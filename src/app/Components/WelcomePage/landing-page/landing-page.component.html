@@ -1,0 +1,43 @@
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a class="navbar-brand logo" href="#">
+      <img class="TeLogo" src="assets/Images/logo.png" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" [ngClass]="{'show': isNavbarOpen}"  id="collapsibleNavbar">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#stars">Boxing Stars</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#stakeholders">Stakeholders</a>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-dark btn-dark my-2 my-sm-0" id="loginBtn" type="submit">Login</button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Hero section -->
+  <section class="hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="intro-text text-center">
+            <h1>
+              <span class="hear"> <span class="highlight ">TequipWise</span> Efficiently manage your equipments with effectiveness.</span> <br />
+              <button class="btn btn-outline-dark my-2 my-sm-0" id="registerBtn" type="submit">Register</button> <br>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

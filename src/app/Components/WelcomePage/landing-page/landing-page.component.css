@@ -1,0 +1,206 @@
+/* Add custom CSS styles here */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,900;1,700&display=swap");
+
+/* CSS Variables */
+:root {
+  --normal-font: 400;
+  --bold-font: 600;
+  --bolder-font: 900;
+  --primary-color: #000000;
+  --secondary-color: #e5a709;
+  --line-height: 1.7rem;
+  --transition: 0.4s ease-in;
+}
+
+/* Smooth scroll effect */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: var(--transition);
+}
+
+ body {
+  font-family: "Roboto", sans-serf;
+}
+
+ul li {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--secondary-color);
+} 
+nav {
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    box-shadow: 2px 3px 2px #f1f1f1;
+    position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  }
+  .hamburger {
+    display: none;
+  }
+  .logo {
+    font-size: 40px;
+    font-weight: 500;
+  }
+  .TeLogo{
+    width: 250px;
+  }
+  ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-item {
+    margin-left: 2rem;
+  }
+  
+  .nav-link {
+    font-weight: var(--bold-font);
+  }
+  .hero{
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.9rem;
+  max-width: 1100px;
+  margin: 2rem auto -6rem;
+  }
+  .fullhero{
+    background-color: rgb(226, 223, 223);
+  }
+  .intro-text h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .intro-text h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .hero p {
+    line-height: var(--line-height);
+  }
+  .highlight {
+    position: relative;
+    display: inline-block; /* Ensure the highlight fits the text */
+    color: #000000;
+  }
+  
+  .highlight::before {
+    content: '';
+    position: absolute;
+    top: -5px; /* Adjust the top position to align with the text */
+    left: -5px; /* Adjust the left position to start before the text */
+    width: calc(100% + 10px); /* Width extends to cover the text with extra padding */
+    height: calc(100% + 10px); /* Height to cover the text with extra padding */
+    border-radius: 10px; /* Adjust the border-radius to create the wave effect */
+    z-index: -1; /* Ensure the highlight is behind the text */
+    background: 
+      linear-gradient(45deg, transparent 10%, rgb(175, 178, 181) 10%, rgb(175, 178, 181) 20%, transparent 20%),
+      linear-gradient(-45deg, transparent 10%, rgb(175, 178, 181) 10%, rgb(175, 178, 181) 20%, transparent 20%);
+    background-size: 10px 10px; /* Adjust the size of the waves */
+    animation: wave 1s infinite linear alternate; /* Animation for continuous wave effect */
+  }
+  
+  @keyframes wave {
+    from { background-position: 0 0; }
+    to { background-position: 10px 10px; } /* Adjust the distance of the wave */
+  }
+  .hear {
+    color: var(--primary-color);
+  font-weight: bold;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Use the appropriate font */
+  letter-spacing: 3px;
+  }
+  
+  .connecting {
+    color: var(--secondary-color);
+  }
+  .btn {
+    margin-top: 1rem;
+    display: inline-block;
+    padding: 0.8rem 0.6rem;
+    border: none;
+    font-size: 1.4rem;
+    border-radius: 5px;
+  }
+  #loginBtn{
+    font-size: 1rem;
+    padding: 0.7rem 1.5rem;
+    
+    color: #fffdfd;
+  }
+  #registerBtn{
+    font-size: 1rem;
+    padding: 0.7rem 1.5rem;
+    background-color: rgb(203, 203, 203);
+    color: #0a0101;
+  }
+  .red {
+    background-color: var(--secondary-color);
+    margin-right: 1.5rem;
+  }
+  
+  .red:hover {
+    background-color: #f1262d;
+    color: #fff;
+  }
+  
+  .blue {
+    background-color: var(--primary-color);
+  }
+  
+  .blue:hover {
+    background-color: #095cf7;
+    color: #fff;
+  }
+  
+  .about {
+    position: relative;
+    /* background: url("../images/jab-transformed.png") no-repeat top center/cover; */
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+   /* Add custom styles here */
+  
+  .hero {
+    padding: 50px 0; /* Add some vertical padding */
+  }
+
+  .hero h1 {
+    font-size: 2.5rem; /* Increase font size for larger screens */
+  }
+
+  .hero p {
+    font-size: 1.1rem; /* Increase font size for larger screens */
+  }
+
+  .about {
+    padding: 50px 0; /* Add some vertical padding */
+  }
+ 

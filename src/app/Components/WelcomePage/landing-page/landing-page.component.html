@@ -11,17 +11,19 @@
     <div class="collapse navbar-collapse" [ngClass]="{'show': isNavbarOpen}"  id="collapsibleNavbar">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#about">About</a>
+          <a class="nav-link" href="#services">Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#stars">Boxing Stars</a>
+          <a class="nav-link" href="#Contact">Contact</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#stakeholders">Stakeholders</a>
+          <a routerLink="/register" class="nav-link" href="#register">Register</a>
         </li>
         <li class="nav-item">
-          <button class="btn btn-outline-dark btn-dark my-2 my-sm-0" id="loginBtn" type="submit">Login</button>
-        </li>
+          <a routerLink="/login" style="text-decoration: none;">
+              <button class="btn btn-outline-dark my-2 my-sm-0" id="loginBtn" type="submit">Login</button>
+          </a>
+      </li>
       </ul>
     </div>
   </nav>
@@ -69,9 +71,7 @@
                         dictum id neque.
                     </small>
                 </p>
-                <h1>
-                  <button class="btn btn-outline-dark my-2 my-sm-0" id="registerBtn" type="submit">Register</button> <br>
-                </h1>
+             
         </div>
     </div>
 </div>

@@ -1,135 +1,86 @@
+<div class="area" >
+    <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+    </ul>
 
+<!-- multistep form -->
+<form id="msform" (ngSubmit)="Register()">
+   
+    <!-- progressbar -->
+    <ul id="progressbar">
+        <li id="step1" class="active">Account Setup</li>
+        <li id="step2">COMPANY INFOS</li>
+        <li id="step3">Personal Details</li>
+      </ul>
+    <!-- fieldsets -->
+    <a href="#" class="navbar-brand">
+        <img src="assets/Images/logo.png" alt="logo" width="250">
+    </a>
+    <fieldset>
+      <h2 class="fs-title">Create your account</h2>
+      <h3 class="fs-subtitle">This is step 1</h3>
+      
+      <input type="text" name="username"  [(ngModel)]="user.username" placeholder="Username" />
+      <input type="text" name="email" [(ngModel)]="user.email" placeholder="Email" />
+      <input type="password" name="password" [(ngModel)]="user.password" placeholder="Password" />
+      <input type="password" name="cpass" placeholder="Confirm Password" />
+      <input type="button" name="next" class="next action-button" value="Next" />
+    </fieldset>
+    <fieldset>
+      <h2 class="fs-title">Company infos</h2>
+      <h3 class="fs-subtitle">Your presence on the social network</h3>
+      <input type="text" name="TeNUm " placeholder="Te identifier " [(ngModel)]="user.TeNum" />
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <div id="full">
+      <select class="form-select" id="select1" aria-label="Default select example" (change)="onPlantChange($event)">
+        <option selected disabled>Select Plant</option>
+        <option *ngFor="let plant of plants" >{{ plant.location }}</option>
+      </select>
 
-<!-- Navbar-->
-<header class="header">
-    <nav class="navbar navbar-expand-lg navbar-light py-3">
-        <div class="container">
-            <!-- Navbar Brand -->
-            <a href="#" class="navbar-brand">
-                <img src="assets/Images/logo.png" alt="logo" width="200">
-            </a>
-        </div>
-    </nav>
-</header>
+      <select class="form-select" id="select2" aria-label="Default select example" [(ngModel)]="user.DepartmentDeptId" name="departmentId">
+        <option selected disabled>Select Department</option>
+        <option *ngFor="let department of selectedPlant?.departments" [value]="department.deptId">{{ department.departmentName }}</option>
+      </select>
 
+      <!-- <mat-form-field>
+        <mat-label>Select Plant</mat-label>
+        <mat-select class="form-select" id="select1" aria-label="Default select example" (selectionChange)="onPlantChange($event)">
+          <mat-option disabled selected>Select Plant</mat-option>
+          <mat-option *ngFor="let plant of plants" [value]="plant">{{ plant.location }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Select Department</mat-label>
+        <mat-select class="form-select" id="select2" aria-label="Default select example" [(ngModel)]="user.DepartmentDeptId" name="departmentId">
+          <mat-option disabled selected>Select Department</mat-option>
+          <mat-option *ngFor="let department of selectedPlant?.departments" [value]="department.deptId">{{ department.departmentName }}</mat-option>
+        </mat-select>
+      </mat-form-field> -->
 
-<div class="container">
-    <div class="row py-5 mt-4 align-items-center">
-        
-        <!-- Registeration Form -->
-        <div class="col-md-7 col-lg-6 ml-auto" id="area">
-            <form (ngSubmit)="Register()">
-                <div class="row">
-                    
-                    <!-- First Name
-                    <div class="input-group col-lg-6 mb-4">
-                       
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-user text-muted"></i>
-                            </span>
-                        </div>
-                        <input id="firstName" type="text" name="firstname" placeholder="First Name" class="form-control bg-white border-left-0 border-md">
-                    </div> -->
-                    <!-- UserName -->
-                    <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="person"></mat-icon>
-                            </span>
-                        </div>
-                        <input id="username" type="text" name="username" placeholder="Username" [(ngModel)]="user.username" class="form-control bg-white border-left-0 border-md">
-                    </div>
-                    <!-- Email Address -->
-                    <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="email"></mat-icon>
-                            </span>
-                        </div>
-                        <input id="email" type="email" name="email" placeholder="Email Address" [(ngModel)]="user.email" class="form-control bg-white border-left-0 border-md">
+      <input type="text" name="Responsibility " placeholder="Your job title"[(ngModel)]="user.Responsibility" />
+      <input type="button" name="previous" class="previous action-button" value="Previous" />
+      <input type="button" name="next" class="next action-button" value="Next" />
+    </fieldset>
+    <fieldset>
+      <h2 class="fs-title">Personal Details</h2>
+      <h3 class="fs-subtitle">We will never sell it</h3>
+      <input type="text" name="gender " placeholder="Gender" [(ngModel)]="user.Gender" />
+      <input type="text" name="phone" placeholder="Phone"  [(ngModel)]="user.PhoneNumber" />
+      <input type="button" name="previous" class="previous action-button" value="Previous" />
+      <button id="registerbtn"  class="submit action-button" type="submit">
+        <span class="font-weight-bold">Register</span>
+    </button>
+    </fieldset>
+  </form>
+ 
 
-                    </div>
-                    <!-- PhoneNumber -->
-                    <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="phone"></mat-icon>
-                            </span>
-                        </div>
-                        <input id="PhoneNumber" type="number" name="PhoneNumber" placeholder="Phone Number" class="form-control bg-white border-left-0 border-md">
-                    </div>
-                    
-                     <!-- Gender -->
-                     <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="man"></mat-icon>  
-                            </span>
-                        </div>
-                        <select id="gender" name="gender" class="form-control custom-select bg-white border-left-0 border-md">
-                            <option value="">Choose your gender</option>
-                            <option value="">Male</option>
-                            <option value="">Female</option>
-                        </select>
-                    </div>
-
-                    <!-- Responsibility -->
-                    <div class="input-group col-lg-12 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="work"></mat-icon>  
-                            </span>
-                        </div>
-                        <select id="Responsibility" name="Responsibility" class="form-control custom-select bg-white border-left-0 border-md">
-                            <option value="">Choose your Responsibility</option>
-                            <option value="">Designer</option>
-                            <option value="">Developer</option>
-                            <option value="">Manager</option>
-                            <option value="">Accountant</option>
-                        </select>
-                    </div>
-
-                    <!-- Password -->
-                    <div class="input-group col-lg-6 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="password"></mat-icon>  
-                            </span>
-                        </div>
-                        <input id="password" type="password" name="password" placeholder="Password" [(ngModel)]="user.password" class="form-control bg-white border-left-0 border-md">
-                    </div>
-
-                    <!-- Password Confirmation -->
-                    <div class="input-group col-lg-6 mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white px-4 border-md border-right-0">
-                                <i class="fa fa-lock text-muted"></i>
-                            </span>
-                        </div>
-                        <input id="passwordConfirmation" type="text" name="passwordConfirmation" placeholder="Confirm Password" class="form-control bg-white border-left-0 border-md">
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="form-group col-lg-12 mx-auto mb-0">
-                       <button id="registerbtn" class="btn btn-block py-2" type="submit"><a>
-                            <span class="font-weight-bold">Register</span>
-                        </a></button>
-                    </div>
-                  
-
-                    <!-- Already Registered -->
-                    <div class="text-center w-100">
-                        <p class="text-muted font-weight-bold">Already Registered? <a routerLink="/login" class="text-primary ml-2">Login</a></p>
-                    </div>
-
-                </div>
-
-
-            </form>
-        </div>
-    </div>
-</div></div>
+</div >

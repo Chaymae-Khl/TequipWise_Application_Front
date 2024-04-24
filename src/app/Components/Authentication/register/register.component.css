@@ -129,7 +129,23 @@
 
 }
 
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
 
+.input-group input,
+.input-group mat-form-field {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.input-group input:last-child,
+.input-group mat-form-field:last-child {
+  margin-right: 0;
+}
 
 
 
@@ -141,10 +157,14 @@
 
 /*form styles*/
 #msform {
-  width: 400px;
+  width: 600px;
   margin: auto;
   text-align: center;
   position: relative;
+  
+}
+#logo{
+  margin-top: 30px;
 }
 #msform fieldset {
   background: white;

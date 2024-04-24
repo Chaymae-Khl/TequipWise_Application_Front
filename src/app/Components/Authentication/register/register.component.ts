@@ -71,7 +71,7 @@ export class RegisterComponent  {
       return;
     }
       // Set the role directly here
-      const role = 'Admin'; // Change 'Admin' to the desired role
+      const role = 'User'; 
       console.log(this.user);
       // Call the registration service method with both user data and role
       this.authService.UserRegister(this.user, role).subscribe(
@@ -86,100 +86,6 @@ export class RegisterComponent  {
     }
   
   
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //Form Animations code 
-  animating: boolean = false;
-  ngAfterViewInit(): void {
-    // Select all elements with the class 'next' and 'previous'
-    const nextButtons = this.elementRef.nativeElement.querySelectorAll('.next');
-    const previousButtons = this.elementRef.nativeElement.querySelectorAll('.previous');
-
-    // Convert the NodeLists to arrays using Array.from with type assertion
-    const nextButtonsArray = Array.from(nextButtons) as HTMLElement[];
-    const previousButtonsArray = Array.from(previousButtons) as HTMLElement[];
-
-    // Check if any elements with class 'next' were found
-    if (nextButtonsArray.length > 0) {
-      // Iterate over the array of next buttons and add event listeners
-      nextButtonsArray.forEach((button: HTMLElement) => {
-        this.renderer.listen(button, 'click', () => this.nextClickHandler(button));
-      });
-    } else {
-      console.error("No elements with class 'next' found.");
-    }
-
-    // Check if any elements with class 'previous' were found
-    if (previousButtonsArray.length > 0) {
-      // Iterate over the array of previous buttons and add event listeners
-      previousButtonsArray.forEach((button: HTMLElement) => {
-        this.renderer.listen(button, 'click', () => this.previousClickHandler(button));
-      });
-    } else {
-      console.error("No elements with class 'previous' found.");
-    }
-  }
-
-  nextClickHandler(button: HTMLElement): void {
-    if (this.animating) return;
-    this.animating = true;
-
-    const current_fs = button.parentElement as HTMLElement;
-    const next_fs = current_fs ? current_fs.nextElementSibling as HTMLElement : null;
-
-    if (!current_fs || !next_fs) return;
-
-    current_fs.style.display = 'none';
-    next_fs.style.display = 'block';
-
-    // Update progress bar
-    const currentStep = document.querySelector('#progressbar .active');
-    const nextStep = currentStep ? currentStep.nextElementSibling as HTMLElement : null;
-    if (nextStep) {
-      currentStep?.classList.remove('active');
-      nextStep.classList.add('active');
-    }
-
-    this.animating = false;
-  }
-
-  previousClickHandler(button: HTMLElement): void {
-    if (this.animating) return;
-    this.animating = true;
-
-    const current_fs = button.parentElement as HTMLElement;
-    const previous_fs = current_fs ? current_fs.previousElementSibling as HTMLElement : null;
-
-    if (!current_fs || !previous_fs) return;
-
-    current_fs.style.display = 'none';
-    previous_fs.style.display = 'block';
-
-    // Update progress bar
-    const currentStep = document.querySelector('#progressbar .active');
-    const previousStep = currentStep ? currentStep.previousElementSibling as HTMLElement : null;
-    if (previousStep) {
-      currentStep?.classList.remove('active');
-      previousStep.classList.add('active');
-    }
-
-    this.animating = false;
-  }
-
 
 
 

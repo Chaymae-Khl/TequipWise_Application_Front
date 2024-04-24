@@ -12,14 +12,17 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import { provideHttpClient, withFetch } from '@angular/common/http';
-
+import {MatRadioModule} from '@angular/material/radio';
+import { DashboardComponent } from './Components/Admin/dashboard/dashboard.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
     LandingPageComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    DashboardComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,9 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     FormsModule,
     MatIconModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatRadioModule,
+    MatSnackBarModule
   ],
   providers: [
     provideClientHydration(),

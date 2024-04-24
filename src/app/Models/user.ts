@@ -4,6 +4,7 @@ export class User {
     username: any;
     email: any; 
     password: any;
+    confirmPassword:any;
     PhoneNumber:any;
     Gender:any;
     Responsibility:any;

@@ -175,6 +175,16 @@
   color: #2C3E50;
   font-size: 13px;
 }
+
+/* angular selct list */
+.custom-select{
+  width: 100%;
+
+}
+/* register.component.css */
+.mat-snack-bar-container.snackbar-error .mat-snack-bar-action {
+  color: white; /* Change color of the close button */
+}
 /*buttons*/
 #msform .action-button {
   width: 100px;

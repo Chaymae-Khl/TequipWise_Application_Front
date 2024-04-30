@@ -8,7 +8,9 @@
     margin: 0px;
     padding: 0px;
 }
-
+.login{
+  color: gray;
+}
 .area{
     background: #ffffff;  
     background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);  
@@ -169,7 +171,7 @@
 #msform fieldset {
   background: white;
   border: 0 none;
-  border-radius: 3px;
+  border-radius: 12px;
   box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
   padding: 20px 30px;
   box-sizing: border-box;

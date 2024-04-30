@@ -1,0 +1,105 @@
+
+
+<div id="table" class="mat-elevation-z8" >
+  <table mat-table [dataSource]="users">
+
+    <!-- Teidentifier Column -->
+    <ng-container matColumnDef="Teidentifier">
+      <th mat-header-cell *matHeaderCellDef> Te identifier </th>
+      <td mat-cell *matCellDef="let user"> {{user.userName}} </td>
+    </ng-container>
+
+    <!-- Fullname Column -->
+    <ng-container matColumnDef="Fullname">
+      <th mat-header-cell *matHeaderCellDef> Fullname </th>
+      <td mat-cell *matCellDef="let user"> {{user.teNum}} </td>
+    </ng-container>
+     <!-- Plant Column -->
+     <ng-container matColumnDef="Plant">
+      <th mat-header-cell *matHeaderCellDef> Plant </th>
+      <td mat-cell *matCellDef="let user"> {{user.location}} </td>
+    </ng-container>
+  <!-- Departement Column -->
+  <ng-container matColumnDef="Departement">
+    <th mat-header-cell *matHeaderCellDef> Departement </th>
+    <td mat-cell *matCellDef="let user"> {{user.departmentName}} </td>
+  </ng-container>
+    <!-- Email Column -->
+    <ng-container matColumnDef="Email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+    </ng-container>
+    <!-- Roles Column -->
+    <ng-container matColumnDef="Roles">
+      <th mat-header-cell *matHeaderCellDef> Roles </th>
+      <td mat-cell *matCellDef="let user">
+        <div *ngFor="let role of user.roles">
+          {{role}}
+        </div>
+      </td>
+    </ng-container>
+    <!-- Actions Column -->
+    <ng-container matColumnDef="Actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let user">
+        <!-- View Details Button -->
+        <button mat-icon-button color="primary" aria-label="View Details" (click)="viewUserDetails(user)">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <!-- Update Button -->
+        <button mat-icon-button color="accent" aria-label="Update" (click)="openUpdateModal(user)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <!-- Delete Button -->
+        <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteUser(user)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Define table headers -->
+    <tr mat-header-row *matHeaderRowDef="['Teidentifier', 'Fullname', 'Email','Plant','Departement','Roles', 'Actions']"></tr>
+    <!-- Define table rows -->
+    <tr mat-row *matRowDef="let user; columns: ['Teidentifier', 'Fullname', 'Email','Plant','Departement','Roles', 'Actions']"></tr>
+
+  </table>
+
+  <!-- Paginator -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of users">
+  </mat-paginator>
+
+    <!-- Modal-like section for displaying user details -->
+  
+    <div class="card" *ngIf="showUserDetails" class="user-details-modal">
+      <!-- Close button -->
+      
+      <div class="circle"></div>
+      <div class="circle"></div>
+      <div class="card-inner"> <div >
+        <button mat-button color="primary" (click)="closeUserDetails()">Close</button>
+        
+        <h2>User Details</h2>
+        <p><strong>Username:</strong> {{ selectedUser?.userName }}</p>
+        <p><strong>TE Number:</strong> {{ selectedUser?.teNum }}</p>
+        <p><strong>Email:</strong> {{ selectedUser?.email }}</p>
+        <p><strong>Plant:</strong> {{ selectedUser?.location }}</p>
+        <p><strong>Department:</strong> {{ selectedUser?.departmentName }}</p>
+        <p><strong>Roles:</strong></p>
+        <ul>
+          <li *ngFor="let role of selectedUser?.roles">{{ role }}</li>
+        </ul>
+        
+      </div></div>
+   
+
+ <!-- Update User Modal -->
+<div class="modal-overlay" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <h2>Update User</h2>
+    <form (submit)="updateUser(usertoupdate)">
+      <input type="text" [(ngModel)]="usertoupdate.TeNum" name="TeNum" placeholder="Full Name" required>
+      <input type="email" [(ngModel)]="usertoupdate.email" name="email" placeholder="Email" required>
+      <button type="submit">Save</button>
+      <button type="button" (click)="closeUpdateModal()">Cancel</button>
+    </form>
+  </div>

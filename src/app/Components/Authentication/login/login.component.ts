@@ -26,6 +26,7 @@ onSubmit(form: NgForm) {
   this.authService.login(loginData).subscribe(
     (response:any) => {
       // Handle successful login response
+      localStorage.setItem('token',response.token);
       console.log(response.token);
       const token=response.token;
       const helper = new JwtHelperService();
@@ -34,10 +35,10 @@ onSubmit(form: NgForm) {
       console.log(decodedToken);
       const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
       console.log('User role:', role);
-      localStorage.setItem('token',response.token);
+     
 
    if(role==="Admin"){
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/admin']);
    } 
    else{
     console.log("your are not admin.");

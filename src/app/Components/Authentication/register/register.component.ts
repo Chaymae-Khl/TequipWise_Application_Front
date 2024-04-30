@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../../Models/user';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../Services/auth-service.service';
-import { ElementRef, Renderer2 } from '@angular/core';
 import jQuery from 'jquery';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
 const $ = jQuery;
@@ -25,8 +24,6 @@ export class RegisterComponent  {
   constructor(private openDataServiceService: OpenDataServiceService,
     private authService: AuthServiceService,
     private router: Router,
-    private renderer: Renderer2,
-    private elementRef: ElementRef,
     private snackBar: MatSnackBar) { }
 
     ngOnInit(): void {
@@ -71,7 +68,7 @@ export class RegisterComponent  {
       return;
     }
       // Set the role directly here
-      const role = 'User'; 
+      const role = 'Admin'; 
       console.log(this.user);
       // Call the registration service method with both user data and role
       this.authService.UserRegister(this.user, role).subscribe(

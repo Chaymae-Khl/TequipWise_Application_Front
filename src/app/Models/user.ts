@@ -1,11 +1,14 @@
 export class User {
     id: any;
     //here the teNum is the fullname i will fix this later
-    TeNum:any;
+    teNum:any;
     //here the username is the teNum
-    username: any;
+    userName: any;
     email: any; 
     password: any;
     confirmPassword:any;
     DepartmentDeptId:any;
+    roles!:string[];
+    departmentName:any;
+    location:any;
 }

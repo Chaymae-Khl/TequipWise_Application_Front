@@ -21,6 +21,10 @@ import { MatTableModule} from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { NavBarComponent } from './Components/nav-bar/nav-bar.component';
+import { UserModalComponent } from './Components/Admin/user-modal/user-modal.component';
+import { RoleManagComponent } from './Components/Admin/role-manag/role-manag.component';
+import { UserFilterPipe } from './Pipes/user-filter.pipe';
+import { MessageDialogComponent } from './message-dialog/message-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +35,12 @@ import { NavBarComponent } from './Components/nav-bar/nav-bar.component';
     AdminsComponent,
     SidebarComponent,
     UsersManagComponent,
-    NavBarComponent
+    NavBarComponent,
+    UserModalComponent,
+    RoleManagComponent,
+    UserFilterPipe,
+    MessageDialogComponent,
+   
   
   ],
   imports: [

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../../Services/auth-service.service';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { User } from '../../../Models/user';
+import { MessageDialogComponent } from '../../../message-dialog/message-dialog.component';
 @Component({
   selector: 'app-users-manag',
   templateUrl: './users-manag.component.html',
@@ -9,16 +10,19 @@ import { User } from '../../../Models/user';
 })
 export class UsersManagComponent implements OnInit{
   users:any;
-  showUserDetails= false;
   selectedUser: any;
-  showUpdateDialog = false;
-  usertoupdate: User  = new User();
-  isModalOpen = false; // Modal state
-constructor(private Authservice:AuthServiceService,public dialog: MatDialog){}
+  showModal = false;
+  searchTerm: string = '';
+  modalMode!: 'view' | 'update';
+
+  
+constructor(private Authservice:AuthServiceService,public dialog: MatDialog){
+}
 
 ngOnInit(): void {
 this.getUsers();
 }
+
 
 getUsers(){
   this.Authservice.getUsers().subscribe(
@@ -34,60 +38,60 @@ getUsers(){
 }
 
 
-deleteUser(user: any) {
-  if (confirm(`Are you sure you want to delete ${user.userName}?`)) {
-    this.Authservice.deleteUser(user.id).subscribe(
-      () => {
-        // User deleted successfully, perform any necessary actions (e.g., refresh user list)
-        console.log(`User ${user.userName} deleted.`);
-        this.getUsers();
-      },
-      (error) => {
-        console.error('Error deleting user:', error);
-      }
-    );
-  }
+deleteUser(user: User): void {
+  const dialogRef = this.dialog.open(MessageDialogComponent, {
+    data: { userName: user.userName }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.Authservice.deleteUser(user.id).subscribe(
+        () => {
+          console.log(`User ${user.userName} deleted.`);
+          this.getUsers();
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+        }
+      );
+    }
+  });
 }
 
-
-
- // Function to show user details
- viewUserDetails(user: any) {
+ // Function to show modal for viewing user details
+ viewUserDetails(user: User): void {
   this.selectedUser = user;
-  this.showUserDetails = true;
+  this.modalMode = 'view';
+  this.showModal = true;
 }
 
-// Function to close user details modal
-closeUserDetails() {
-  this.showUserDetails = false;
-  this.selectedUser = null;
-}
-
-
-
+// Function to show modal for updating user details
 openUpdateModal(user: User): void {
-  this.isModalOpen = true;
-  // Create a copy of the selected user object to update
-  this.usertoupdate = { ...user };
+  this.selectedUser = user;
+  this.modalMode = 'update';
+  this.showModal = true;
 }
 
-closeUpdateModal(): void {
-  this.isModalOpen = false;
-  this.usertoupdate = new User(); // Reset userToUpdate
+// Function to close the modal
+closeModal(): void {
+  this.showModal = false;
+  this.selectedUser = null;
+  this.modalMode = "view";
+}
+// Function to update user details
+updateUser(updatedUser: User): void {
+  console.log('Updating user:', updatedUser);
+
+  this.Authservice.updateUser(updatedUser, updatedUser.id).subscribe(
+    () => {
+      this.closeModal();
+      console.log(`User updated successfully.`);
+    },
+    (error) => {
+      console.error('Error updating user:', error);
+    }
+  );
 }
 
-updateUser(user:User): void {
-  
-    this.Authservice.updateUser(user.id,user).subscribe(
-      () => {
-        // User deleted successfully, perform any necessary actions (e.g., refresh user list)
-        console.log(`User updated.`);
-        this.getUsers();
-      },
-      (error) => {
-        console.error('Error updating user:', error);
-      }
-    );
-  this.closeUpdateModal();
-}
+
 }

@@ -1,0 +1,158 @@
+.user-details-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(12, 31, 49, 0.29);
+  background-color: rgb(237, 237, 237);
+}
+
+.user-details-modal h2 {
+  margin-bottom: 10px;
+  text-align: center;
+
+}
+
+.user-details-modal p {
+  margin-left: 30px;
+
+}
+
+.user-details-modal .closing {
+  left: 435px;
+  color: #E98201;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content form input {
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+
+/* card css */
+.card {
+  width: 500px;
+  height: 500px;
+  transition: all 0.2s;
+  position: relative;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 500px;
+  height: 400px;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: scale(1.04) rotate(1deg);
+}
+
+.circle {
+  width: 100px;
+  height: 100px;
+  background: repeating-linear-gradient(48deg, #e7e6ee 0%, #E98201 100%);
+  border-radius: 35% 30% 75% 30% / 49% 30% 70% 51%;
+  position: absolute;
+  animation: move-up6 2s ease-in infinite alternate-reverse;
+}
+
+.circle:nth-child(1) {
+  top: -25px;
+  left: -25px;
+}
+
+.circle:nth-child(2) {
+  bottom: -25px;
+  right: -25px;
+  animation-name: move-down1;
+}
+
+@keyframes move-up6 {
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes move-down1 {
+  to {
+    transform: translateY(10px);
+  }
+}
+
+/* update modal style */
+.updatemodal-content{
+
+  margin-left: 25px;
+}
+
+.updatemodal-content label {
+  flex: 1; /* Allow label to grow and take up available space */
+}
+.updatemodal-content button {
+  padding: 11px 21px;
+  color: #ffffff;
+  cursor: pointer;
+  background-color: #E98201;
+}
+.updatemodal-content button:hover {
+background-color: #c0bab4;
+color: #ffffff;
+border-color: #ffffff;
+
+}
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  flex: 1;
+  margin-right: 10px;
+}
+
+label {
+  display: block;
+  margin-left: 10px;
+}
+.profileimage {
+  background-color: transparent;
+  border: none;
+  margin-top: -31px;
+  border-radius: 5em;
+  width: 40px;
+  height: 40px;
+  margin-left: 230px;
+}

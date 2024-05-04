@@ -63,9 +63,16 @@ deleteUser(id: any) {
 }
 
 // Update user by ID
-updateUser(data: any, id: any) {
+updateUser(data: User, id: any) {
   const httpOptions = this.getHttpOptions();
   return this.httpClient.put(`${this.apiUrl}/Admin/update/${id}`, data, httpOptions);
 }
+
+//get roles
+getRoles() {
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Admin/allRoles`, httpOptions);
+}
+
 
 }

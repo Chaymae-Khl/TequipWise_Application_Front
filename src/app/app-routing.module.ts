@@ -6,6 +6,8 @@ import { RegisterComponent } from './Components/Authentication/register/register
 import { DashboardComponent } from './Components/Admin/dashboard/dashboard.component';
 import { AdminsComponent } from './Components/Admin/admins/admins.component';
 import { UsersManagComponent } from './Components/Admin/users-manag/users-manag.component';
+import { RoleManagComponent } from './Components/Admin/role-manag/role-manag.component';
+import { AuthGuard } from './Gards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -19,8 +21,11 @@ const routes: Routes = [
         {
           path:'users', component: UsersManagComponent,
 
+        },
+        {
+          path:'roles',component:RoleManagComponent,
         }
-      ]},
+      ],canActivate: [AuthGuard] },
 
   // { path : 'dashboard',component:DashboardComponent},
   // {

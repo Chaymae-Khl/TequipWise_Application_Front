@@ -32,25 +32,34 @@
           <input type="password" name="cpass" [(ngModel)]="user.confirmPassword" placeholder="Confirm Password" />
       </div>
       <div>
-          <mat-form-field class="custom-select">
-              <mat-label>Select Plant</mat-label>
-              <mat-select (selectionChange)="onPlantChange($event)">
-                  <mat-option disabled>Select Plant</mat-option>
-                  <mat-option *ngFor="let plant of plants" [value]="plant">{{ plant.location }}</mat-option>
-              </mat-select>
-          </mat-form-field>
+        <mat-form-field class="custom-select">
+          <mat-label>Select Location</mat-label>
+          <mat-select (selectionChange)="onLocationChange($event)">
+            <mat-option disabled>Select Location</mat-option>
+            <mat-option *ngFor="let location of locations" [value]="location">{{ location.locationName }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="custom-select">
+          <mat-label>Select Plant</mat-label>
+          <mat-select >
+            <mat-option disabled>Select Plant</mat-option>
+            <mat-option *ngFor="let plant of plantsOfSelectedLocation" [value]="plant">{{ plant.plant_name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div class="input-group">
-          <mat-form-field class="custom-select">
-              <mat-label>Select Department</mat-label>
-              <mat-select [(ngModel)]="user.DepartmentDeptId" name="departmentId">
-                  <mat-option disabled>Select Department</mat-option>
-                  <mat-option *ngFor="let department of selectedPlant?.departments" [value]="department.deptId">{{ department.departmentName }}</mat-option>
-              </mat-select>
-          </mat-form-field>
+        <mat-form-field class="custom-select">
+          <mat-label>Select Department</mat-label>
+          <mat-select [(ngModel)]="user.DepartmentDeptId" name="departmentId">
+            <mat-option disabled>Select Department</mat-option>
+            <mat-option *ngFor="let department of departmentsOfSelectedPlant" [value]="department.deptId">{{ department.departmentName }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <button id="registerbtn" class="submit action-button" type="submit">
-          <span class="font-weight-bold">Register</span>
+          <span class="font-weight-bold"  style="color: white;">Register</span>
       </button> <br>
       <p>Already have an acount ? <a class="login" routerLink="/login">Login</a></p>
   </fieldset>

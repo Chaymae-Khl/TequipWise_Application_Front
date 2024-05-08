@@ -1,0 +1,80 @@
+<div class="menu-item">
+  <div class="arrow"></div>
+  <h2 class="title">Plants & Departements</h2>
+  <div class="row">
+    <div class="col-8">
+      <div>
+        <button type="button" class="btn btn-outline-secondary" (click)="openAddDepartmentModal()">+ Add</button>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="search-bar">
+        <mat-form-field appearance="fill" class="search-field">
+          <mat-label> Search by Plant Name</mat-label>
+          <input matInput placeholder="Te identifier">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="plants">
+      <!-- Building Number Column -->
+      <ng-container matColumnDef="Building Number">
+        <th mat-header-cell *matHeaderCellDef> Building Number </th>
+        <td mat-cell *matCellDef="let plant"> {{plant.buildingNumber}} </td>
+      </ng-container>
+
+      <!-- Location Column -->
+      <ng-container matColumnDef="Location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let plant"> {{plant.location}} </td>
+      </ng-container>
+
+      <!-- Plant Name Column -->
+      <ng-container matColumnDef="Plant Name">
+        <th mat-header-cell *matHeaderCellDef> Plant Name </th>
+        <td mat-cell *matCellDef="let plant"> {{plant.plant_name}} </td>
+      </ng-container>
+
+      <!-- Plant Manager Column -->
+      <ng-container matColumnDef="Plant Manager">
+        <th mat-header-cell *matHeaderCellDef> Plant Manager </th>
+        <td mat-cell *matCellDef="let plant"> {{plant.plant_Manager}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Departements">
+        <th mat-header-cell *matHeaderCellDef> Departements </th>
+        <td mat-cell *matCellDef="let plant">
+          <button mat-icon-button color="link" aria-label="Vie departements" (click)="openDepartmentModal(plant)">
+            <i class="pi pi-warehouse" style="font-size: 1.3rem"></i>
+          </button>
+        </td>
+      </ng-container>
+      <!-- Actions Column -->
+      <ng-container matColumnDef="Actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let user">
+          <!-- View Details Button -->
+          <button mat-icon-button color="primary" aria-label="View Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <!-- Update Button -->
+          <button mat-icon-button color="accent" aria-label="Update">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <!-- Delete Button -->
+          <button mat-icon-button color="warn" aria-label="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
+</div>
+
+

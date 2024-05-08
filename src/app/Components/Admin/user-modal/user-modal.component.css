@@ -5,7 +5,7 @@
   transform: translate(-50%, -50%);
   padding: 30px;
   box-shadow: 0 4px 8px rgba(12, 31, 49, 0.29);
-  background-color: rgb(237, 237, 237);
+  background-color: rgb(255, 255, 255);
 }
 
 .user-details-modal h2 {
@@ -57,60 +57,6 @@
 
 
 
-/* card css */
-.card {
-  width: 500px;
-  height: 500px;
-  transition: all 0.2s;
-  position: relative;
-  cursor: pointer;
-}
-
-.card-inner {
-  width: 500px;
-  height: 400px;
-  background: rgb(255, 255, 255);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-}
-
-.card:hover {
-  transform: scale(1.04) rotate(1deg);
-}
-
-.circle {
-  width: 100px;
-  height: 100px;
-  background: repeating-linear-gradient(48deg, #e7e6ee 0%, #E98201 100%);
-  border-radius: 35% 30% 75% 30% / 49% 30% 70% 51%;
-  position: absolute;
-  animation: move-up6 2s ease-in infinite alternate-reverse;
-}
-
-.circle:nth-child(1) {
-  top: -25px;
-  left: -25px;
-}
-
-.circle:nth-child(2) {
-  bottom: -25px;
-  right: -25px;
-  animation-name: move-down1;
-}
-
-@keyframes move-up6 {
-  to {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes move-down1 {
-  to {
-    transform: translateY(10px);
-  }
-}
-
 /* update modal style */
 .updatemodal-content{
 
@@ -154,5 +100,14 @@ label {
   border-radius: 5em;
   width: 40px;
   height: 40px;
-  margin-left: 230px;
+  margin-left: 100px;
+}
+.close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
 }

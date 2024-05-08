@@ -10,6 +10,6 @@ export class OpenDataServiceService {
   constructor(private httpClient:HttpClient) { }
   apiUrl = environment.apiUrl;
   getPlantsWDept(){
-    return this.httpClient.get(`${this.apiUrl}/OpenData/Plants`);
+    return this.httpClient.get(`${this.apiUrl}/OpenData/locations`);
   }
 }

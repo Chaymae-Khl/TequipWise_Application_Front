@@ -4,8 +4,8 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { log } from 'console';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { LocalStorageServiceService } from '../../../Services/local-storage-service.service';
+
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ export class LoginComponent {
     username: null,
     password: null
   };
-constructor(private authService: AuthServiceService, private router: Router,private snackBar: MatSnackBar){}
+constructor(private authService: AuthServiceService, private router: Router,private localstorgeService:LocalStorageServiceService ){}
 onSubmit(form: NgForm) {
   const loginData = {
     username: form.value.username,
@@ -25,8 +25,10 @@ onSubmit(form: NgForm) {
   };
   this.authService.login(loginData).subscribe(
     (response:any) => {
+      const localStorage = document.defaultView?.localStorage;
       // Handle successful login response
-      localStorage.setItem('token',response.token);
+      if(localStorage)
+        this.localstorgeService.setItem('token',response.token);
       console.log(response.token);
       const token=response.token;
       const helper = new JwtHelperService();

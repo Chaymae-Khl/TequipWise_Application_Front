@@ -2,11 +2,14 @@
     display: flex;
     justify-content: flex-end;
     margin-bottom: 16px; /* Optional: Adjust spacing as needed */
-    
   }
   
   .search-field {
     flex: 1; /* Take up remaining space */
     max-width: 300px; /* Limit width to prevent stretching */
   }
+  .title{
+    text-align: center;
+     margin-top: 4rem;
+   }
   

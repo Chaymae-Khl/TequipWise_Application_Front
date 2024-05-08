@@ -50,14 +50,18 @@
     }
     .TeLogo{
       width: 250px; 
-      margin-left: 20px;
+      margin-left: -30px;
     }
-    ul {
+    ul{
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
+      padding-right: 2rem; /* adjust as needed */
     }
-    
+    .collapse.navbar-collapse {
+      display: flex;
+      justify-content: flex-end;
+    }
     .nav-item {
       margin-left: 2rem;
     }

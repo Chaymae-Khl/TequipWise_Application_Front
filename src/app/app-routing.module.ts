@@ -8,6 +8,7 @@ import { AdminsComponent } from './Components/Admin/admins/admins.component';
 import { UsersManagComponent } from './Components/Admin/users-manag/users-manag.component';
 import { RoleManagComponent } from './Components/Admin/role-manag/role-manag.component';
 import { AuthGuard } from './Gards/auth.guard';
+import { DeptPlantMangComponent } from './Components/Admin/dept-plant-mang/dept-plant-mang.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -24,6 +25,9 @@ const routes: Routes = [
         },
         {
           path:'roles',component:RoleManagComponent,
+        },
+        {
+          path:'plants',component:DeptPlantMangComponent,
         }
       ],canActivate: [AuthGuard] },
 

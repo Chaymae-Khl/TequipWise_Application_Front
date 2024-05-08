@@ -8,6 +8,7 @@ export class User {
     password: any;
     confirmPassword:any;
     DepartmentDeptId:any;
+    plant_name:any;
     roles!:string[];
     departmentName:any;
     location:any;

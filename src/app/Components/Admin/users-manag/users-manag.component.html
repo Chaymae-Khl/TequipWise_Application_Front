@@ -1,5 +1,8 @@
 <!-- Search Bar -->
-<div class="search-bar">
+<div class="menu-item">
+  <div class="arrow"></div>
+  <h2 class="title">Users</h2>
+  <div class="search-bar">
   <mat-form-field appearance="fill" class="search-field">
     <mat-label > Search by Te identifier</mat-label>
     <input  matInput [(ngModel)]="searchTerm" name="user.userName" placeholder="Te identifier">
@@ -20,10 +23,15 @@
       <th mat-header-cell *matHeaderCellDef> Fullname </th>
       <td mat-cell *matCellDef="let user"> {{user.teNum}} </td>
     </ng-container>
+     <!-- Plant Column -->
+     <ng-container matColumnDef="Location">
+      <th mat-header-cell *matHeaderCellDef> Location </th>
+      <td mat-cell *matCellDef="let user"> {{user.location}} </td>
+    </ng-container>
     <!-- Plant Column -->
     <ng-container matColumnDef="Plant">
       <th mat-header-cell *matHeaderCellDef> Plant </th>
-      <td mat-cell *matCellDef="let user"> {{user.location}} </td>
+      <td mat-cell *matCellDef="let user"> {{user.plant_name}} </td>
     </ng-container>
     <!-- Departement Column -->
     <ng-container matColumnDef="Departement">
@@ -60,15 +68,19 @@
         <button mat-icon-button color="warn" aria-label="Delete" (click)="deleteUser(user)">
           <mat-icon>delete</mat-icon>
         </button>
+        <!-- change password button -->
+        <button mat-icon-button color="warn" aria-label="Change Password" (click)="openChangePasswordModal(user.id)">
+          <mat-icon>vpn_key</mat-icon>
+        </button>
       </td>
     </ng-container>
 
     <!-- Define table headers -->
     <tr mat-header-row
-      *matHeaderRowDef="['Teidentifier', 'Fullname', 'Email','Plant','Departement','Roles', 'Actions']"></tr>
+      *matHeaderRowDef="['Teidentifier', 'Fullname', 'Email','Location','Plant','Departement','Roles', 'Actions']"></tr>
     <!-- Define table rows -->
     <tr mat-row
-      *matRowDef="let user; columns: ['Teidentifier', 'Fullname', 'Email','Plant','Departement','Roles', 'Actions']">
+      *matRowDef="let user; columns: ['Teidentifier', 'Fullname', 'Email','Location','Plant','Departement','Roles', 'Actions']">
     </tr>
 
   </table>
@@ -81,6 +93,11 @@
 </div>
 
 <!-- modal to hundel the update and the showdeails of the user -->
-<app-user-modal *ngIf="showModal" [user]="selectedUser" [mode]="modalMode" (closeModal)="closeModal()"
-  (updateUser)="updateUser($event)">
-</app-user-modal>
+<app-user-modal *ngIf="showModal"
+                [user]="selectedUser"
+                [userId]="userId"
+                [mode]="modalMode"
+                (closeModal)="closeModal()"
+                (updateUser)="updateUser($event)"
+                (changePassword)="changePassword($event)">
+</app-user-modal> </div> 

@@ -25,6 +25,19 @@ import { UserModalComponent } from './Components/Admin/user-modal/user-modal.com
 import { RoleManagComponent } from './Components/Admin/role-manag/role-manag.component';
 import { UserFilterPipe } from './Pipes/user-filter.pipe';
 import { MessageDialogComponent } from './message-dialog/message-dialog.component';
+import { DeptPlantMangComponent } from './Components/Admin/dept-plant-mang/dept-plant-mang.component';
+import { DepartemnentListModalComponent } from './Components/Admin/departemnent-list-modal/departemnent-list-modal.component';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
+import { CommonModule } from '@angular/common';
+import { DeptPlantModalComponent } from './Components/Admin/dept-plant-modal/dept-plant-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,6 +53,9 @@ import { MessageDialogComponent } from './message-dialog/message-dialog.componen
     RoleManagComponent,
     UserFilterPipe,
     MessageDialogComponent,
+    DeptPlantMangComponent,
+    DepartemnentListModalComponent,
+    DeptPlantModalComponent,
    
   
   ],
@@ -55,7 +71,18 @@ import { MessageDialogComponent } from './message-dialog/message-dialog.componen
     MatSnackBarModule,
     MatTableModule, 
     MatPaginatorModule,
-    MatButtonModule
+    MatButtonModule,
+    CardModule,
+    ButtonModule,
+    TableModule,
+    TableModule, 
+    TagModule, 
+    IconFieldModule, 
+    InputTextModule, 
+    InputIconModule, 
+    MultiSelectModule, 
+    DropdownModule, 
+    CommonModule
   ],
   providers: [
     provideClientHydration(),

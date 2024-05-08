@@ -17,8 +17,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegisterComponent  {
 
   user = new User;
-  plants: any;
+  locations: any;
   selectedLocation: any; // Store only the location of the selected plant
+  plantsOfSelectedLocation: any[] = [];
+  departmentsOfSelectedPlant: any[] = [];
+
   selectedPlant: any; // Store the entire selected plant object
   message:any;
   constructor(private openDataServiceService: OpenDataServiceService,
@@ -27,15 +30,16 @@ export class RegisterComponent  {
     private snackBar: MatSnackBar) { }
 
     ngOnInit(): void {
-      this.getPlants();
+      this.getLocations();
     }
 
 
-    //GetPlants method
-    getPlants(){
+    //getLocations method
+    getLocations(){
       this.openDataServiceService.getPlantsWDept().subscribe(
         (data) => {
-          this.plants = data;
+          this.locations = data;
+          console.log(this.locations);
         },
         (error) => {
           console.error('An error occurred while fetching plants:', error);
@@ -44,16 +48,20 @@ export class RegisterComponent  {
       );
     }
 
-    //to get the department associed to the plant
-    onPlantChange(event: any) {
-      this.selectedPlant = event.value;
-      if (this.selectedPlant) {
-        console.log('Plant selected');
-      } else {
-        this.selectedPlant = null; // Reset selectedPlant if no plant is selected
-        console.log('No plant selected.');
-      }
-    }
+// Handle location change
+onLocationChange(event: any) {
+  this.selectedLocation = event.value;
+  if (this.selectedLocation) {
+    this.plantsOfSelectedLocation = this.selectedLocation.plants;
+    this.departmentsOfSelectedPlant =this.selectedLocation.departments;
+    console.log('Location selected');
+  } else {
+    this.selectedLocation = null; // Reset selectedLocation if no location is selected
+    this.plantsOfSelectedLocation = []; // Clear the plants
+    console.log('No location selected.');
+  }
+}
+
 
   //Register method
   Register() {

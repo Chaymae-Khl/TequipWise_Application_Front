@@ -11,9 +11,10 @@ import { MessageDialogComponent } from '../../../message-dialog/message-dialog.c
 export class UsersManagComponent implements OnInit{
   users:any;
   selectedUser: any;
+  userId:any;
   showModal = false;
   searchTerm: string = '';
-  modalMode!: 'view' | 'update';
+  modalMode!: 'view' | 'update'|'changepassword';
 
   
 constructor(private Authservice:AuthServiceService,public dialog: MatDialog){
@@ -35,6 +36,10 @@ getUsers(){
       console.log('Error response:', error.error); // Log the response object
     }
   );
+
+
+
+  
 }
 
 
@@ -72,6 +77,15 @@ openUpdateModal(user: User): void {
   this.showModal = true;
 }
 
+// Function to show modal for updating the user password
+openChangePasswordModal(userId: any): void {
+  console.log('Opening Change Password Modal for User:', userId);
+  this.userId = userId; // Set the userId property
+  this.modalMode = 'changepassword';
+  this.showModal = true;
+}
+
+
 // Function to close the modal
 closeModal(): void {
   this.showModal = false;
@@ -80,18 +94,54 @@ closeModal(): void {
 }
 // Function to update user details
 updateUser(updatedUser: User): void {
-  console.log('Updating user:', updatedUser);
+  const dialogRef = this.dialog.open(MessageDialogComponent, {
+  });
 
-  this.Authservice.updateUser(updatedUser, updatedUser.id).subscribe(
-    () => {
-      this.closeModal();
-      console.log(`User updated successfully.`);
-    },
-    (error) => {
-      console.error('Error updating user:', error);
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.Authservice.updateUser(updatedUser, updatedUser.id).subscribe(
+        () => {
+          this.closeModal();
+          console.log(`User updated successfully.`);
+        },
+        (error) => {
+          console.error('Error deleting user:', error);
+        }
+      );
     }
-  );
+  });
+  
 }
 
 
+// Function to handle password change
+changePassword(data: { userId: any, newPassword: any }): void {
+  const { userId, newPassword } = data;
+  const dialogRef = this.dialog.open(MessageDialogComponent, {
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      if (userId && newPassword) {
+        this.Authservice.updatePassword(userId, newPassword).subscribe(
+          () => {
+            this.closeModal(); // Close modal after successful password update
+            console.log(`Password updated successfully.`);
+          },
+          (error) => {
+           
+            console.error('Error updating the password:', error);
+          }
+        );
+      } else {
+        console.error('Invalid userId or newPassword provided.');
+        // Handle error (e.g., show error message)
+      }
+    }
+  });
+
+
 }
+}
+
+

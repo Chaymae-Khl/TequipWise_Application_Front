@@ -10,13 +10,18 @@ import { AuthServiceService } from '../../../Services/auth-service.service';
 })
 export class UserModalComponent implements OnInit{
   @Input() user:User= new User();
-  @Input() mode!: 'view' | 'update'; // Mode to control the behavior of the modal
+  @Input() mode!: 'view' | 'update' |'changepassword'; // Mode to control the behavior of the modal
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
   @Output() updateUser: EventEmitter<User> = new EventEmitter<User>();
+  @Output() changePassword: EventEmitter<{ userId: any, newPassword: any }> = new EventEmitter<{ userId: any, newPassword: any }>();
+  @Input() userId: any;
+  
   plants: any;
   selectedPlant: any; // Store the entire selected plant object
   Roles:any;
   selectedLocation: any;
+  newPassword: any;
+  confirmPassword:any;
   constructor(private openDataService: OpenDataServiceService,private authservice:AuthServiceService) { }
 
   ngOnInit() {
@@ -74,4 +79,17 @@ getRoles(){
   onUpdateUser(): void {
     this.updateUser.emit(this.user);
   }
-}
+
+  onChangePassword(): void {
+    if (this.newPassword === this.confirmPassword && this.userId) {
+      this.changePassword.emit({ userId: this.userId, newPassword: this.newPassword });
+    } else {
+      console.error('Passwords do not match or userId is missing.');
+      // Handle error condition
+    }
+  }
+  
+  
+  
+  
+  }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../Models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment'; // Import environment
+import { LocalStorageServiceService } from './local-storage-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class AuthServiceService {
   
   token = typeof window !== 'undefined' && window.localStorage ? localStorage.getItem('token') : null;
  
-constructor(private httpClient:HttpClient) { 
+constructor(private httpClient:HttpClient,private localstorgeService:LocalStorageServiceService ) {
 }
  // Helper function to update HTTP headers with the current token
  private getHttpOptions(): { headers: HttpHeaders } {
-  const token = localStorage.getItem('token');
+  const token = this.localstorgeService.getItem('token');
   return {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -41,6 +42,16 @@ UserRegister(data: User, role: string){
 login(loginData: any) {
   return this.httpClient.post(`${this.apiUrl}/Auth/Login`, loginData);
 }
+
+
+//updatePassword
+updatePassword(userId: any, newPassword: any) {
+  const httpOptions = this.getHttpOptions();
+  //here the server side is expecting a data type String, but the client send it as json so we use JSON.stringify to convert newPassword into a string enclosed in double quotes.
+  return this.httpClient.post(`${this.apiUrl}/Admin/updatePassword/${userId}`, JSON.stringify(newPassword), httpOptions);
+}
+
+
 //logout 
 
 logout(): void {

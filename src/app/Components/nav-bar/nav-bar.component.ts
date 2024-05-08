@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../Services/auth-service.service';
 import { Router } from '@angular/router';
+import { LocalStorageServiceService } from '../../Services/local-storage-service.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 export class NavBarComponent implements OnInit{
   isNavbarOpen = false;
   
-constructor(private authservice:AuthServiceService,private router: Router){
+constructor(private authservice:AuthServiceService,private router: Router,private localstorgeService:LocalStorageServiceService ){
   
 }
   ngOnInit(): void {
@@ -21,7 +22,7 @@ constructor(private authservice:AuthServiceService,private router: Router){
   }
   isLoggedIn(): boolean {
     // Check if token exists in localStorage
-    return !!localStorage.getItem('token');
+    return !!this.localstorgeService.getItem('token');
   }
 
   logout(): void {

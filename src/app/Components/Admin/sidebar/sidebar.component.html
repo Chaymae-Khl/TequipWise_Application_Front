@@ -1,136 +1,55 @@
-<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-<div class="sidebar close">
-    <div class="logo-details">
-     
+
+
+
+  <!-- Icon Font Stylesheet -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  
+  
+  <div class="container-xxl position-relative bg-white d-flex p-0">
+
+    <!-- Sidebar Start -->
+    <div class="sidebar pe-4 pb-3">
+        
+        <nav class="navbar ">
+          
+            <div class="navbar-nav w-100 ">
+                <a routerLink="/admin/dashboard" class="nav-item nav-link" routerLinkActive="active"><i class="fa fa-tachometer-alt me-4"></i>Dashboard</a>
+                <a href="chart.html" class="nav-item nav-link" routerLinkActive="active"><i class="fa fa-chart-bar me-4"></i>Charts</a>
+                <a routerLink="/admin/users" class="nav-item nav-link " routerLinkActive="active"><i class="fa fa-users me-4"></i>Users</a>
+                <a routerLink="/admin/plants"class="nav-item nav-link" routerLinkActive="active"><i class="fa fa-building me-4"></i>Plants</a>
+                <a href="table.html" class="nav-item nav-link" routerLinkActive="active"><i class='fa fa-handshake me-4'></i>Suppliers</a>
+                <a href="table.html" class="nav-item nav-link" routerLinkActive="active"><i class='fa fa-history me-4'></i>History</a>
+                <a href="table.html" class="nav-item nav-link" routerLinkActive="active"><i class='fas fa-store-alt me-4'></i>Stock</a>
+                
+
+            </div>
+        </nav>
     </div>
-    <ul class="nav-links">
-      <li>
-        <a routerLink="/admin/dashboard">
-          <i class='bx bx-grid-alt' ></i>
-          <span class="link_name">Dashboard</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" routerLink="/dashboard">Category</a></li>
-        </ul>
-      </li>
-      <!-- <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-collection' ></i>
-            <span class="link_name">Category</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Category</a></li>
-          <li><a href="#">HTML & CSS</a></li>
-          <li><a href="#">JavaScript</a></li>
-          <li><a href="#">PHP & MySQL</a></li>
-        </ul>
-      </li> -->
-      <!-- <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-book-alt' ></i>
-            <span class="link_name">Posts</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Posts</a></li>
-          <li><a href="#">Web Design</a></li>
-          <li><a href="#">Login Form</a></li>
-          <li><a href="#">Card Design</a></li>
-        </ul>
-      </li> -->
-      <li>
-        <a href="#">
-          <i class='bx bx-pie-chart-alt-2' ></i>
-          <span class="link_name">Analytics</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Analytics</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">
-          <i class='bx bx-line-chart' ></i>
-          <span class="link_name">Chart</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Chart</a></li>
-        </ul>
-      </li>
-      <!-- <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-plug' ></i>
-            <span class="link_name">Plugins</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Plugins</a></li>
-          <li><a href="#">UI Face</a></li>
-          <li><a href="#">Pigments</a></li>
-          <li><a href="#">Box Icons</a></li>
-        </ul>
-      </li> -->
-      <li>
-        <a routerLink="/admin/users">
-          <i class='bx bx-group' ></i>
-          <span class="link_name">Users</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" routerLink="/admin/users">Users</a></li>
-        </ul>
-      </li>
-      <li>
-        <a routerLink="/admin/roles">
-          <i class='bx bx-plug' ></i>
-          <span class="link_name">Roles</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" routerLink="/admin/roles">Roles</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">
-          <i class='bx bx-collection' ></i>
-          <span class="link_name">Plants & Departements</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Plants & Departements</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">
-          <i class='bx bx-history'></i>
-          <span class="link_name">History</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">History</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">
-          <i class='bx bx-cog' ></i>
-          <span class="link_name">Setting</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Setting</a></li>
-        </ul>
-      </li>
-    
-</ul>
-  </div>
-  <section class="home-section">
-    <div class="home-content">
-      <img id="dashlogo" class='bx bx-menu' src="assets/Images/dashlogo.png" alt="">
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        <nav class="navbar navbar-expand sticky-top px-4 py-0">
+            <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+            </a>
+            <a href="#" class="sidebar-toggler flex-shrink-0">
+                <i class="fa fa-bars"></i>
+            </a>
+        </nav>
+        <!-- Navbar End -->
+        <section class="home-section">
+         
+          <router-outlet></router-outlet> 
+        </section>
 
     </div>
-    <router-outlet></router-outlet> 
-  </section>
-  
-  <div class="one"></div>
-  
+    <!-- Content End -->
+
+    
+</div>
+ 
+ 
+ 

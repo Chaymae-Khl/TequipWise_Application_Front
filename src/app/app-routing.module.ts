@@ -9,27 +9,33 @@ import { UsersManagComponent } from './Components/Admin/users-manag/users-manag.
 import { RoleManagComponent } from './Components/Admin/role-manag/role-manag.component';
 import { AuthGuard } from './Gards/auth.guard';
 import { DeptPlantMangComponent } from './Components/Admin/dept-plant-mang/dept-plant-mang.component';
+import { LoadingComponent } from './Components/loading/loading.component';
+import { ForgetPasswordComponent } from './Components/forget-password/forget-password.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
-  { path : 'login',component:LoginComponent},
-  { path : 'register',component:RegisterComponent},
-  { path : 'admin',component:AdminsComponent, children: [
-        {
-          path:'dashboard', component: DashboardComponent
-          
-        },
-        {
-          path:'users', component: UsersManagComponent,
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  {
+    path: 'admin', component: AdminsComponent, children: [
+      {
+        path: 'dashboard', component: DashboardComponent
 
-        },
-        {
-          path:'roles',component:RoleManagComponent,
-        },
-        {
-          path:'plants',component:DeptPlantMangComponent,
-        }
-      ],canActivate: [AuthGuard] },
+      },
+      {
+        path: 'users', component: UsersManagComponent,
+
+      },
+      {
+        path: 'roles', component: RoleManagComponent,
+      },
+      {
+        path: 'plants', component: DeptPlantMangComponent,
+      }
+    ], canActivate: [AuthGuard]
+  },
+  { path: 'loading', component: LoadingComponent },
+  { path: 'forgetPassword', component: ForgetPasswordComponent },
 
   // { path : 'dashboard',component:DashboardComponent},
   // {
@@ -48,6 +54,6 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {
-  
+
 }
 

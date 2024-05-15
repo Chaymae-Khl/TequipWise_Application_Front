@@ -4,6 +4,7 @@ export class User {
     teNum:any;
     //here the username is the teNum
     userName: any;
+    backupaprover_Name:any;
     email: any; 
     password: any;
     confirmPassword:any;

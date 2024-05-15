@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalStorageServiceService } from '../../../Services/local-storage-service.service';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -13,12 +14,24 @@ import { LocalStorageServiceService } from '../../../Services/local-storage-serv
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  visible: boolean = false;
+  email:any;
+  
+
+
   loginData: any = {
     username: null,
     password: null
   };
-constructor(private authService: AuthServiceService, private router: Router,private localstorgeService:LocalStorageServiceService ){}
-onSubmit(form: NgForm) {
+constructor(private authService: AuthServiceService, private router: Router,private localstorgeService:LocalStorageServiceService,private messageService: MessageService ){}
+  showDialog() {
+      this.visible = true;
+  }
+  
+
+  //login function
+
+  onSubmit(form: NgForm) {
   const loginData = {
     username: form.value.username,
     password: form.value.password
@@ -54,4 +67,21 @@ onSubmit(form: NgForm) {
     }
   );
 }
+
+//sendemail function
+passwordEmail(){
+  this.authService.SendForgetPasswordEmail(this.email).subscribe(
+    (response) => {
+      console.log('Reset link sent successfully:', response);
+      this.visible=false;
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'An Email was sent to your MailBox',life: 15000 });
+    },
+    (error) => {
+      console.error('Error sending reset link:', error);
+      // Handle error (e.g., show an error message)
+    }
+  );
+}
+
+
 }

@@ -18,7 +18,7 @@
         <img id="logo" src="assets/Images/logo.png" alt="logo" width="300">
     </a>
     <fieldset>
-        
+        <img class="loginimg" src="assets/Images/loginimg.png" alt="">
       <h2 class="fs-title">Login</h2>
       <h3 id="title2" class="fs-subtitle">Enter your credentials</h3>
       <input type="text" name="username" ngModel placeholder="Te identifier" required/>
@@ -29,10 +29,21 @@
       </button>
        <div class="additional-options">
     <p>Don't have an account? <a  routerLink="/register" >  Register</a> </p><br>
-    <a  routerLink="/">Forgot Password</a>
+  <p-button (click)="showDialog()" label="Forgot Password" [text]="true" severity="secondary" />
 </div>
     </fieldset>
   
 </form>
 
 </div >
+<p-toast />
+<p-dialog header="Enter your Email" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+   <form (ngSubmit)="passwordEmail()"> 
+  <mat-form-field class="example-full-width">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="email"  name="email">
+      </mat-form-field>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Confirm" [outlined]="true" type="submit" severity="warning" />
+    </div></form>
+</p-dialog>

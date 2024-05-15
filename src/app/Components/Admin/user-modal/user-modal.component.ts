@@ -3,10 +3,11 @@ import { User } from '../../../Models/user';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
 import { AuthServiceService } from '../../../Services/auth-service.service';
 
+
 @Component({
   selector: 'app-user-modal',
   templateUrl: './user-modal.component.html',
-  styleUrl: './user-modal.component.css'
+  styleUrl: './user-modal.component.css',
 })
 export class UserModalComponent implements OnInit{
   @Input() user:User= new User();
@@ -15,47 +16,69 @@ export class UserModalComponent implements OnInit{
   @Output() updateUser: EventEmitter<User> = new EventEmitter<User>();
   @Output() changePassword: EventEmitter<{ userId: any, newPassword: any }> = new EventEmitter<{ userId: any, newPassword: any }>();
   @Input() userId: any;
-  
-  plants: any;
-  selectedPlant: any; // Store the entire selected plant object
+  locations: any;
+  selectedLocation: any; // Store only the location of the selected plant
+  plantsOfSelectedLocation: any[] = [];
+  departmentsOfSelectedPlant: any[] = [];
   Roles:any;
-  selectedLocation: any;
+  locationed:User =new User();
+  mylocation:any;
   newPassword: any;
   confirmPassword:any;
+  users:any;
+
   constructor(private openDataService: OpenDataServiceService,private authservice:AuthServiceService) { }
 
   ngOnInit() {
-    this.getPlants();
+    this.getLocations();
     this.getRoles();
+    this.getuasersname();
   }
-   //GetPlants method
-   getPlants(){
-    this.openDataService.getPlantsWDept().subscribe(
-      (data) => {
-        console.log(data);
-        this.plants = data;
-      },
-      (error) => {
-        console.error('An error occurred while fetching plants:', error);
-        console.log('Error response:', error.error); // Log the response object
-      }
-    );
-  }
+   
+//getusersNames
 
-  //to get the department associed to the plant
-  onPlantChange(event: any) {
-    this.selectedPlant = event.value;
-    console.log('Selected Plant:', this.selectedPlant);
-  
-    if (this.selectedPlant) {
-      this.selectedLocation = this.selectedPlant.location;
-      console.log('Selected Location:', this.selectedLocation);
-    } else {
-      this.selectedLocation = null;
-      console.log('No plant selected.');
+getuasersname(){
+  this.authservice.getUsers().subscribe(
+    (data) => {
+      this.users = data;
+      console.log(this.users);
+    },
+    (error) => {
+      console.error('An error occurred while fetching Users:', error);
+      console.log('Error response:', error.error); // Log the response object
+    })
+}
+
+
+    //getLocations method
+    getLocations(){
+      this.openDataService.getPlantsWDept().subscribe(
+        (data) => {
+          this.locations = data;
+          console.log(this.locations);
+        },
+        (error) => {
+          console.error('An error occurred while fetching plants:', error);
+          console.log('Error response:', error.error); // Log the response object
+        }
+      );
     }
+
+// Handle location change
+onLocationChange(event: any) {
+  this.selectedLocation = event.value;
+  console.log(this.locationed);
+  if (this.selectedLocation) {
+    this.plantsOfSelectedLocation = this.selectedLocation.plants;
+    this.departmentsOfSelectedPlant =this.selectedLocation.departments;
+    console.log('Location selected');
+  } else {
+    this.selectedLocation = null; // Reset selectedLocation if no location is selected
+    this.plantsOfSelectedLocation = []; // Clear the plants
+    console.log('No location selected.');
   }
- 
+}
+  
   //get roles method
 getRoles(){
   this.authservice.getRoles().subscribe(
@@ -78,6 +101,7 @@ getRoles(){
 
   onUpdateUser(): void {
     this.updateUser.emit(this.user);
+ 
   }
 
   onChangePassword(): void {

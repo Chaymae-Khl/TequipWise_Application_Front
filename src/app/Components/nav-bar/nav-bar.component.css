@@ -1,11 +1,3 @@
-/* Add custom CSS styles here */
-
-
-/* CSS Variables */
-
-
-/* Smooth scroll effect */
-
 
 /* Resets */
 * {
@@ -15,15 +7,13 @@
     transition: var(--transition);
   }
   
-  
-  
   ul li {
     list-style-type: none;
   }
   
   a {
     text-decoration: none;
-    color: var(--primary-color);
+    color: black;
   }
   
   a:hover {

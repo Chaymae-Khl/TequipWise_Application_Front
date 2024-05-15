@@ -5,8 +5,8 @@ import { AppComponent } from './app.component';
 import { LandingPageComponent } from './Components/WelcomePage/landing-page/landing-page.component';
 import { LoginComponent } from './Components/Authentication/login/login.component';
 import { RegisterComponent } from './Components/Authentication/register/register.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
@@ -37,7 +37,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
+import { MatMenuModule  } from '@angular/material/menu';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { ToastModule } from 'primeng/toast';
 import { DeptPlantModalComponent } from './Components/Admin/dept-plant-modal/dept-plant-modal.component';
+import { MessageService } from 'primeng/api';
+import { LoadingComponent } from './Components/loading/loading.component';
+import { AuthGuard } from './Gards/auth.guard';
+import { ForgetPasswordComponent } from './Components/forget-password/forget-password.component';
+import { DialogModule } from 'primeng/dialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +64,8 @@ import { DeptPlantModalComponent } from './Components/Admin/dept-plant-modal/dep
     DeptPlantMangComponent,
     DepartemnentListModalComponent,
     DeptPlantModalComponent,
+    LoadingComponent,
+    ForgetPasswordComponent,
    
   
   ],
@@ -82,11 +92,18 @@ import { DeptPlantModalComponent } from './Components/Admin/dept-plant-modal/dep
     InputIconModule, 
     MultiSelectModule, 
     DropdownModule, 
-    CommonModule
+    CommonModule,
+    ToastModule,
+    MatMenuModule,
+    FloatLabelModule,
+    DialogModule,
+    ReactiveFormsModule  
   ],
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
+    MessageService,
+    AuthGuard
     
   ],
   bootstrap: [AppComponent]

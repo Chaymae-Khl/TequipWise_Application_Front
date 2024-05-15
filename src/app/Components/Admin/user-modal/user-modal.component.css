@@ -8,10 +8,10 @@
   background-color: rgb(255, 255, 255);
 }
 
-.user-details-modal h2 {
-  margin-bottom: 10px;
+.user-details-modal h2 
+{
   text-align: center;
-
+margin-bottom: 3rem;
 }
 
 .user-details-modal p {
@@ -67,9 +67,11 @@
   flex: 1; /* Allow label to grow and take up available space */
 }
 .updatemodal-content button {
-  padding: 11px 21px;
+  padding: 15px 21px;
   color: #ffffff;
   cursor: pointer;
+  border: none;
+  border-radius: 1rem;
   background-color: #E98201;
 }
 .updatemodal-content button:hover {

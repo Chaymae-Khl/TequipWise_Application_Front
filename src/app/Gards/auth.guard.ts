@@ -9,9 +9,9 @@ export class AuthGuard implements CanActivate {
 
   constructor(private router: Router,private localstorgeService:LocalStorageServiceService ) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     
-    const token = this.localstorgeService.getItem('token');
+    const token = await this.localstorgeService.getItem('token');
 
     if (token) {
       // User is authenticated, allow route activation

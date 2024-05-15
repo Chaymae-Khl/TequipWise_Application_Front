@@ -9,8 +9,16 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 export class DepartemnentListModalComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DepartemnentListModalComponent>) {}
 
-  get departments() {
-    return this.data.departments;
+  get getdata() {
+    return this.data.data;
+  }
+  
+  get isDepartment() {
+    return this.data.type === 'department';
+  }
+  
+  get isPlant() {
+    return this.data.type === 'plant';
   }
   // Close dialog method
   closeModal(): void {

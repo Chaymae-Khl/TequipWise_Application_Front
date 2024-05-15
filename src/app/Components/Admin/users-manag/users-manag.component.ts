@@ -3,10 +3,13 @@ import { AuthServiceService } from '../../../Services/auth-service.service';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { User } from '../../../Models/user';
 import { MessageDialogComponent } from '../../../message-dialog/message-dialog.component';
+import { MessageService } from 'primeng/api';
+import { data } from 'jquery';
+import { error } from 'console';
 @Component({
   selector: 'app-users-manag',
   templateUrl: './users-manag.component.html',
-  styleUrl: './users-manag.component.css'
+  styleUrl: './users-manag.component.css',
 })
 export class UsersManagComponent implements OnInit{
   users:any;
@@ -15,13 +18,13 @@ export class UsersManagComponent implements OnInit{
   showModal = false;
   searchTerm: string = '';
   modalMode!: 'view' | 'update'|'changepassword';
-
-  
-constructor(private Authservice:AuthServiceService,public dialog: MatDialog){
+  numberofusers:any;
+constructor(private Authservice:AuthServiceService,public dialog: MatDialog,private messageService: MessageService){
 }
 
 ngOnInit(): void {
 this.getUsers();
+this.getNumofUsers();
 }
 
 
@@ -37,9 +40,18 @@ getUsers(){
     }
   );
 
+ 
+}
 
-
-  
+getNumofUsers(){
+  this.Authservice.getNumUsers().subscribe(
+    (data)=>{
+      this.numberofusers=data;
+    },
+    (error)=>{
+      console.error('An error occurred while fetching nuber of Users:', error);
+    }
+  )
 }
 
 
@@ -54,22 +66,22 @@ deleteUser(user: User): void {
         () => {
           console.log(`User ${user.userName} deleted.`);
           this.getUsers();
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'User deleted successfully',life: 10000});
         },
         (error) => {
           console.error('Error deleting user:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User delete failed',life: 10000 });
         }
       );
     }
   });
 }
-
  // Function to show modal for viewing user details
  viewUserDetails(user: User): void {
   this.selectedUser = user;
   this.modalMode = 'view';
   this.showModal = true;
 }
-
 // Function to show modal for updating user details
 openUpdateModal(user: User): void {
   this.selectedUser = user;
@@ -101,11 +113,14 @@ updateUser(updatedUser: User): void {
     if (result) {
       this.Authservice.updateUser(updatedUser, updatedUser.id).subscribe(
         () => {
+
           this.closeModal();
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'User updated successfully',life: 10000});
           console.log(`User updated successfully.`);
         },
         (error) => {
-          console.error('Error deleting user:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User update failed',life: 10000 });
+          console.error('Error updating user:', error);
         }
       );
     }
@@ -126,15 +141,19 @@ changePassword(data: { userId: any, newPassword: any }): void {
         this.Authservice.updatePassword(userId, newPassword).subscribe(
           () => {
             this.closeModal(); // Close modal after successful password update
+            this.messageService.add({severity:'success', summary: 'Success', detail: 'Password updated successfully',life: 10000});
+
             console.log(`Password updated successfully.`);
           },
           (error) => {
-           
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Password update failed',life: 10000 });
             console.error('Error updating the password:', error);
           }
         );
       } else {
         console.error('Invalid userId or newPassword provided.');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid userId or newPassword provided',life: 10000 });
+
         // Handle error (e.g., show error message)
       }
     }

@@ -21,15 +21,15 @@
   <fieldset>
       <h2 class="fs-title">Create your account</h2>
       <div class="input-group">
-          <input type="text" name="TeNUm" placeholder="FullName" [(ngModel)]="user.teNum" />
-      <input type="text" name="username" [(ngModel)]="user.userName" placeholder="Te identifier" />
+          <input type="text" name="TeNUm" placeholder="FullName" [(ngModel)]="user.teNum" required/>
+      <input type="text" name="username" [(ngModel)]="user.userName" placeholder="Te identifier" required/>
           
       </div>
-      <input type="text" name="email" [(ngModel)]="user.email" placeholder="Email" />
+      <input type="text" name="email" [(ngModel)]="user.email" placeholder="Email" required/>
       
       <div class="input-group">
-          <input type="password" name="password" [(ngModel)]="user.password" placeholder="Password" />
-          <input type="password" name="cpass" [(ngModel)]="user.confirmPassword" placeholder="Confirm Password" />
+          <input type="password" name="password" [(ngModel)]="user.password" placeholder="Password" required/>
+          <input type="password" name="cpass" [(ngModel)]="user.confirmPassword" placeholder="Confirm Password" required/>
       </div>
       <div>
         <mat-form-field class="custom-select">
@@ -39,7 +39,7 @@
             <mat-option *ngFor="let location of locations" [value]="location">{{ location.locationName }}</mat-option>
           </mat-select>
         </mat-form-field>
-      </div>
+      </div> 
       <div>
         <mat-form-field class="custom-select">
           <mat-label>Select Plant</mat-label>

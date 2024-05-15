@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, inject } from '@angular/core';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
 import { DepartemnentListModalComponent } from '../departemnent-list-modal/departemnent-list-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Plant } from '../../../Models/plant';
 import { DeptPlantModalComponent } from '../dept-plant-modal/dept-plant-modal.component';
 
 
@@ -13,10 +12,14 @@ import { DeptPlantModalComponent } from '../dept-plant-modal/dept-plant-modal.co
 
 })
 export class DeptPlantMangComponent implements OnInit {
-  displayedColumns: string[] = ['Building Number', 'Location', 'Plant Name', 'Plant Manager','Departements','Actions'];
-  plants!: Plant[]; // Use Plant type array
+  displayedColumns: string[] = ['Location', 'buildingNumber', 'Plants','Departements','Actions'];
+  plants:any; // Use Plant type array
   
-  constructor(private openDataServiceService: OpenDataServiceService, public dialog: MatDialog) { }
+  constructor(private openDataServiceService: OpenDataServiceService, public dialog: MatDialog) { 
+    inject(NgZone).runOutsideAngular(() => {
+      setInterval(() => {}, 1000);
+    })
+  }
 
   ngOnInit(): void {
     this.getPlants();
@@ -38,17 +41,21 @@ export class DeptPlantMangComponent implements OnInit {
   }
 
   // Open department modal function
-  openDepartmentModal(plant: Plant): void {
+  openDepartmentModal(plant: any, type: 'department' | 'plant'): void {
     const dialogRef = this.dialog.open(DepartemnentListModalComponent, {
       width: '400px',
-      data: { departments: plant.departments }
+      data: { 
+        data: type === 'department' ? plant.departments : plant.plants,
+        type: type
+      }
     });
-
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
     });
   }
+ 
 
+  
   openAddDepartmentModal(): void {
     const dialogRef = this.dialog.open(DeptPlantModalComponent, {
       width: '400px',

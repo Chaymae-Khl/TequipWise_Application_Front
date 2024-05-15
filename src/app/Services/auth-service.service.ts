@@ -43,6 +43,16 @@ login(loginData: any) {
   return this.httpClient.post(`${this.apiUrl}/Auth/Login`, loginData);
 }
 
+//send password link
+SendForgetPasswordEmail(Email:any){
+  return this.httpClient.post(`${this.apiUrl}/Auth/tokenEmail?Email=${Email}`,{})
+}
+
+//resetpassword function
+ResetPassword(data: any){
+  return this.httpClient.post(`${this.apiUrl}/Auth/reset-password`,data)
+}
+
 
 //updatePassword
 updatePassword(userId: any, newPassword: any) {
@@ -65,6 +75,12 @@ logout(): void {
  getUsers() {
   const httpOptions = this.getHttpOptions();
   return this.httpClient.get(`${this.apiUrl}/Admin/Users`, httpOptions);
+}
+
+//get number ofusers
+getNumUsers(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Admin/numberofusers`, httpOptions);
 }
 
 // Delete user by ID

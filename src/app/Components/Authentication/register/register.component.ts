@@ -6,6 +6,7 @@ import jQuery from 'jquery';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
 const $ = jQuery;
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -21,13 +22,14 @@ export class RegisterComponent  {
   selectedLocation: any; // Store only the location of the selected plant
   plantsOfSelectedLocation: any[] = [];
   departmentsOfSelectedPlant: any[] = [];
-
   selectedPlant: any; // Store the entire selected plant object
   message:any;
+ 
   constructor(private openDataServiceService: OpenDataServiceService,
     private authService: AuthServiceService,
     private router: Router,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+  ) { }
 
     ngOnInit(): void {
       this.getLocations();
@@ -39,7 +41,7 @@ export class RegisterComponent  {
       this.openDataServiceService.getPlantsWDept().subscribe(
         (data) => {
           this.locations = data;
-          console.log(this.locations);
+          // console.log(this.locations);
         },
         (error) => {
           console.error('An error occurred while fetching plants:', error);

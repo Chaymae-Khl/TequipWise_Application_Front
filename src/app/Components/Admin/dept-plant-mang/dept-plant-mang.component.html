@@ -16,36 +16,31 @@
       </div>
     </div>
   </div>
+  <h1 style="color: red;">add the org chart for(primeng) the location-plant departement </h1>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="plants">
       <!-- Building Number Column -->
-      <ng-container matColumnDef="Building Number">
+      <ng-container matColumnDef="Location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let plant"> {{plant.locationName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="buildingNumber">
         <th mat-header-cell *matHeaderCellDef> Building Number </th>
         <td mat-cell *matCellDef="let plant"> {{plant.buildingNumber}} </td>
       </ng-container>
-
-      <!-- Location Column -->
-      <ng-container matColumnDef="Location">
-        <th mat-header-cell *matHeaderCellDef> Location </th>
-        <td mat-cell *matCellDef="let plant"> {{plant.location}} </td>
-      </ng-container>
-
-      <!-- Plant Name Column -->
-      <ng-container matColumnDef="Plant Name">
-        <th mat-header-cell *matHeaderCellDef> Plant Name </th>
-        <td mat-cell *matCellDef="let plant"> {{plant.plant_name}} </td>
-      </ng-container>
-
-      <!-- Plant Manager Column -->
-      <ng-container matColumnDef="Plant Manager">
-        <th mat-header-cell *matHeaderCellDef> Plant Manager </th>
-        <td mat-cell *matCellDef="let plant"> {{plant.plant_Manager}} </td>
+      <ng-container matColumnDef="Plants">
+        <th mat-header-cell *matHeaderCellDef> Plants</th>
+        <td mat-cell *matCellDef="let plant">
+          <button mat-icon-button color="link" aria-label="Vie departements" (click)="openDepartmentModal(plant, 'plant')">
+            <i class="pi pi-table" style="font-size: 1.3rem"></i>
+          </button>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="Departements">
-        <th mat-header-cell *matHeaderCellDef> Departements </th>
+        <th mat-header-cell *matHeaderCellDef> Departements</th>
         <td mat-cell *matCellDef="let plant">
-          <button mat-icon-button color="link" aria-label="Vie departements" (click)="openDepartmentModal(plant)">
+          <button mat-icon-button color="link" aria-label="Vie departements" (click)="openDepartmentModal(plant, 'department')">
             <i class="pi pi-warehouse" style="font-size: 1.3rem"></i>
           </button>
         </td>

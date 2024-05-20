@@ -11,6 +11,7 @@ import { AuthGuard } from './Gards/auth.guard';
 import { DeptPlantMangComponent } from './Components/Admin/dept-plant-mang/dept-plant-mang.component';
 import { LoadingComponent } from './Components/loading/loading.component';
 import { ForgetPasswordComponent } from './Components/forget-password/forget-password.component';
+import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/suppliers-manag.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -31,6 +32,9 @@ const routes: Routes = [
       },
       {
         path: 'plants', component: DeptPlantMangComponent,
+      },
+      {
+        path: 'suppliers', component: SuppliersManagComponent,
       }
     ], canActivate: [AuthGuard]
   },

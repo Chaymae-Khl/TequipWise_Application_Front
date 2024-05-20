@@ -197,6 +197,36 @@
 #msform .action-button:hover, #msform .action-button:focus {
   box-shadow: 0 0 0 2px white, 0 0 0 3px #E98201;
 }
+::ng-deep .password .p-inputtext {
+    width: 21rem !important; /* Use important to override any existing styles */
+    padding: 15px; /* Optional: adjust padding */
+    margin-bottom: 3%;
+    
+  }
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-wrapper input {
+    padding-right: 30px; /* Space for the icon */
+  }
+  
+  .password-wrapper .pi {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    top: 19px;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.2em; /* Adjust size as needed */
+    user-select: none; /* Prevent text selection on click */
+  }
 /*headings*/
 .fs-title {
   font-size: 15px;

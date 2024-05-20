@@ -60,9 +60,7 @@
       font-weight: var(--bold-font);
     }
     
-    .nav-link:hover {
-      animation: changeColor 2s infinite alternate;
-    }
+  
   
     .btn {
       margin-top: 1rem;

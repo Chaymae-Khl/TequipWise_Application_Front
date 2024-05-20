@@ -1,69 +1,170 @@
-<div class="area" >
-    <ul class="circles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-    </ul>
+<div class="area">
+  <ul class="circles">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+<!-- validation message -->
+<div  *ngIf="registerForm.get('teNum')?.invalid && (registerForm.get('teNum')?.touched || registerForm.get('teNum')?.dirty)"
+class="error-message">
+   <div  class="error">
+     <div class="error__icon">
+         <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+     </div>
+      <div>
+       FullName is required
+     </div>
+     <div class="error__close"></div>
+   </div>
+</div>
 
-<!-- multistep form -->
-<form id="msform" (ngSubmit)="Register()">
- 
-  <a href="#" class="navbar-brand" >
-      <img src="assets/Images/logo.png" alt="logo" id="logo" width="250">
-  </a>
-  <fieldset>
-      <h2 class="fs-title">Create your account</h2>
-      <div class="input-group">
-          <input type="text" name="TeNUm" placeholder="FullName" [(ngModel)]="user.teNum" required/>
-      <input type="text" name="username" [(ngModel)]="user.userName" placeholder="Te identifier" required/>
-          
-      </div>
-      <input type="text" name="email" [(ngModel)]="user.email" placeholder="Email" required/>
+<div *ngIf="registerForm.get('userName')?.invalid && (registerForm.get('userName')?.touched || registerForm.get('userName')?.dirty)"
+class="error-message">
+  <div  class="error">
+    <div class="error__icon">
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+    </div>
+     <div>
+      Username is required
+    </div>
+    <div class="error__close"></div>
+  </div>
+</div>
+
+<div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.touched || registerForm.get('email')?.dirty)"
+class="error-message">
+  <div  class="error">
+    <div class="error__icon">
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+    </div>
+     <div>
+      Invalid email format
+    </div>
+    <div class="error__close"></div>
+  </div>
+</div>
+
+<div *ngIf="registerForm.hasError('passwordsMismatch') && (registerForm.get('confirmPassword')?.touched || registerForm.get('confirmPassword')?.dirty)"
+class="error-message">
+  <div  class="error">
+    <div class="error__icon">
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+    </div>
+     <div>
+     Passwords do not match
+    </div>
+    <div class="error__close"></div>
+  </div>
+</div>
+
+<div *ngIf="registerForm.hasError('location') && (registerForm.get('location')?.touched || registerForm.get('location')?.dirty)"
+class="error-message">
+  <div  class="error">
+    <div class="error__icon">
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+    </div>
+     <div>
+       Location is required
+    </div>
+    <div class="error__close"></div>
+  </div>
+</div>
+
+
+<div  *ngIf="registerForm.get('plant')?.invalid && (registerForm.get('plant')?.touched || registerForm.get('plant')?.dirty)"
+class="error-message">
+  <div  class="error">
+    <div class="error__icon">
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+    </div>
+     <div>
+       Plant is required
+    </div>
+    <div class="error__close"></div>
+  </div>
+</div>
+<div *ngIf="registerForm.get('department')?.invalid && (registerForm.get('department')?.touched || registerForm.get('department')?.dirty)"
+class="error-message">
+  <div  class="error">
+    <div class="error__icon">
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+    </div>
+     <div>
+       Department is required
+    </div>
+    <div class="error__close"></div>
+  </div>
+</div>
+<!-- end validation message -->
+  <div class="form-container">
+
+
+    <form id="msform" [formGroup]="registerForm" (ngSubmit)="Register()">
+      <a href="#" class="navbar-brand">
+        <img src="assets/Images/logo.png" alt="logo" id="logo" width="250">
+      </a>
+      <fieldset>
+        <h2 class="fs-title">Create your account</h2>
+        <div class="input-group">
+          <input type="text" name="TeNUm" formControlName="teNum" placeholder="FullName*" 
+            required />
+          <input type="text" name="username" formControlName="userName" 
+            placeholder="Te identifier*" required />
+        </div>
+        <input type="text" name="email" formControlName="email"  placeholder="Email*" required />
+        <div class="input-group">
+          <div class="row">
+            <div class="col-6">
+              <p-password class="custom-password1" formControlName="password" placeholder="Password*" name="password" required [toggleMask]="true"></p-password>
+            </div>
+            <div class="col-6">
+              <p-password class="custom-password2" formControlName="confirmPassword" name="cpass" placeholder="Confirm Password*" required [toggleMask]="true"></p-password>
+            </div>
+          </div>
+</div>
       
-      <div class="input-group">
-          <input type="password" name="password" [(ngModel)]="user.password" placeholder="Password" required/>
-          <input type="password" name="cpass" [(ngModel)]="user.confirmPassword" placeholder="Confirm Password" required/>
-      </div>
-      <div>
-        <mat-form-field class="custom-select">
-          <mat-label>Select Location</mat-label>
-          <mat-select (selectionChange)="onLocationChange($event)">
-            <mat-option disabled>Select Location</mat-option>
-            <mat-option *ngFor="let location of locations" [value]="location">{{ location.locationName }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div> 
-      <div>
-        <mat-form-field class="custom-select">
-          <mat-label>Select Plant</mat-label>
-          <mat-select >
-            <mat-option disabled>Select Plant</mat-option>
-            <mat-option *ngFor="let plant of plantsOfSelectedLocation" [value]="plant">{{ plant.plant_name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="input-group">
-        <mat-form-field class="custom-select">
-          <mat-label>Select Department</mat-label>
-          <mat-select [(ngModel)]="user.DepartmentDeptId" name="departmentId">
-            <mat-option disabled>Select Department</mat-option>
-            <mat-option *ngFor="let department of departmentsOfSelectedPlant" [value]="department.deptId">{{ department.departmentName }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <button id="registerbtn" class="submit action-button" type="submit">
-          <span class="font-weight-bold"  style="color: white;">Register</span>
-      </button> <br>
-      <p>Already have an acount ? <a class="login" routerLink="/login">Login</a></p>
-  </fieldset>
-</form>
- 
-
-</div >
+        <div>
+          <mat-form-field class="custom-select">
+            <mat-label>Select Location</mat-label>
+            <mat-select formControlName="location" (selectionChange)="onLocationChange($event)">
+              <mat-option disabled>Select Location</mat-option>
+              <mat-option *ngFor="let location of locations" [value]="location">{{ location.locationName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="custom-select">
+            <mat-label>Select Plant</mat-label>
+            <mat-select formControlName="plant">
+              <mat-option disabled>Select Plant</mat-option>
+              <mat-option *ngFor="let plant of plantsOfSelectedLocation" [value]="plant">{{ plant.plant_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="input-group">
+          <mat-form-field class="custom-select">
+            <mat-label>Select Department</mat-label>
+            <mat-select formControlName="department" name="departmentId" >
+              <mat-option disabled>Select Department</mat-option>
+              <mat-option *ngFor="let department of departmentsOfSelectedPlant" [value]="department.deptId">{{
+                department.departmentName }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button id="registerbtn" class="submit action-button" type="submit">
+          <span class="font-weight-bold" style="color: white;">Register</span>
+        </button> <br>
+        <p>Already have an account? <a class="login" routerLink="/login">Login</a></p>
+      </fieldset>
+    </form>
+  </div>
+</div>

@@ -10,103 +10,75 @@
 </div>
 
 <div id="table" class="mat-elevation-z8">
-  <table mat-table  [dataSource]="(users | userFilter:searchTerm) || []">
 
-    <!-- Teidentifier Column -->
-    <ng-container matColumnDef="Teidentifier">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-hashtag"></i> Te identifier </th>
-      <td mat-cell *matCellDef="let user"> {{user.userName}} </td>
-    </ng-container>
+<div class="card">
+  <p-table
+      [value]="(users | userFilter:searchTerm) || []"
+      [paginator]="true"
+      [rows]="5"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[5, 10, 20]"
+  >
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width:25%;"># Te identifier</th>
+              <th style="width:25%">Fullname</th>
+              <th style="width:25%">Email </th>
+              <th style="width:25%">Roles </th>
+              <th style="width:25%"> Location </th>
+              <th style="width:25%">Plant </th>
+              <th style="width:25%">Departement </th>
+              <th style="width:25%">Backup Aprover </th>
+              <th style="width:25%">Actions </th>
 
-    <!-- Fullname Column -->
-    <ng-container matColumnDef="Fullname">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-user"></i> Fullname </th>
-      <td mat-cell *matCellDef="let user"> {{user.teNum}} </td>
-    </ng-container>
-     <!-- Plant Column -->
-     <ng-container matColumnDef="Location">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-map-marker"></i> Location </th>
-      <td mat-cell *matCellDef="let user"> {{user.location}} </td>
-    </ng-container>
-    <!-- Plant Column -->
-    <ng-container matColumnDef="Plant">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-sitemap"></i> Plant </th>
-      <td mat-cell *matCellDef="let user"> {{user.plant_name}} </td>
-    </ng-container>
-    <!-- Departement Column -->
-    <ng-container matColumnDef="Departement">
-      <th mat-header-cell *matHeaderCellDef> <i class="pi pi-building"></i>Departement </th>
-      <td mat-cell *matCellDef="let user"> {{user.departmentName}} </td>
-    </ng-container>
-     <!-- Departement Column -->
-     <ng-container matColumnDef="backupaprover_Name">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-check-circle"></i> Backup Aprover </th>
-      <td mat-cell *matCellDef="let user"> {{user.backupaprover_Name}} </td>
-    </ng-container>
-    <!-- Email Column -->
-    <ng-container matColumnDef="Email">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-envelope"></i> Email </th>
-      <td mat-cell *matCellDef="let user"> {{user.email}} </td>
-    </ng-container>
-    <!-- Roles Column -->
-    <ng-container matColumnDef="Roles">
-      <th mat-header-cell *matHeaderCellDef><i class="pi pi-sliders-h"></i> Roles </th>
-      <td mat-cell *matCellDef="let user">
-        <div *ngFor="let role of user.roles">
-          {{role}}
-        </div>
-      </td>
-    </ng-container>
-    <!-- Actions Column -->
-    <ng-container matColumnDef="Actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let user">
-        <!-- Actions Button -->
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-    
-        <mat-menu #menu="matMenu">
-          <!-- View Details Button -->
-          <button mat-menu-item (click)="viewUserDetails(user)">
-            <mat-icon>visibility</mat-icon>
-            <span>View Details</span>
-          </button>
-          <!-- Update Button -->
-          <button mat-menu-item (click)="openUpdateModal(user)">
-            <mat-icon>edit</mat-icon>
-            <span>Update</span>
-          </button>
-          <!-- Delete Button -->
-          <button mat-menu-item (click)="deleteUser(user)">
-            <mat-icon>delete</mat-icon>
-            <span>Delete</span>
-          </button>
-          <!-- Change Password Button -->
-          <button mat-menu-item (click)="openChangePasswordModal(user.id)">
-            <mat-icon>vpn_key</mat-icon>
-            <span>Change Password</span>
-          </button>
-        </mat-menu>
-      </td>
-    </ng-container>
-
-    <!-- Define table headers -->
-    <tr mat-header-row
-      *matHeaderRowDef="['Teidentifier', 'Fullname', 'Email','Location','Plant','Departement','backupaprover_Name','Roles', 'Actions']"></tr>
-    <!-- Define table rows -->
-    <tr mat-row
-      *matRowDef="let user; columns: ['Teidentifier', 'Fullname', 'Email','Location','Plant','Departement','backupaprover_Name','Roles', 'Actions']">
-    </tr>
-
-  </table>
-
-  <!-- Paginator -->
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of users">
-  </mat-paginator>
-
-
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+          <tr>
+              <td>{{user.userName}}</td>
+              <td> {{user.teNum}} </td>
+              <td>{{user.email}}</td>
+              <td><div *ngFor="let role of user.roles">
+                {{role}}
+              </div></td>
+              <td>{{user.location}} </td>
+              <td>{{user.plant_name}}</td>
+              <td>{{user.departmentName}}</td>
+              <td>{{user.backupaprover_Name}} </td>
+              <td> <!-- Actions Button -->
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+            
+                <mat-menu #menu="matMenu">
+                  <!-- View Details Button -->
+                  <button mat-menu-item (click)="viewUserDetails(user)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View Details</span>
+                  </button>
+                  <!-- Update Button -->
+                  <button mat-menu-item (click)="openUpdateModal(user)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Update</span>
+                  </button>
+                  <!-- Delete Button -->
+                  <button mat-menu-item (click)="deleteUser(user)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                  <!-- Change Password Button -->
+                  <button mat-menu-item (click)="openChangePasswordModal(user.id)">
+                    <mat-icon>vpn_key</mat-icon>
+                    <span>Change Password</span>
+                  </button>
+                </mat-menu></td>
+             
+          </tr>
+      </ng-template>
+  </p-table>
 </div>
+</div>
+
 <p-toast></p-toast>
 <!-- modal to hundel the update and the showdeails of the user -->
 <app-user-modal *ngIf="showModal"

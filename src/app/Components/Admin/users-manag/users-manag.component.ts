@@ -4,8 +4,7 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { User } from '../../../Models/user';
 import { MessageDialogComponent } from '../../../message-dialog/message-dialog.component';
 import { MessageService } from 'primeng/api';
-import { data } from 'jquery';
-import { error } from 'console';
+
 @Component({
   selector: 'app-users-manag',
   templateUrl: './users-manag.component.html',

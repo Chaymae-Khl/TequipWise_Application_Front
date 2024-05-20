@@ -2,21 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../../Models/user';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../Services/auth-service.service';
-import jQuery from 'jquery';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
-const $ = jQuery;
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CustomValidators } from '../../../Validators/validators';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
-
 })
 
 export class RegisterComponent  {
-
   user = new User;
   locations: any;
   selectedLocation: any; // Store only the location of the selected plant
@@ -24,12 +21,26 @@ export class RegisterComponent  {
   departmentsOfSelectedPlant: any[] = [];
   selectedPlant: any; // Store the entire selected plant object
   message:any;
- 
+  registerForm: FormGroup;
   constructor(private openDataServiceService: OpenDataServiceService,
     private authService: AuthServiceService,
     private router: Router,
     private snackBar: MatSnackBar,
-  ) { }
+    private fb: FormBuilder,
+  ) {
+
+    this.registerForm = this.fb.group({
+      teNum: ['', Validators.required],
+      userName: ['', Validators.required],
+      email: ['', [Validators.required, CustomValidators.emailPattern]],
+      password: ['', [Validators.required, CustomValidators.strongPassword]],
+      confirmPassword: ['', Validators.required],
+      location: ['', Validators.required],
+      plant: ['', Validators.required],
+      department: ['', Validators.required]
+    }, { validators: CustomValidators.passwordsMatch });
+
+   }
 
     ngOnInit(): void {
       this.getLocations();
@@ -52,6 +63,7 @@ export class RegisterComponent  {
 
 // Handle location change
 onLocationChange(event: any) {
+``
   this.selectedLocation = event.value;
   if (this.selectedLocation) {
     this.plantsOfSelectedLocation = this.selectedLocation.plants;
@@ -77,11 +89,12 @@ onLocationChange(event: any) {
       });
       return;
     }
+    const formValues = this.registerForm.value;
       // Set the role directly here
       const role = 'Admin'; 
       console.log(this.user);
       // Call the registration service method with both user data and role
-      this.authService.UserRegister(this.user, role).subscribe(
+      this.authService.UserRegister(formValues, role).subscribe(
         (res) => {
           console.log("Registration successful");
           this.router.navigate(['/login']);

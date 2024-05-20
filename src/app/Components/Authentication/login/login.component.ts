@@ -16,7 +16,11 @@ import { MessageService } from 'primeng/api';
 export class LoginComponent {
   visible: boolean = false;
   email:any;
-  
+  isPasswordVisible: boolean = false;
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
 
 
   loginData: any = {

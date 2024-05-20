@@ -26,7 +26,11 @@ export class UserModalComponent implements OnInit{
   newPassword: any;
   confirmPassword:any;
   users:any;
+  isPasswordVisible: boolean = false;
 
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
   constructor(private openDataService: OpenDataServiceService,private authservice:AuthServiceService) { }
 
   ngOnInit() {

@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { User } from '../Models/user';
+import { Supplier } from '../Models/supplier';
 
 @Pipe({
   name: 'userFilter'
@@ -20,3 +21,4 @@ export class UserFilterPipe implements PipeTransform {
   }
 
 }
+

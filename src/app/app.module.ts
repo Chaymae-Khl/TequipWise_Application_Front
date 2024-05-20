@@ -46,6 +46,9 @@ import { LoadingComponent } from './Components/loading/loading.component';
 import { AuthGuard } from './Gards/auth.guard';
 import { ForgetPasswordComponent } from './Components/forget-password/forget-password.component';
 import { DialogModule } from 'primeng/dialog';
+import { PasswordModule } from 'primeng/password';
+import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/suppliers-manag.component';
+import { SupplierFiltePipe } from './Pipes/supplier-filte.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +69,9 @@ import { DialogModule } from 'primeng/dialog';
     DeptPlantModalComponent,
     LoadingComponent,
     ForgetPasswordComponent,
+    SuppliersManagComponent,
+    SupplierFiltePipe,
+    
    
   
   ],
@@ -97,13 +103,15 @@ import { DialogModule } from 'primeng/dialog';
     MatMenuModule,
     FloatLabelModule,
     DialogModule,
-    ReactiveFormsModule  
+    ReactiveFormsModule,
+    PasswordModule
   ],
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
     MessageService,
     AuthGuard
+
     
   ],
   bootstrap: [AppComponent]

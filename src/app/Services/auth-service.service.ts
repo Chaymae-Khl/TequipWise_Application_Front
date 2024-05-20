@@ -28,9 +28,18 @@ constructor(private httpClient:HttpClient,private localstorgeService:LocalStorag
   };
 }
 
+isAuthenticated(): boolean {
+  const token = this.localstorgeService.getItem('token');
+  // Check if the token exists and is valid
+  if (token) {
+    // Here you can add additional checks for token validity if needed
+    return true;
+  }
+  return false;
+}
 
 //Register
-UserRegister(data: User, role: string){
+UserRegister(data: any, role: string){
   // Construct the URL with the role parameter
   const url = `${this.apiUrl}/Auth/Register?role=${role}`;
   // Make the POST request with the URL and user data
@@ -70,7 +79,7 @@ logout(): void {
   this.token = null;
 }
 
-
+//USERS MANAGMENT
  // Get list of users
  getUsers() {
   const httpOptions = this.getHttpOptions();

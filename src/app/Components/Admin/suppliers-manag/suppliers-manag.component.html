@@ -1,0 +1,99 @@
+<p-toast></p-toast>
+<div class="menu-item">
+  <div class="arrow"></div>
+  <h2 class="title">Suppliers({{NumberSuppliers}})</h2>
+  <div class="row">
+    <div class="col-8">
+      <div>
+        <button (click)="showDialog('add')" type="button" class="btn btn-outline-secondary">+ Add</button>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="search-bar">
+        <mat-form-field appearance="fill" class="search-field">
+          <mat-label>Search by Supplier Name</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Supplier Name">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  
+  <div id="table" class="mat-elevation-z8">
+    <div class="card">
+      <p-table
+        [value]="(suppliers | supplierFilte:searchTerm) || []"
+        [paginator]="true"
+        [rows]="5"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width:25%;">Supplier Name</th>
+            <th style="width:25%">Address</th>
+            <th style="width:25%">Email</th>
+            <th style="width:25%">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-supplier>
+          <tr>
+            <td>{{ supplier.suuplier_name }}</td>
+            <td>{{ supplier.address }}</td>
+            <td>{{ supplier.email }}</td>
+            <td>
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="showDialog('view', supplier)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>View Details</span>
+                </button>
+                <button mat-menu-item (click)="showDialog('update', supplier)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Update</span>
+                </button>
+                <button mat-menu-item (click)="deleteSupplier(supplier.suplierId)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <p-dialog header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? 'View Supplier' : 'Update Supplier' }}" [modal]="true" [(visible)]="visible" [style]="{ width: '20rem'}">
+    <form *ngIf="mode !== 'view'" (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
+      <div class="row">
+        <p-floatLabel class="inputFloat">
+          <input pInputText [(ngModel)]="selectedSupplier.suuplier_name" name="suuplier_name" id="supplier_name" required />
+          <label for="supplier_name">Supplier Name</label>
+        </p-floatLabel>
+        <p-floatLabel class="inputFloat">
+          <input pInputText [(ngModel)]="selectedSupplier.address" name="address" id="address" required />
+          <label for="address">Address</label>
+        </p-floatLabel>
+        <p-floatLabel class="inputFloat">
+          <input pInputText [(ngModel)]="selectedSupplier.email" name="email" id="email" required />
+          <label for="email">Email</label>
+        </p-floatLabel>
+      </div>
+      <div class="confirmbtn col align-self-end">
+        <button type="submit" class="button">
+          {{ mode === 'add' ? 'Add' : 'Update' }}
+        </button>
+      </div>
+    </form>
+   
+    <div *ngIf="mode === 'view'">
+      <div class="row">
+        <p><strong>Supplier Name:</strong> {{ selectedSupplier.suuplier_name }}</p>
+        <p><strong>Address:</strong> {{ selectedSupplier.address }}</p>
+        <p><strong>Email:</strong> {{ selectedSupplier.email }}</p>
+      </div>
+    </div>
+  </p-dialog>
+</div>

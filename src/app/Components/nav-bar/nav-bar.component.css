@@ -102,7 +102,10 @@
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
     background-color: rgb(3, 3, 3);
   }
-  
+  .dashicon{
+
+    width: 2rem;
+  }
   /* plus sign */
   .sign {
     width: 100%;

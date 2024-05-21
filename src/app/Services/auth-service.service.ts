@@ -38,6 +38,10 @@ isAuthenticated(): boolean {
   return false;
 }
 
+
+
+
+
 //Register
 UserRegister(data: any, role: string){
   // Construct the URL with the role parameter

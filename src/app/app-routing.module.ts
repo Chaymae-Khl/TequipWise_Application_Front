@@ -12,6 +12,7 @@ import { DeptPlantMangComponent } from './Components/Admin/dept-plant-mang/dept-
 import { LoadingComponent } from './Components/loading/loading.component';
 import { ForgetPasswordComponent } from './Components/forget-password/forget-password.component';
 import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/suppliers-manag.component';
+import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -40,6 +41,8 @@ const routes: Routes = [
   },
   { path: 'loading', component: LoadingComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
+  { path: 'tokenExpired', component: TokenExpiredComponent },
+
 
   // { path : 'dashboard',component:DashboardComponent},
   // {

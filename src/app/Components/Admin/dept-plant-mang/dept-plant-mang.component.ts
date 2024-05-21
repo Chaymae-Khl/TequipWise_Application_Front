@@ -14,7 +14,7 @@ import { DeptPlantModalComponent } from '../dept-plant-modal/dept-plant-modal.co
 export class DeptPlantMangComponent implements OnInit {
   displayedColumns: string[] = ['Location', 'buildingNumber', 'Plants','Departements','Actions'];
   plants:any; // Use Plant type array
-  
+
   constructor(private openDataServiceService: OpenDataServiceService, public dialog: MatDialog) { 
     inject(NgZone).runOutsideAngular(() => {
       setInterval(() => {}, 1000);
@@ -24,7 +24,27 @@ export class DeptPlantMangComponent implements OnInit {
   ngOnInit(): void {
     this.getPlants();
   }
-
+  // Transform data to fit PrimeNG organization chart format
+  transformDataToOrgChartFormat(data: any): any[] {
+    return data.map((location: any) => ({
+      label: location.locationName,
+      type: 'location',
+      children: [
+        ...location.plants.map((plant: any) => ({
+          label: plant.plantName,
+          type: 'plant',
+          children: plant.departments.map((dept: any) => ({
+            label: dept.departmentName,
+            type: 'department'
+          }))
+        })),
+        ...location.departments.map((dept: any) => ({
+          label: dept.departmentName,
+          type: 'department'
+        }))
+      ]
+    }));
+  }
   // Get plants method
   getPlants(): void {
     this.openDataServiceService.getPlantsWDept().subscribe(

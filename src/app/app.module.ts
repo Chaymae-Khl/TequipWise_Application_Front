@@ -49,6 +49,9 @@ import { DialogModule } from 'primeng/dialog';
 import { PasswordModule } from 'primeng/password';
 import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/suppliers-manag.component';
 import { SupplierFiltePipe } from './Pipes/supplier-filte.pipe';
+import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
+import { OrganizationChartModule } from 'primeng/organizationchart';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,6 +74,7 @@ import { SupplierFiltePipe } from './Pipes/supplier-filte.pipe';
     ForgetPasswordComponent,
     SuppliersManagComponent,
     SupplierFiltePipe,
+    TokenExpiredComponent,
     
    
   
@@ -104,7 +108,8 @@ import { SupplierFiltePipe } from './Pipes/supplier-filte.pipe';
     FloatLabelModule,
     DialogModule,
     ReactiveFormsModule,
-    PasswordModule
+    PasswordModule,
+    OrganizationChartModule
   ],
   providers: [
     provideClientHydration(),

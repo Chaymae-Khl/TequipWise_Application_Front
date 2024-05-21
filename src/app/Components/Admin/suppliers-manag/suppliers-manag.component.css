@@ -1,10 +1,15 @@
 .title{
   text-align: center;
-   margin-top: 3rem;
+   margin-top: 1rem;
    font-size: 2rem;
   
  }
-
+ i{
+  color: #E98201;
+ }
+ th{
+  color: #E98201;
+ }
    .search-bar {
      display: flex;
      justify-content: flex-end;

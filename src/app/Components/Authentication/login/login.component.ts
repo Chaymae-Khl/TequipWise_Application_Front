@@ -54,7 +54,6 @@ constructor(private authService: AuthServiceService, private router: Router,priv
       console.log(decodedToken);
       const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
       console.log('User role:', role);
-     
 
    if(role==="Admin"){
     this.router.navigate(['/admin']);

@@ -1,0 +1,44 @@
+
+<div *ngIf="isAuthenticated; else loginTemplate">
+    <app-nav-bar></app-nav-bar>
+<div class="container-fluid ">
+    <div class="row align-items-center inner-container">
+        <div class="col d-flex justify-content-center align-items-center">
+            <img src="/assets/Images/MEnuTitle.gif" alt="" style="width: 65%;">
+        </div>
+    </div>
+    <div class="row align-items-center inner-container">
+        <div class="col d-flex justify-content-center align-items-center" id="col2">
+            
+            <div>
+                <button class="button">
+                    <a routerLink="/admin"><img class="dashicon" src="assets/Images/dashboard.png" alt=""></a>
+                </button>
+                <p class="desc">Dashboard</p>
+                <span class="backdrop"></span>
+            </div>
+            <div>
+                <button class="button">
+                    <a routerLink="/admin"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
+                </button>
+                <p class="desc">My Requests</p>
+                <span class="backdrop"></span>
+            </div>
+            <div >
+                <button class="button">
+                    <a routerLink="/admin"><img  src="assets/Images/request.png" alt="" style="width: 3.5rem;margin-left: 0.7rem;"></a>
+                </button>
+                <p class="desc">Submit a request</p>
+                <span class="backdrop"></span>
+            </div>
+         
+        </div>
+        
+    </div>
+
+</div>
+  </div>
+  <ng-template #loginTemplate>
+    <app-loading></app-loading>
+</ng-template>
+

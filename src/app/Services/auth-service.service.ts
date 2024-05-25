@@ -114,5 +114,12 @@ getRoles() {
   return this.httpClient.get(`${this.apiUrl}/Admin/allRoles`, httpOptions);
 }
 
+//get autheticated user
+
+getAuthuser(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Auth/GetAuthenticatedUser`, httpOptions);
+}
+
 
 }

@@ -8,7 +8,8 @@
   color: #E98201;
  }
  th{
-  color: #E98201;
+  color: #ffffff;
+  background-color: #2E4957;
  }
    .search-bar {
      display: flex;

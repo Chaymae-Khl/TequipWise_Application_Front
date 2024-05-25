@@ -1,39 +1,56 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-  <a class="navbar-brand logo" href="#">
+  <a class="navbar-brand logo" href="/">
     <img class="TeLogo" src="assets/Images/logo.png" alt="">
   </a>
-  <button class="navbar-toggler" title="Toggle Navigation" name="toggle" type="button" (click)="toggleNavbar()">
+  <button class="navbar-toggler" title="Toggle Navigation" name="toggle" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" [ngClass]="{'show': isNavbarOpen}"  id="collapsibleNavbar">
-    <ul class="navbar-nav ml-auto">
+  <div class="collapse navbar-collapse" [ngClass]="{'show': isNavbarOpen}" id="collapsibleNavbar">
+    <ul class="navbar-nav ms-auto me-auto">
+      <li class="nav-item" *ngIf="!isLoggedIn()">
+        
+      </li>
+      <li class="nav-item" *ngIf="!isLoggedIn()">
+      </li>
+    </ul>
+    <ul class="navbar-nav mx-auto">
+      <li class="nav-item" *ngIf="isLoggedIn()">
+        <a routerLink="/" class="nav-link"><i class="pi pi-home" style="font-size: 1.5rem;color: black;"></i></a>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn()">
+        <a routerLink="/Menu" > <img src="assets/Images/MenuIcon.png" style="width: 13%;" alt="">Menu</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ms-auto">
       <li class="nav-item" *ngIf="!isLoggedIn()">
         <a class="nav-link" href="#services">Services</a>
       </li>
       <li class="nav-item" *ngIf="!isLoggedIn()">
-        <a class="nav-link" href="#Contact">Contact</a>
-      </li>
-      <li class="nav-item" *ngIf="!isLoggedIn()">
         <a routerLink="/register" class="nav-link" href="#register">Register</a>
       </li>
-      <li class="nav-item" *ngIf="isLoggedIn()">
-       <a routerLink="/admin"> <img class="dashicon" src="assets/Images/dashboard.png" alt=""></a>
-      </li>
-
-      <li class="nav-item" > 
-        <button class="button" *ngIf="isLoggedIn()">
-        <svg viewBox="0 0 448 512" class="bell"><path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path></svg>
-     </button>
-    </li>
       <li class="nav-item">
         <a *ngIf="!isLoggedIn()" routerLink="/login" style="text-decoration: none;">
           <button class="btn btn-outline-dark my-2 my-sm-0" id="loginBtn" type="submit">Login</button>
         </a>
-        <button class="Btn" *ngIf="isLoggedIn()" (click)="logout()">
-          <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-          <div class="text">Logout</div>
+      </li>
+      <li class="nav-item" *ngIf="isLoggedIn()">
+        <div class="dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="rounded-circle me-lg-2 pi pi-user" style="width:20px;"></i>
+            <span class="d-none d-lg-inline-flex">{{authUser.teNum}}</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end bg-light border-8 rounded-0 rounded-bottom m-0">
+            <a href="#" class="dropdown-item"><i class="pi pi-sign-out pi-user p-2"></i>My Profile</a>
+            <button (click)="logout()" class="dropdown-item"><i class="pi pi-sign-out p-2"></i>Log Out</button>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <button class="button" *ngIf="isLoggedIn()">
+          <svg viewBox="0 0 448 512" class="bell">
+            <path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"></path>
+          </svg>
         </button>
-        
       </li>
     </ul>
   </div>

@@ -37,10 +37,10 @@ export class UserModalComponent implements OnInit{
     this.getLocations();
     this.getRoles();
     this.getuasersname();
-  }
    
-//getusersNames
+  }
 
+//getusersNames
 getuasersname(){
   this.authservice.getUsers().subscribe(
     (data) => {
@@ -70,19 +70,26 @@ getuasersname(){
 
 // Handle location change
 onLocationChange(event: any) {
-  this.selectedLocation = event.value;
-  console.log(this.locationed);
-  if (this.selectedLocation) {
-    this.plantsOfSelectedLocation = this.selectedLocation.plants;
-    this.departmentsOfSelectedPlant =this.selectedLocation.departments;
-    console.log('Location selected');
+  const selectedLocationName = event.value;
+  const selectedLocation = this.locations.find((location:any) => location.locationName === selectedLocationName);
+
+  if (selectedLocation) {
+    this.plantsOfSelectedLocation = selectedLocation.plants;
+    this.departmentsOfSelectedPlant = selectedLocation.departments;
+  
   } else {
     this.selectedLocation = null; // Reset selectedLocation if no location is selected
     this.plantsOfSelectedLocation = []; // Clear the plants
+    this.departmentsOfSelectedPlant = []; // Clear the departments
     console.log('No location selected.');
   }
+
 }
   
+
+
+
+
   //get roles method
 getRoles(){
   this.authservice.getRoles().subscribe(

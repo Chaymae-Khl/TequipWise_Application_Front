@@ -9,23 +9,27 @@ import { LocalStorageServiceService } from './Services/local-storage-service.ser
 })
 export class AppComponent {
   title = 'TequipWiseFront';
-  constructor(private localStorageService: LocalStorageServiceService, private router: Router) {}
+
+
+  constructor(
+    private localStorageService: LocalStorageServiceService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     const isAuthenticated = await this.localStorageService.isAuthenticated();
-    
     if (isAuthenticated) {
-      const isTokenExpired = await this.localStorageService.checkTokenExpiry();
-  
-      if (isTokenExpired) {
-        this.router.navigate(['/tokenExpired']);
-      } else {
-        // User is authenticated and token is not expired
-        // Handle authenticated scenarios
+      // Only check token expiry for protected routes
+      const currentRoute = this.router.routerState.snapshot.url;
+      const protectedRoutes = ['/admin']; // Add your protected routes here
+
+      if (protectedRoutes.includes(currentRoute)) {
+        const isTokenExpired = await this.localStorageService.checkTokenExpiry();
+
+        if (isTokenExpired) {
+          await this.router.navigate(['/tokenExpired']);
+        }
       }
-    } else {
-      // User is not authenticated
-      // Handle unauthenticated scenarios
     }
   }
 }

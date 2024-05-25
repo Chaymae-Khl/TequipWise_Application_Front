@@ -13,6 +13,7 @@ import { LoadingComponent } from './Components/loading/loading.component';
 import { ForgetPasswordComponent } from './Components/forget-password/forget-password.component';
 import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/suppliers-manag.component';
 import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
+import { MenuComponent } from './Components/menu/menu.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -37,23 +38,15 @@ const routes: Routes = [
       {
         path: 'suppliers', component: SuppliersManagComponent,
       }
-    ], canActivate: [AuthGuard]
+    ],   resolve: { isAuthenticated: AuthGuard }
   },
   { path: 'loading', component: LoadingComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'tokenExpired', component: TokenExpiredComponent },
+  { path: 'Menu', component: MenuComponent ,resolve: { isAuthenticated: AuthGuard }},
 
 
-  // { path : 'dashboard',component:DashboardComponent},
-  // {
-  //   path:'admin', 
-  //   component: AdminsComponent,
-  //   children: [
-  //     {
-  //       path:'dashboard', component: DashboardComponent
-  //     }
-  //   ]
-  // },
+ 
 ];
 
 @NgModule({

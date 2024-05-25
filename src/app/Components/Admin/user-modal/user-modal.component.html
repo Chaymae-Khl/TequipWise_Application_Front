@@ -14,7 +14,7 @@
    </span></p>
      <p><strong>Username:</strong> {{ user.teNum }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Location:</strong> {{ user.location }}</p>
+      <p><strong>Location:</strong> {{ user.locationName}}</p>
       <p><strong>Plant:</strong> {{user.plant_name}}</p>
       <p><strong>Department:</strong> {{ user.departmentName }}</p>
       <p><strong>Backup Aprover:</strong> {{ user.backupaprover_Name }}</p>
@@ -48,9 +48,9 @@
             <div class="form-group">
               <mat-form-field class="custom-select">
                 <mat-label>Select Location</mat-label>
-                <mat-select  name="location" (selectionChange)="onLocationChange($event)">
+                <mat-select  [(ngModel)]="user.locationName" name="locationName" (selectionChange)="onLocationChange($event)">
                   <mat-option disabled>Select Location</mat-option>
-                  <mat-option *ngFor="let location of locations" [value]="location">{{
+                  <mat-option *ngFor="let location of locations" [value]="location.locationName">{{
                     location.locationName }}</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -61,9 +61,9 @@
             <div class="form-group">
               <mat-form-field class="custom-select">
                 <mat-label>Select Plant</mat-label>
-                <mat-select>
+                <mat-select [(ngModel)]="user.plant_name" name="plant_name" >
                   <mat-option disabled>Select Plant</mat-option>
-                  <mat-option *ngFor="let plant of plantsOfSelectedLocation" [value]="plant">{{ plant.plant_name
+                  <mat-option *ngFor="let plant of plantsOfSelectedLocation" [value]="plant.plant_name">{{ plant.plant_name
                     }}</mat-option>
                 </mat-select>
               </mat-form-field>

@@ -13,19 +13,18 @@
 
     <div class="card">
       <p-table [value]="(users | userFilter:searchTerm) || []" [paginator]="true" [rows]="5"
-        [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
+        [tableStyle]="{ 'min-width': '50rem;border-radius: 30px;' }" [rowsPerPageOptions]="[5, 10, 20]" class="table">
         <ng-template pTemplate="header">
           <tr>
-            <th style="width:25%;"># Te identifier</th>
-            <th style="width:25%">Fullname</th>
-            <th style="width:25%">Email </th>
-            <th style="width:25%">Roles </th>
-            <th style="width:25%"> Location </th>
-            <th style="width:25%">Plant </th>
-            <th style="width:25%">Departement </th>
-            <th style="width:25%">Backup Aprover </th>
-            <th style="width:25%">Actions </th>
-
+            <th ># Te identifier</th>
+            <th> Fullname</th>
+            <th> Email </th>
+            <th> Roles </th>
+            <th> Location </th>
+            <th>Plant </th>
+            <th>Departement </th>
+            <th >Backup Aprover </th>
+            <th >Actions </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user>
@@ -38,7 +37,7 @@
                 {{role}}
               </div>
             </td>
-            <td>{{user.location}} </td>
+            <td>{{user.locationName}} </td>
             <td>{{user.plant_name}}</td>
             <td>{{user.departmentName}}</td>
             <td>{{user.backupaprover_Name}} </td>

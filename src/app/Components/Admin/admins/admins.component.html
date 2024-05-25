@@ -1,6 +1,13 @@
 
 
-<app-nav-bar></app-nav-bar>
-
+<div *ngIf="isAuthenticated; else loginTemplate">
+    <!-- Your protected content -->
+    <app-nav-bar></app-nav-bar>
     <app-sidebar></app-sidebar>
+  </div>
+  <ng-template #loginTemplate>
+    <app-loading></app-loading>
+  </ng-template>
+
+    
    

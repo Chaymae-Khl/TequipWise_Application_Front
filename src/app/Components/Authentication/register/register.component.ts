@@ -35,9 +35,9 @@ export class RegisterComponent  {
       email: ['', [Validators.required, CustomValidators.emailPattern]],
       password: ['', [Validators.required, CustomValidators.strongPassword]],
       confirmPassword: ['', Validators.required],
-      location: ['', Validators.required],
-      plant: ['', Validators.required],
-      department: ['', Validators.required]
+      locationID: [0, Validators.required],
+      plantId: [0, Validators.required],
+      DeptId: [0, Validators.required]
     }, { validators: CustomValidators.passwordsMatch });
 
    }
@@ -63,19 +63,21 @@ export class RegisterComponent  {
 
 // Handle location change
 onLocationChange(event: any) {
-``
-  this.selectedLocation = event.value;
-  if (this.selectedLocation) {
-    this.plantsOfSelectedLocation = this.selectedLocation.plants;
-    this.departmentsOfSelectedPlant =this.selectedLocation.departments;
-    console.log('Location selected');
+  const selectedLocationID = event.value;
+  // console.log(selectedLocationID);
+  const selectedLocation = this.locations.find((location:any) => location.locationId === selectedLocationID);
+
+  if (selectedLocation) {
+    this.plantsOfSelectedLocation = selectedLocation.plants;
+    this.departmentsOfSelectedPlant = selectedLocation.departments;
+    // console.log('Location selected:', selectedLocation.locationName);
   } else {
     this.selectedLocation = null; // Reset selectedLocation if no location is selected
     this.plantsOfSelectedLocation = []; // Clear the plants
+    this.departmentsOfSelectedPlant = []; // Clear the departments
     console.log('No location selected.');
   }
 }
-
 
   //Register method
   Register() {
@@ -90,6 +92,7 @@ onLocationChange(event: any) {
       return;
     }
     const formValues = this.registerForm.value;
+    console.log(formValues);
       // Set the role directly here
       const role = 'Admin'; 
       console.log(this.user);

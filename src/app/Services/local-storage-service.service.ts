@@ -44,6 +44,8 @@ export class LocalStorageServiceService {
       const expiry = payload.exp;
       console.log(expiry);
       const now = Math.floor(Date.now() / 1000);
+      console.log(now);
+
       return now > expiry;
     } catch (e) {
       return true; // Assume expired if there's an error parsing the token
@@ -52,6 +54,7 @@ export class LocalStorageServiceService {
 
   async checkTokenExpiry(): Promise<boolean> { // New method to handle token check without argument
     const token = await this.getToken();
+    console.log(token);
     return this.isTokenExpired(token!);
   }
 

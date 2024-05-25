@@ -8,9 +8,12 @@ export class User {
     email: any; 
     password: any;
     confirmPassword:any;
-    DepartmentDeptId:any;
+    locationID:any;
+    locationName:any;
+    plantId:any;
     plant_name:any;
     roles!:string[];
+    DeptId:any;
     departmentName:any;
     location:any;
 }

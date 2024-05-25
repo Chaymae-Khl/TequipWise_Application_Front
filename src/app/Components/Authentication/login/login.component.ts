@@ -56,7 +56,7 @@ constructor(private authService: AuthServiceService, private router: Router,priv
       console.log('User role:', role);
 
    if(role==="Admin"){
-    this.router.navigate(['/admin']);
+    this.router.navigate(['/Menu']);
    } 
    else{
     console.log("your are not admin.");

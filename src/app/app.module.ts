@@ -51,6 +51,7 @@ import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/supp
 import { SupplierFiltePipe } from './Pipes/supplier-filte.pipe';
 import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
 import { OrganizationChartModule } from 'primeng/organizationchart';
+import { MenuComponent } from './Components/menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
     SuppliersManagComponent,
     SupplierFiltePipe,
     TokenExpiredComponent,
+    MenuComponent,
     
    
   

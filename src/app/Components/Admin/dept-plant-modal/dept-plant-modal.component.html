@@ -1,23 +1,71 @@
+<div class="all">
+  <button class="close-button"><i class="pi pi-times-circle" style="color: #708090"></i></button>
+  <h2 class="title">Add Location & Plant & Department</h2>
+  <div class="container">
+    <form action="">
 
-<!-- multistep form -->
-<form id="msform" >
-  
-  <fieldset>
-      <h2 class="fs-title">Create your account</h2>
-      <div class="input-group">
-          <input type="text" name="TeNUm" placeholder="FullName" />
-      <input type="text" name="username" placeholder="Te identifier" />
-          
+      <p-panel  header="Location Informations" [toggleable]="true">
+        <div class="flex-row gap-2 p-2">
+          <div class="flex flex-column gap-2">
+            <label for="plant-name">Location Name</label>
+            <input pInputText id="plant-name" aria-describedby="plant-name-help" />
+          </div>
+          <div class="flex flex-column gap-2">
+            <label for="approver-name">Building Number</label>
+            <input pInputText id="approver-name" aria-describedby="approver-name-help" />
+            
+          </div>
+        </div>
+      </p-panel>
+   
+      <p-panel class="panel" header="Departement Informations" [toggleable]="true">
+        <div class="flex-row gap-2 p-2">
+          <div class="flex flex-column gap-2">
+            <label for="plant-name">Plant Name</label>
+            <input pInputText id="plant-name" aria-describedby="plant-name-help" />
+          </div> 
+          <div class="flex flex-column gap-2">
+            <label for="approver-name">Approver Name</label>
+            <input pInputText id="approver-name" aria-describedby="approver-name-help" />
+          </div>
+          <button tabindex="0" class="plusButton">
+            <svg class="plusIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+              <g mask="url(#mask0_21_345)">
+                <path d="M13.75 23.75V16.25H6.25V13.75H13.75V6.25H16.25V13.75H23.75V16.25H16.25V23.75H13.75Z"></path>
+              </g>
+            </svg>
+          </button>
+        </div>
+      </p-panel>
+      <p-panel header="Plant Informations" [toggleable]="true">
+        <div class="flex-row gap-2 p-2">
+          <div class="flex flex-column gap-2">
+            <label for="plant-name">Departement Name</label>
+            <input pInputText id="plant-name" aria-describedby="plant-name-help" />
+          </div>
+          <div class="flex flex-column gap-2">
+            <label for="approver-name">Manager Name</label>
+            <p-dropdown optionLabel="name" placeholder="Select a City" />
+          </div>
+          <div>
+            <label for="status" style="margin-bottom: 1.3rem;">Status</label> <br>
+            <p-inputSwitch [(ngModel)]="checked"  />
+          </div>
+          <button tabindex="0" class="plusButton">
+            <svg class="plusIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+              <g mask="url(#mask0_21_345)">
+                <path d="M13.75 23.75V16.25H6.25V13.75H13.75V6.25H16.25V13.75H23.75V16.25H16.25V23.75H13.75Z"></path>
+              </g>
+            </svg>
+          </button>
+        </div>
+      </p-panel>
+      <div class="button-container">
+        <button>Confirm</button>
       </div>
-      <input type="text" name="email"  placeholder="Email" />
-      
-      <div class="input-group">
-          <input type="password" name="password" />
-          <input type="password" name="cpass"  />
-      </div>
-      
-      <button id="registerbtn" class="submit action-button" type="submit">
-          <span class="font-weight-bold">Register</span>
-      </button> <br>
-  </fieldset>
-</form>
+    </form>
+  </div>
+</div>
+
+
+

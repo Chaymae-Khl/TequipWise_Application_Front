@@ -65,7 +65,9 @@
     </div>
   </div>
 
-  <p-dialog header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? 'View Supplier' : 'Update Supplier' }}" [modal]="true" [(visible)]="visible" [style]="{ width: '20rem'}">
+ 
+</div>
+ <p-dialog header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? 'View Supplier' : 'Update Supplier' }}" [modal]="true" [(visible)]="visible" [style]="{ width: '20rem'}">
     <form *ngIf="mode !== 'view'" (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
       <div class="row">
         <p-floatLabel class="inputFloat">
@@ -96,4 +98,3 @@
       </div>
     </div>
   </p-dialog>
-</div>

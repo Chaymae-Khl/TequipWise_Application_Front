@@ -11,12 +11,17 @@
             <li></li>
             <li></li>
     </ul>
+
 <!-- multistep form -->
 <form id="msform" (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+  <div id="logo">
+    <a routerLink="/"><i class="pi pi-home" style="font-size: 1.5rem;color: black; text-align:left;"></i></a>
+  </div>
     <!-- fieldsets -->
-    <a href="#" >
-        <img id="logo" src="assets/Images/logo.png" alt="logo" width="300">
-    </a>
+    <a routerLink="/" >
+        <img  src="assets/Images/logo.png" alt="logo" width="300">
+    </a> 
+   
     <fieldset>
         <img class="loginimg" src="assets/Images/loginimg.png" alt="">
       <h2 class="fs-title">Login</h2>

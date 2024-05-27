@@ -52,6 +52,13 @@ import { SupplierFiltePipe } from './Pipes/supplier-filte.pipe';
 import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
 import { OrganizationChartModule } from 'primeng/organizationchart';
 import { MenuComponent } from './Components/menu/menu.component';
+import { FieldsetModule } from 'primeng/fieldset';
+import { TabViewModule } from 'primeng/tabview';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { PanelModule } from 'primeng/panel';
+import { DockModule } from 'primeng/dock';
+import { DockComponent } from './Components/dock/dock.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +84,8 @@ import { MenuComponent } from './Components/menu/menu.component';
     SupplierFiltePipe,
     TokenExpiredComponent,
     MenuComponent,
-    
+    DockComponent,
+   
    
   
   ],
@@ -111,7 +119,14 @@ import { MenuComponent } from './Components/menu/menu.component';
     DialogModule,
     ReactiveFormsModule,
     PasswordModule,
-    OrganizationChartModule
+    OrganizationChartModule,
+    FieldsetModule,
+    TabViewModule,
+    RadioButtonModule,
+    InputSwitchModule,
+    PanelModule,
+    DockModule
+
   ],
   providers: [
     provideClientHydration(),

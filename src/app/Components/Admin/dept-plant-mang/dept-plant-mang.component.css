@@ -1,6 +1,7 @@
 .title{
- text-align: center;
-  margin-top: 4rem;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 2rem;
 }
 .search-bar {
   display: flex;
@@ -12,3 +13,7 @@
   flex: 1; /* Take up remaining space */
   max-width: 300px; /* Limit width to prevent stretching */
 }
+th{
+  color: #ffffff;
+  background-color: #2E4957;
+ }

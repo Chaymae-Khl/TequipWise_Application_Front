@@ -24,6 +24,7 @@
             <th>Plant </th>
             <th>Departement </th>
             <th >Backup Aprover </th>
+            <th >Manager</th>
             <th >Actions </th>
           </tr>
         </ng-template>
@@ -41,6 +42,8 @@
             <td>{{user.plant_name}}</td>
             <td>{{user.departmentName}}</td>
             <td>{{user.backupaprover_Name}} </td>
+            <td>{{user.managerName}} </td>
+
             <td> <!-- Actions Button -->
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
                 <mat-icon>more_vert</mat-icon>

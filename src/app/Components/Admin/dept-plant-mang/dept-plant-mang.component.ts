@@ -24,27 +24,7 @@ export class DeptPlantMangComponent implements OnInit {
   ngOnInit(): void {
     this.getPlants();
   }
-  // Transform data to fit PrimeNG organization chart format
-  transformDataToOrgChartFormat(data: any): any[] {
-    return data.map((location: any) => ({
-      label: location.locationName,
-      type: 'location',
-      children: [
-        ...location.plants.map((plant: any) => ({
-          label: plant.plantName,
-          type: 'plant',
-          children: plant.departments.map((dept: any) => ({
-            label: dept.departmentName,
-            type: 'department'
-          }))
-        })),
-        ...location.departments.map((dept: any) => ({
-          label: dept.departmentName,
-          type: 'department'
-        }))
-      ]
-    }));
-  }
+ 
   // Get plants method
   getPlants(): void {
     this.openDataServiceService.getPlantsWDept().subscribe(
@@ -78,7 +58,8 @@ export class DeptPlantMangComponent implements OnInit {
   
   openAddDepartmentModal(): void {
     const dialogRef = this.dialog.open(DeptPlantModalComponent, {
-      width: '400px',
+      width: '800px',
+      height:'800px',
       data: { department: {} } // Pass an empty object for adding a new department
     });
   

@@ -340,5 +340,7 @@ background-color: #71192F;
   font-size: 14px;
   color: #71192F;
 }
-
+.passwordmessage{
+  color: red;
+}
 

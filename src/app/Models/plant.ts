@@ -1,10 +1,10 @@
-import { Department } from "./department";
 
 export class Plant {
-  plantNumber: any;
-  buildingNumber: any;
-  location: any;
-  plant_Manager: any;
+  PlantNumber: any;
   plant_name:any;
-  departments!: Department;
+  SapNumber:any;
+  location: any;
+  Approver_name: any;
+  ApproverId?: any;
+  
 }

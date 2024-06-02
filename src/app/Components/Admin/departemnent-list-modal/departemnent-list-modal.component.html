@@ -1,78 +1,124 @@
-
-
 <div class="LPD-modal">
   <button class="close-button" (click)="closeModal()"><i class="pi pi-times-circle" style="color: #708090"></i></button>
- 
-  <div id="table" class="mat-elevation-z8">
-    <h1 style="text-align: center;">{{ isPlant  ? 'Plants' : 'Departements' }}</h1>
-    <button type="button" class="btn btn-outline-secondary" style="margin-top: 2rem; margin-left: 1rem;">+ Add</button>
-
-    <table mat-table [dataSource]="getdata">
   
-      <!-- Department Columns -->
-      <ng-container *ngIf="isDepartment">
-        
-      <!-- departmentName Column -->
-      <ng-container matColumnDef="departmentName">
-        <th mat-header-cell *matHeaderCellDef> Departement Name </th>
-        <td mat-cell *matCellDef="let department"> {{department.departmentName}} </td>
-      </ng-container>
-    <!-- departmenManager Column -->
-    <ng-container matColumnDef="managerName">
-      <th mat-header-cell *matHeaderCellDef> Manager Name </th>
-      <td mat-cell *matCellDef="let department"> {{department.managerName}} </td>
-    </ng-container>
 
-    <!-- Status Column -->
-<!-- Status Column -->
-<ng-container matColumnDef="status">
-  <th mat-header-cell *matHeaderCellDef> Status </th>
-  <td mat-cell *matCellDef="let department">
-    <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}" *ngIf="department.status; else inactiveIcon">check_circle</mat-icon>
-    <ng-template #inactiveIcon><mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}">cancel</mat-icon></ng-template>
-  </td>
-</ng-container>
-<!-- Actions column -->
-      <ng-container matColumnDef="Actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let user">
-          <!-- Update Button -->
-          <button mat-icon-button color="accent" aria-label="Update">
-            <mat-icon>edit</mat-icon>
-          </button>
-          
-        </td>
-      </ng-container>
-      <!-- Define table headers -->
-      <tr mat-header-row
-        *matHeaderRowDef="['departmentName','managerName', 'status','Actions']"></tr>
-      <!-- Define table rows -->
-      <tr mat-row
-        *matRowDef="let user; columns: ['departmentName','managerName', 'status','Actions']">
-      </tr>
-  
-      </ng-container>
+      <h1 style="text-align: center; padding: 0.5rem;margin-top: 0.5rem;">{{ isPlant ? 'Plants' : 'Departements' }}</h1>
+      <p-divider />
+      <form (ngSubmit)="AddPlantToLocation()" *ngIf="isPlant">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+                <input pInputText  [(ngModel)]="plant.plant_name" name="plant_name"  placeholder="Plant name"  required />
+            </div>
+            <div class="col">
+              <input pInputText name="sapNumber" [(ngModel)]="plant.SapNumber"   placeholder="SAP number"  required />
+          </div>
+            <div class="col">
+              <p-dropdown [filter]="true" filterBy="fullName" [options]="users" name="ApproverId" [(ngModel)]="plant.ApproverId"  [showClear]="true" optionValue="id"
+              optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the controller">
+            </p-dropdown>
+            </div>
+            <div class="col"> 
+              <p-button icon="pi pi-check" severity="secondary" type="submit"/>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form *ngIf="isDepartment">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <input pInputText name="departmentName" placeholder="Departement Name"  required />
+            </div>
+            <div class="col">
+              <p-dropdown [filter]="true" filterBy="fullName" [options]="users"  [showClear]="true" optionValue="id"
+              optionLabel="fullName" aria-describedby="manager-name-help" placeholder="Select the manager">
+            </p-dropdown>
+            </div>
+            <div class="col">
+              <label for="Status">Status</label> <br>
+              <p-inputSwitch id="status"  name="status" />
+            </div>
+            <div class="col">
+              <p-button icon="pi pi-check" severity="secondary"  />
+            </div>
+          </div>
+        </div>
+      </form>
+      <p-divider />
 
-      <!-- Plant Columns -->
-      <ng-container *ngIf="isPlant">
-        <ng-container matColumnDef="plant_name">
-          <th mat-header-cell *matHeaderCellDef>Plant Name </th>
-          <td mat-cell *matCellDef="let plant"> {{plant.plant_name}} </td>
-        </ng-container>
-        <ng-container matColumnDef="approver_name">
-          <th mat-header-cell *matHeaderCellDef>Approver Name </th>
-          <td mat-cell *matCellDef="let plant"> {{plant.approver_name}} </td>
-        </ng-container>
-        <!-- Define table headers -->
-        <tr mat-header-row *matHeaderRowDef="['plant_name','approver_name']"></tr>
-        <!-- Define table rows -->
-        <tr mat-row *matRowDef="let user; columns: ['plant_name','approver_name']"></tr>
-      </ng-container>
-  
-    </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of users">
-    </mat-paginator>
-    
-  </div>
+      <p-accordion [activeIndex]="0">
+        <p-accordionTab header="{{ isPlant ? 'Plants List' : 'Departements List' }}" >
+          <p-table *ngIf="isDepartment"
+          [value]="getdata" 
+          [paginator]="true"
+    [rows]="5"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[5, 10, 20]"
+         >
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th>Departement Name</th>
+                      <th>Manager Name</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-department>
+                  <tr>
+                      <td>{{department.departmentName}}</td>
+                      <td>{{department.managerName}} </td>
+                      <td> <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}"
+                        *ngIf="department.status; else inactiveIcon">check_circle</mat-icon>
+                      <ng-template #inactiveIcon><mat-icon
+                          [ngClass]="{'active': department.status, 'inactive': !department.status}">cancel</mat-icon></ng-template></td>
+                        
+                           <td>
+                            <!-- Update Button -->
+                            <button   mat-icon-button color="infos">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+              
+                          </td>
+                  </tr>
+              </ng-template>
+      </p-table>
+      <p-table *ngIf="isPlant"
+      [value]="getdata" 
+      [paginator]="true"
+      [rows]="5"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [rowsPerPageOptions]="[5, 10, 20]" >
+     
+          <ng-template pTemplate="header">
+              <tr>
+                  <th>Plant Name</th>
+                  <th>SAP Number</th>
+                  <th>Controller Name</th>
+                  <th>Actions</th>
+                  
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-plant>
+              <tr>
+                  <td>{{plant.plant_name}}</td>
+                  <td>{{plant.sapNumber}}</td>
+                  <td>{{plant.approver_name}} </td>
+                  <td >
+                    <!-- Update Button -->
+                    <button   mat-icon-button color="infos">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button   mat-icon-button color="warn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+              </tr>
+          </ng-template>
+  </p-table>
+        </p-accordionTab>
+    </p-accordion>
+
 </div>
+

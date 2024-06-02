@@ -16,16 +16,16 @@
         [tableStyle]="{ 'min-width': '50rem;border-radius: 30px;' }" [rowsPerPageOptions]="[5, 10, 20]" class="table">
         <ng-template pTemplate="header">
           <tr>
-            <th ># Te identifier</th>
+            <th># Te identifier</th>
             <th> Fullname</th>
             <th> Email </th>
             <th> Roles </th>
             <th> Location </th>
             <th>Plant </th>
             <th>Departement </th>
-            <th >Backup Aprover </th>
-            <th >Manager</th>
-            <th >Actions </th>
+            <th>Backup Aprover </th>
+            <th>Manager</th>
+            <th>Actions </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user>
@@ -51,12 +51,12 @@
 
               <mat-menu #menu="matMenu">
                 <!-- View Details Button -->
-                <button mat-menu-item (click)="viewUserDetails(user)">
+                <button mat-menu-item (click)="showDialog('view',user)">
                   <mat-icon>visibility</mat-icon>
                   <span>View Details</span>
                 </button>
                 <!-- Update Button -->
-                <button mat-menu-item (click)="openUpdateModal(user)">
+                <button mat-menu-item (click)="showDialog('update',user)">
                   <mat-icon>edit</mat-icon>
                   <span>Update</span>
                 </button>
@@ -66,7 +66,7 @@
                   <span>Delete</span>
                 </button>
                 <!-- Change Password Button -->
-                <button mat-menu-item (click)="openChangePasswordModal(user.id)">
+                <button mat-menu-item (click)="showDialog('changepassword',user)">
                   <mat-icon>vpn_key</mat-icon>
                   <span>Change Password</span>
                 </button>
@@ -79,9 +79,164 @@
     </div>
   </div>
 
-  <p-toast></p-toast>
+
   <!-- modal to hundel the update and the showdeails of the user -->
-  <app-user-modal *ngIf="showModal" [user]="selectedUser" [userId]="userId" [mode]="modalMode"
+  <!-- <app-user-modal *ngIf="showModal" [user]="selectedUser" [userId]="userId" [mode]="modalMode"
     (closeModal)="closeModal()" (updateUser)="updateUser($event)" (changePassword)="changePassword($event)">
-  </app-user-modal>
+  </app-user-modal> -->
 </div>
+
+
+
+
+
+
+<p-toast></p-toast>
+
+<p-dialog
+  header="{{ mode === 'changepassword' ? 'Change password' : mode === 'view' ? 'View Details' : 'Update Informations' }}"
+  [modal]="true" [(visible)]="visible">
+
+
+  <!-- Close button -->
+
+  <!-- <button class="close-button" (click)="onClose()"><i class="pi pi-times-circle" style="color: #708090"></i></button> -->
+  <h2 style="color: darkblue; text-align: center;"> {{ mode === 'view' ? '- User: '+ locationed.userName: mode ===
+    'update' ? ' - User: '+ locationed.userName :
+    '- User: '+ locationed.userName }} </h2>
+
+  <!-- Display user details or update form based on mode -->
+  <ng-container *ngIf="mode === 'view'; else updateForm">
+
+    <p><span *ngFor="let role of locationed?.roles"
+        [ngStyle]="{'background-color': role === 'Admin' ? 'green' : '#e9810173', 'border-radius': '5px','color':'white','padding':'6px','margin-right': '8px'}">
+        {{ role }}
+      </span></p>
+      <p-divider type="dashed" />
+    <p><strong>Username:</strong> {{ locationed.teNum }}</p>
+    <p><strong>Email:</strong> {{ locationed.email }}</p>
+    <p><strong>Location:</strong> {{ locationed.locationName}}</p>
+    <p><strong>Plant:</strong> {{locationed.plant_name}}</p>
+    <p><strong>Department:</strong> {{ locationed.departmentName }}</p>
+    <p><strong>Backup Aprover:</strong> {{ locationed.backupaprover_Name }}</p>
+    <p><strong>Manager:</strong> {{ locationed.managerName }}</p>
+  </ng-container>
+
+  <ng-template #updateForm>
+    <div class="updatemodal-content">
+      <form *ngIf="mode === 'update'; else changepassword" (ngSubmit)="updateUser(locationed)">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="userName">Te Identifier :</label>
+            <input type="text" [(ngModel)]="locationed.userName" name="userName" pInputText />
+          </div>
+          <div class="form-group">
+            <label for="teNum">FullName :</label>
+            <input type="text" [(ngModel)]="locationed.teNum" name="teNum" pInputText />
+          </div>
+          <div class="form-group">
+            <label for="email">Email :</label>
+            <input type="text" [(ngModel)]="locationed.email" name="email" pInputText />
+          </div>
+        </div>
+        <p-divider type="dashed" />
+        <p-accordion [activeIndex]="0">
+          <p-accordionTab header="Location & Plant & Department">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="locationName">Location :</label>
+                <p-dropdown [options]="locations" [(ngModel)]="locationed.locationName" name="locationName"
+                  optionLabel="locationName" optionValue="locationName" (onChange)="onLocationChange($event)"
+                  [showClear]="true" [filter]="true" filterBy="locationName" placeholder="Select Location"
+                  class="custom-dropdown">
+                </p-dropdown>
+
+              </div>
+
+              <div class="form-group">
+                <label for="plant_name">Plant :</label>
+                <p-dropdown [options]="plantsOfSelectedLocation" [(ngModel)]="locationed.plant_name" name="plant_name"
+                  optionLabel="plant_name" optionValue="plant_name" [showClear]="true" [filter]="true"
+                  filterBy="plant_name" placeholder="Select Plant">
+                </p-dropdown>
+              </div>
+              <div class="form-group">
+                <label for="departmentName">Departemnt :</label>
+                <p-dropdown [options]="departmentsOfSelectedPlant" [(ngModel)]="locationed.departmentName"
+                  name="departmentName" optionLabel="departmentName" optionValue="departmentName" [showClear]="true"
+                  [filter]="true" filterBy="departmentName" placeholder="Select Department">
+                </p-dropdown>
+              </div>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+        <p-divider type="dashed" />
+        <p-accordion [activeIndex]="0">
+          <p-accordionTab header="Other Informations">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="roles">Roles :</label>
+                <p-multiSelect [options]="Roles" [(ngModel)]="locationed.roles" name="roles" optionLabel="name"
+                  optionValue="name" [showClear]="true" [filter]="true" filterBy="name" placeholder="Select Roles"
+                  multiple="multiple">
+                </p-multiSelect>
+              </div>
+              <div class="form-group">
+                <label for="managerName">Manager name :</label>
+                <p-dropdown [options]="users" [(ngModel)]="locationed.managerName" name="managerName"
+                  optionLabel="teNum" optionValue="teNum" [showClear]="true" [filter]="true" filterBy="teNum"
+                  placeholder="Select the Manager">
+                </p-dropdown>
+              </div>
+              <div class="form-group">
+                <label for="backupaprover_Name">Backup Approver :</label>
+                <p-dropdown [options]="users" [(ngModel)]="locationed.backupaprover_Name" name="backupaprover_Name"
+                  optionLabel="teNum" optionValue="teNum" [showClear]="true" [filter]="true" filterBy="teNum"
+                  placeholder="Select the Backup Approver">
+                </p-dropdown>
+              </div>
+              
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+        <div class="form-group">
+                <div class="d-flex flex-row-reverse">
+                  <button type="submit">Update</button>
+                </div>
+              </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <!-- Template for Change Password Form (ngSubmit)="changePassword()"-->
+  <ng-template #changepassword>
+    <p-divider type="dashed" />
+    <h3 class="passwordmessage">
+      NB: Password must,
+      Contain at least one special character (e.g., -),<br>
+      Contain at least one uppercase letter (A-Z),<br>
+      Contain at least one digit (0-9)
+    </h3>
+    <p-divider type="dashed" />
+
+    <form (ngSubmit)="changePassword({ userId: locationed.id, newPassword: newPassword})">
+      <div class="form-row">
+
+        <div class="form-group">
+          <p-password class="custom-password1" placeholder="New Password" type="password" [(ngModel)]="newPassword"
+            name="newPassword" required [toggleMask]="true"></p-password>
+        </div>
+        <div class="form-group">
+          <div class="password-wrapper">
+            <input [type]="isPasswordVisible ? 'text' : 'password'" class="password" placeholder="Confirm Password"
+              [(ngModel)]="confirmPassword" name="confirmPassword" required />
+            <i class="pi" [ngClass]="isPasswordVisible ? 'pi-eye-slash' : 'pi-eye'" (click)="togglePasswordVisibility()"
+              style="cursor: pointer;"></i>
+          </div>
+        </div>
+      </div>
+      <button type="submit">Confirm</button>
+    </form>
+  </ng-template>
+</p-dialog>

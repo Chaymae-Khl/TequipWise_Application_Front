@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../../Services/auth-service.service';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { User } from '../../../Models/user';
 import { MessageDialogComponent } from '../../../message-dialog/message-dialog.component';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { OpenDataServiceService } from '../../../Services/open-data-service.service';
 
 @Component({
   selector: 'app-users-manag',
@@ -16,14 +17,35 @@ export class UsersManagComponent implements OnInit{
   userId:any;
   showModal = false;
   searchTerm: string = '';
-  modalMode!: 'view' | 'update'|'changepassword';
+
+
+  locations: any;
+  selectedLocation: any; // Store only the location of the selected plant
+  plantsOfSelectedLocation: any[] = [];
+  departmentsOfSelectedPlant: any[] = [];
+  Roles: any;
+  locationed: User = new User();
+  mylocation: any;
+  newPassword: any;
+  confirmPassword: any;
+  isPasswordVisible: boolean = false;
+  mode: 'add' | 'view' | 'update' | 'changepassword' = 'add';
+  visible: boolean = false;
+
+
+
+
+
+  // modalMode!: 'view' | 'update'|'changepassword';
   numberofusers:any;
-constructor(private Authservice:AuthServiceService,public dialog: MatDialog,private messageService: MessageService){
+constructor(private Authservice:AuthServiceService,public dialog: MatDialog,private messageService: MessageService,private openDataService: OpenDataServiceService){
 }
 
 ngOnInit(): void {
 this.getUsers();
 this.getNumofUsers();
+this.getLocations();
+this.getRoles();
 }
 
 
@@ -75,46 +97,70 @@ deleteUser(user: User): void {
     }
   });
 }
- // Function to show modal for viewing user details
- viewUserDetails(user: User): void {
-  this.selectedUser = user;
-  this.modalMode = 'view';
-  this.showModal = true;
-}
-// Function to show modal for updating user details
-openUpdateModal(user: User): void {
-  this.selectedUser = user;
-  this.modalMode = 'update';
-  this.showModal = true;
-}
-
-// Function to show modal for updating the user password
-openChangePasswordModal(userId: any): void {
-  console.log('Opening Change Password Modal for User:', userId);
-  this.userId = userId; // Set the userId property
-  this.modalMode = 'changepassword';
-  this.showModal = true;
+ 
+getLocations() {
+  this.openDataService.getPlantsWDept().subscribe(
+    (data) => {
+      this.locations = data;
+      // If there is a preselected location, update the plants and departments.
+      if(this.locationed && this.locationed.locationName) {
+        this.onLocationChange({ value: this.locationed.locationName });
+      }
+    },
+    (error) => {
+      console.error('An error occurred while fetching plants:', error);
+    }
+  );
 }
 
+onLocationChange(event: any) {
+  const selectedLocationName = event.value;
+  // Find the selected location object based on the location name.
+  const selectedLocation = this.locations.find((location:any) => location.locationName === selectedLocationName);
 
-// Function to close the modal
-closeModal(): void {
-  this.showModal = false;
-  this.selectedUser = null;
-  this.modalMode = "view";
+  if (selectedLocation) {
+    // Update the plants and departments based on the selected location.
+    this.plantsOfSelectedLocation = selectedLocation.plants;
+    this.departmentsOfSelectedPlant = selectedLocation.departments;
+  } else {
+    // If no location is selected, clear the plants and departments.
+    this.plantsOfSelectedLocation = [];
+    this.departmentsOfSelectedPlant = [];
+  }
 }
-// Function to update user details
+//get roles method
+getRoles() {
+  this.Authservice.getRoles().subscribe(
+    (data) => {
+      this.Roles = data;
+      console.log(this.Roles);
+    },
+    (error) => {
+      console.error('An error occurred while fetching roles:', error);
+      console.log('Error response:', error.error); // Log the response object
+    }
+  );
+
+}
+
+
+showDialog(mode: 'add' | 'view' | 'update'|'changepassword', user?: any): void {
+  this.mode = mode;
+  this.locationed = user ? { ...user } : {};
+  this.visible = true;
+}
+
+
+
+
 updateUser(updatedUser: User): void {
-  const dialogRef = this.dialog.open(MessageDialogComponent, {
-  });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
       this.Authservice.updateUser(updatedUser, updatedUser.id).subscribe(
         () => {
-
-          this.closeModal();
+          this.visible=false;
+          // this.closeModal();
           this.messageService.add({severity:'success', summary: 'Success', detail: 'User updated successfully',life: 10000});
+         this.getUsers();
           console.log(`User updated successfully.`);
         },
         (error) => {
@@ -123,23 +169,19 @@ updateUser(updatedUser: User): void {
         }
       );
     }
-  });
   
-}
+
 
 
 // Function to handle password change
 changePassword(data: { userId: any, newPassword: any }): void {
   const { userId, newPassword } = data;
-  const dialogRef = this.dialog.open(MessageDialogComponent, {
-  });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
       if (userId && newPassword) {
         this.Authservice.updatePassword(userId, newPassword).subscribe(
           () => {
-            this.closeModal(); // Close modal after successful password update
+            this.visible=false;
+            // this.closeModal(); // Close modal after successful password update
             this.messageService.add({severity:'success', summary: 'Success', detail: 'Password updated successfully',life: 10000});
 
             console.log(`Password updated successfully.`);
@@ -154,11 +196,13 @@ changePassword(data: { userId: any, newPassword: any }): void {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid userId or newPassword provided',life: 10000 });
 
         // Handle error (e.g., show error message)
-      }
     }
-  });
+ 
+}
 
 
+togglePasswordVisibility() {
+  this.isPasswordVisible = !this.isPasswordVisible;
 }
 }
 

@@ -14,5 +14,7 @@
   .inactive {
     color: red;
   }
- 
- 
+  th{
+    color: #ffffff;
+   background-color: #EA8300;
+   }

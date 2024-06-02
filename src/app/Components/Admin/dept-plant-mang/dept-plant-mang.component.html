@@ -1,81 +1,136 @@
 <div class="menu-item">
   <div class="arrow"></div>
-  <h2 class="title">Locations & Plants & Departements</h2>
+  <h2 class="title">Locations & Plants & Departments</h2>
   <div class="row">
     <div class="col-8">
       <div>
-        <button type="button" class="btn btn-outline-secondary" (click)="openAddDepartmentModal()">+ Add</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="showDialog()">+ Add</button>
       </div>
     </div>
     <div class="col-4">
       <div class="search-bar">
         <mat-form-field appearance="fill" class="search-field">
-          <mat-label> Search by Plant Name</mat-label>
+          <mat-label>Search by Plant Name</mat-label>
           <input matInput placeholder="Te identifier">
         </mat-form-field>
       </div>
     </div>
   </div>
 
-<div id="table" class="mat-elevation-z8">
-
-  <div class="card">
-    <p-table [value]="plants" [paginator]="true" [rows]="5"
-      [tableStyle]="{ 'min-width': '50rem;border-radius: 30px;' }" [rowsPerPageOptions]="[5, 10, 20]" class="table">
-      <ng-template pTemplate="header">
-        <tr>
-          <th >Location Name</th>
-          <th> Building Number </th>
-          <th> Plants </th>
-          <th> Departements </th>
-          <th >Actions </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-plant>
-        <tr>
-          <td>{{plant.locationName}}</td>
-          <td> {{plant.buildingNumber}}</td>
-          <td>   <button mat-icon-button color="link" aria-label="Vie departements" (click)="openDepartmentModal(plant, 'plant')">
-            <i class="pi pi-table" style="font-size: 1.3rem"></i>
-          </button>
+  <div id="table" class="mat-elevation-z8">
+    <div class="card">
+      <p-table [value]="plants" [paginator]="true" [rows]="5"
+        [tableStyle]="{ 'min-width': '50rem;border-radius: 30px;' }" [rowsPerPageOptions]="[5, 10, 20]" class="table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Location Name</th>
+            <th>Building Number</th>
+            <th>Plants</th>
+            <th>Departments</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-plant>
+          <tr>
+            <td>{{plant.locationName}}</td>
+            <td>{{plant.buildingNumber}}</td>
+            <td>
+              <button mat-icon-button color="link" aria-label="View departments"
+                (click)="openDepartmentModal(plant, 'plant')">
+                <i class="pi pi-table" style="font-size: 1.3rem"></i>
+              </button>
             </td>
-          <td>
-            <button mat-icon-button color="link" aria-label="Vie departements" (click)="openDepartmentModal(plant, 'department')">
-              <i class="pi pi-warehouse" style="font-size: 1.3rem"></i>
-            </button>
-          </td>
-          
-          <td> <!-- Actions Button -->
-            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-
-            <mat-menu #menu="matMenu">
-              <!-- View Details Button -->
-              <button mat-menu-item >
-                <mat-icon>visibility</mat-icon>
-                <span>View Details</span>
+            <td>
+              <button mat-icon-button color="link" aria-label="View departments"
+                (click)="openDepartmentModal(plant, 'department')">
+                <i class="pi pi-warehouse" style="font-size: 1.3rem"></i>
               </button>
-              <!-- Update Button -->
-              <button mat-menu-item >
-                <mat-icon>edit</mat-icon>
-                <span>Update</span>
-              </button>
-              <!-- Delete Button -->
-              <button mat-menu-item>
+            </td>
+            <td>
+              <button (click)="deleteLocation(plant.locationId)" mat-icon-button color="warn">
                 <mat-icon>delete</mat-icon>
-                <span>Delete</span>
               </button>
-              <!-- Change Password Button -->
-              <button mat-menu-item >
-                <mat-icon>vpn_key</mat-icon>
-                <span>Change Password</span>
-              </button>
-            </mat-menu>
-          </td>
-
-        </tr>
-      </ng-template>
-    </p-table>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
+
+  <p-dialog header="Add Location & Plant & Department" [modal]="true" [(visible)]="visible">
+    <div class="all">
+      <div class="container">
+        <form (ngSubmit)="AddNewLocation()">
+          <p-panel header="Location Informations">
+            <div class="flex-row gap-2 p-2">
+              <div class="flex flex-column gap-2">
+                <label for="Location-name">Location Name</label>
+                <input pInputText id="Location-name" [(ngModel)]="location.LocationName" name="locationName"
+                  aria-describedby="Location-name-help" />
+              </div>
+              <div class="flex flex-column gap-2">
+                <label for="approver-name">Building Number</label>
+                <input pInputText id="approver-name" [(ngModel)]="location.BuildingNumber" name="buildingNumber"
+                  aria-describedby="approver-name-help" />
+              </div>
+            </div>
+          </p-panel>
+          <br>
+          <p-tabView>
+
+            <p-panel class="panel" header="Plant Informations" [toggleable]="true" [collapsed]="true">
+              <div *ngFor="let plant of plantes; let i = index" class="flex-row gap-2 p-2">
+                <div class="flex flex-column gap-2">
+                  <label for="plant-name-{{i}}">Plant Name</label>
+                  <input pInputText id="plant-name-{{i}}" [(ngModel)]="plant.plant_name" name="plantName-{{i}}"
+                    aria-describedby="plant-name-help" />
+                </div>
+                <div class="flex flex-column gap-2">
+                  <label for="sap-Number-{{i}}">SAP Number</label>
+                  <input pInputText id="sap-Number-{{i}}" [(ngModel)]="plant.SapNumber" name="SapNumber-{{i}}"
+                    aria-describedby="sap-Number-help" />
+                </div>
+                <div class="flex flex-column gap-2">
+                  <label for="approver-name-{{i}}">Controller Name</label>
+                  <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="approver-name-{{i}}"
+                    [(ngModel)]="plant.ApproverId" name="approverName-{{i}}" [options]="users" optionValue="id"
+                    optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the controller">
+                  </p-dropdown>
+                </div>
+              </div>
+              <p-button label="Add new plant" (click)="addPlant($event)" [text]="true" severity="secondary" />
+            </p-panel>
+            <br>
+            <p-panel header="Department Informations" [toggleable]="true" [collapsed]="true">
+              <div *ngFor="let department of departments; let i = index" class="flex-row gap-2 p-2">
+                <div class="flex flex-column gap-2">
+                  <label for="department-name-{{i}}">Department Name</label>
+                  <input pInputText id="department-name-{{i}}" [(ngModel)]="department.departmentName"
+                    name="departmentName-{{i}}" aria-describedby="department-name-help" />
+                </div>
+                <div class="flex flex-column gap-2">
+                  <label for="manager-name-{{i}}">Manager Name</label>
+                  <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="manager-name-{{i}}"
+                    [(ngModel)]="department.ManagerId" name="manager-name-{{i}}" [options]="users" optionValue="id"
+                    optionLabel="fullName" aria-describedby="manager-name-help" placeholder="Select the manager">
+                  </p-dropdown>
+                </div>
+                <div>
+                  <label for="status-{{i}}">Status</label> <br>
+                  <p-inputSwitch id="status-{{i}}" [(ngModel)]="department.status" name="status-{{i}}" />
+                </div>
+              </div>
+              <p-button label="Add new department" (click)="addDepartment($event)" [text]="true" severity="secondary" />
+            </p-panel>
+
+          </p-tabView>
+
+          <div class="button-container">
+            <button type="submit">Confirm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </p-dialog>
 </div>
+<p-toast></p-toast>

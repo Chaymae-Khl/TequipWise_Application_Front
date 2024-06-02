@@ -17,3 +17,132 @@ th{
   color: #ffffff;
   background-color: #2E4957;
  }
+ .title2{
+  text-align: center;
+  color: #EA8300;
+  font-size: 50px;
+}
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.centered-tabview {
+  width: 100%;
+  max-width: 800px; /* Adjust the max-width as needed */
+}
+.centered{
+  display: flex;
+  justify-content: center;
+}
+
+input{
+  margin-top: 5px;
+}
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #EA8300;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; /* Adjust gap as needed */
+  align-items: center; /* Ensures alignment of items */
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adjust gap as needed */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #EA8300;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #0056b3;
+}
+.plusButton {
+  /* Config start */
+  --plus_sideLength: 2.5rem;
+  --plus_topRightTriangleSideLength: 0.9rem;
+  /* Config end */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white;
+  width: var(--plus_sideLength);
+  height: var(--plus_sideLength);
+  background-color: #EA8300;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.plusButton::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-width: 0 var(--plus_topRightTriangleSideLength) var(--plus_topRightTriangleSideLength) 0;
+  border-style: solid;
+  border-color: transparent white transparent transparent;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+}
+
+.plusButton:hover {
+  cursor: pointer;
+}
+
+.plusButton:hover::before {
+  --plus_topRightTriangleSideLength: calc(var(--plus_sideLength) * 2);
+}
+
+.plusButton:focus-visible::before {
+  --plus_topRightTriangleSideLength: calc(var(--plus_sideLength) * 2);
+}
+
+.plusButton>.plusIcon {
+  fill: white;
+  width: calc(var(--plus_sideLength) * 0.7);
+  height: calc(var(--plus_sideLength) * 0.7);
+  z-index: 1;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+}
+
+.plusButton:hover>.plusIcon {
+  fill: #EA8300;
+  transform: rotate(180deg);
+}
+
+.plusButton:focus-visible>.plusIcon {
+  fill: #EA8300;
+  transform: rotate(180deg);
+}

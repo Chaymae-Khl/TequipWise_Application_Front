@@ -21,7 +21,6 @@ import { MatTableModule} from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { NavBarComponent } from './Components/nav-bar/nav-bar.component';
-import { UserModalComponent } from './Components/Admin/user-modal/user-modal.component';
 import { RoleManagComponent } from './Components/Admin/role-manag/role-manag.component';
 import { UserFilterPipe } from './Pipes/user-filter.pipe';
 import { MessageDialogComponent } from './message-dialog/message-dialog.component';
@@ -59,6 +58,13 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { PanelModule } from 'primeng/panel';
 import { DockModule } from 'primeng/dock';
 import { DockComponent } from './Components/dock/dock.component';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { SplitterModule } from 'primeng/splitter';
+import { DividerModule } from 'primeng/divider';
+import { AccordionModule } from 'primeng/accordion';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { SplitButtonModule } from 'primeng/splitbutton';
+
 
 @NgModule({
   declarations: [
@@ -71,7 +77,6 @@ import { DockComponent } from './Components/dock/dock.component';
     SidebarComponent,
     UsersManagComponent,
     NavBarComponent,
-    UserModalComponent,
     RoleManagComponent,
     UserFilterPipe,
     MessageDialogComponent,
@@ -125,8 +130,13 @@ import { DockComponent } from './Components/dock/dock.component';
     RadioButtonModule,
     InputSwitchModule,
     PanelModule,
-    DockModule
-
+    DockModule,
+    SpeedDialModule,
+    SplitterModule,
+    DividerModule,
+    AccordionModule,
+    ConfirmPopupModule,
+    SplitButtonModule
   ],
   providers: [
     provideClientHydration(),

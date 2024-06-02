@@ -6,24 +6,33 @@ import { MenuItem } from 'primeng/api';
   templateUrl: './dock.component.html',
   styleUrl: './dock.component.css'
 })
-export class DockComponent implements OnInit  {
-  items: MenuItem[] | undefined;
+export class DockComponent implements OnInit {
+  items!: MenuItem[];
   ngOnInit(): void {
     this.items = [
-      {
-          icon: '../assets/Icons/Home.png'
-      },
-      {
-          icon: 'https://primefaces.org/cdn/primeng/images/dock/appstore.svg'
-      },
-      {
-          icon: 'https://primefaces.org/cdn/primeng/images/dock/photos.svg'
-      },
-      {
-          icon: 'https://primefaces.org/cdn/primeng/images/dock/trash.png'
-      }
-  ];
 
+      {
+        icon: 'pi pi-trash',
+
+      },
+      {
+        icon: 'pi pi-upload',
+        routerLink: ['/fileupload'],
+      },
+      {
+        icon: 'pi pi-external-link',
+        target: '_blank',
+        url: 'http://angular.io',
+      }, 
+      {
+        icon: 'pi pi-home',
+        routerLink: ["/"],
+      },
+      {
+        icon: 'pi pi-bars',
+        routerLink: ["/Menu"],
+      }
+    ];
 
   }
 }

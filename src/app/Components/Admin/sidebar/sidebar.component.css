@@ -24,7 +24,6 @@
     margin: 0;
     font-family: var(--bs-body-font-family);
     font-size: var(--bs-body-font-size);
-    font-weight: var(--bs-body-font-weight);
     line-height: var(--bs-body-line-height);
     color: var(--bs-body-color);
     text-align: var(--bs-body-text-align);
@@ -52,7 +51,6 @@
   .navbar-vertical .navbar-nav .nav-link {
     padding-left: 1rem;
     padding-right: 1rem;
-    font-weight: 500;
     color: #67748e;
   }
   
@@ -825,7 +823,6 @@
   }
   
   .navbar-vertical .navbar-nav .nav-link.active {
-    font-weight: 600;
     box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
     border-radius: 0.5rem;
   }

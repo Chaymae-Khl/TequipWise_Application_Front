@@ -4,10 +4,7 @@
 
 
 /* background style */
-*{
-    margin: 0px;
-    padding: 0px;
-}
+
 
 .area{
     background: #ffffff;  
@@ -127,21 +124,14 @@
     }
 
 }
-
-
-
-
-
-
-
 /*form styles*/
-
 
 #msform {
   width: 500px;
   margin: auto;
   text-align: center;
   position: relative;
+  margin-top: 7rem;
 }
 #msform fieldset {
   background: white;
@@ -160,14 +150,7 @@
 #msform fieldset:not(:first-of-type) {
   display: none;
 }
-#logo{
-    margin-top: 70px;
 
-}
-#title2{
-    margin-top: 17px;
-
-}
 /*inputs*/
 #msform input, #msform textarea {
   padding: 15px;

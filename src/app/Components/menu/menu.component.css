@@ -1,47 +1,52 @@
 @media (min-width: 100px) {
-    .full-height {
-      height: calc(100% - 80.5px);
-    }
-    .row {
-        height: calc(50%);
-      }#col2{
-    background-color:  #c4c1c044;
+  .full-height {
+    height: calc(100% - 80.5px);
+  }
+
+  .row {
+    height: calc(50%);
+  }
+
+  #col2 {
+    background-color: #ea850024;
     border-radius: 48% 52% 0% 0% / 32% 27% 27% 32%;
     padding: 3rem;
-    }
-    .desc{
-      margin-top: 20%;
-      text-align: center;
-      font-size: 1.2rem;
-      margin-left: -4.5rem;
-      
-    }
-      
-    .button {
-      width: 90px;
-      height: 90px;
-      border-radius: 15px;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      background-color: rgb(255, 255, 255);
-      border: 0px;
-      cursor: pointer;
-      outline: 0px;
-      font-weight: 600;
-      font-size: 18px;
-      color: white;
-      box-shadow: rgba(0, 0, 0, 0.22) 0px 9px 9px;
-      margin-right: 5rem;
-    }
-    .dashicon{
-      width: 3.5rem;
-    }
-    .allBtn{
-      margin-right: 4rem;
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
   }
-  button:hover{
-    background-color: #3e637627;
+
+  .desc {
+    margin-top: 20%;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-left: -4.5rem;
+
   }
-  
-  
+
+  .button {
+    width: 90px;
+    height: 90px;
+    border-radius: 15px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: rgb(255, 255, 255);
+    border: 0px;
+    cursor: pointer;
+    outline: 0px;
+    font-weight: 600;
+    font-size: 18px;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.22) 0px 9px 9px;
+    margin-right: 5rem;
+  }
+
+  .dashicon {
+    width: 3.5rem;
+  }
+
+  .allBtn {
+    margin-right: 4rem;
+  }
+}
+
+button:hover {
+  background-color: #3e637627;
+}

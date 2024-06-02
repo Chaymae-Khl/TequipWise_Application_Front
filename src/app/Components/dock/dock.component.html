@@ -1,18 +1,9 @@
-
-
-<div class="content">
-    <!-- Other content -->
-    <div class="card-container">
-      <div class="card">
-        <div class="flex flex-wrap gap-3 mb-5">
-        </div>
-        <div class="dock-window">
-          <p-dock [model]="items" >
-            <ng-template pTemplate="item" let-item>
-              <img [src]="item.icon" [alt]="item.label" width="100%" />
-            </ng-template>
-          </p-dock>
-        </div>
-      </div>
-    </div>
+  <div style="height: 150px;position: absolute;right: 110px; top:50%;">
+    <p-speedDial 
+      [model]="items" 
+      direction="left" 
+      [radius]="80" 
+      type="semi-circle"
+      buttonClassName="p-button-warning">
+    </p-speedDial>
   </div>

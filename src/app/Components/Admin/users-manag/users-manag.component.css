@@ -180,3 +180,11 @@
     padding: 10px;
     margin-left: -1px;
   }
+  #role {
+    padding: 5px; /* Adjust padding as needed */
+    color: white; /* Text color */
+    border-radius: 3rem;
+    text-align: center;
+    margin: 0.4rem;
+    /* Add other styles as needed */
+  }

@@ -10,7 +10,7 @@
     <div class="row align-items-center inner-container">
         <div class="col d-flex justify-content-center align-items-center" id="col2">
             
-            <div>
+            <div *ngIf="IsAdmin">
                 <button class="button">
                     <a routerLink="/admin"><img class="dashicon" src="assets/Images/dashboard.png" alt=""></a>
                 </button>
@@ -19,14 +19,14 @@
             </div>
             <div>
                 <button class="button">
-                    <a routerLink="/admin"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
+                    <a routerLink="/"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
                 </button>
                 <p class="desc">My Requests</p>
                 <span class="backdrop"></span>
             </div>
             <div >
                 <button class="button">
-                    <a routerLink="/admin"><img  src="assets/Images/request.png" alt="" style="width: 3.5rem;margin-left: 0.7rem;"></a>
+                    <a routerLink="/"><img  src="assets/Images/request.png" alt="" style="width: 3.5rem;margin-left: 0.7rem;"></a>
                 </button>
                 <p class="desc">Submit a request</p>
                 <span class="backdrop"></span>

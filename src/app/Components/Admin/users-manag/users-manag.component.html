@@ -4,8 +4,8 @@
   <h2 class="title">Users ({{numberofusers}})</h2>
   <div class="search-bar">
     <mat-form-field appearance="fill" class="search-field">
-      <mat-label> Search by Te identifier</mat-label>
-      <input matInput [(ngModel)]="searchTerm" name="user.userName" placeholder="Te identifier">
+      <mat-label> Search by Te identifier/Fullname</mat-label>
+      <input matInput [(ngModel)]="searchTerm" name="user.userName" placeholder="Te identifier/Fullname">
     </mat-form-field>
   </div>
 
@@ -34,8 +34,8 @@
             <td> {{user.teNum}} </td>
             <td>{{user.email}}</td>
             <td>
-              <div *ngFor="let role of user.roles">
-                {{role}}
+              <div id="role" *ngFor="let role of user.roles" [ngStyle]="{'background-color': role === 'Admin' ? 'rgba(19, 96, 59, 0.666) ' : 'rgb(246, 187, 92)'}">
+                {{ role }}
               </div>
             </td>
             <td>{{user.locationName}} </td>

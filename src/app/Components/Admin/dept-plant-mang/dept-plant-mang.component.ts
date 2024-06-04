@@ -25,7 +25,9 @@ export class DeptPlantMangComponent implements OnInit {
   mode: 'add' | 'view' | 'update' = 'add';
   checked: boolean = false;
   users: any;
+  controllers:any;
   selectedExistingPlantIds:any;
+  searchTerm: string = '';
   //for the form repititions
   public locations: any[] = [{ name: '', buildingNumber: '' }];
   public departments: any[] = [{ departmentName: '', managerName: '', status: false }];
@@ -43,8 +45,8 @@ export class DeptPlantMangComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPlants();
-    this.getUsersNames();
-
+    this.getUsernames();
+    this.getControllers();
   }
 
   // Get plants method
@@ -64,7 +66,7 @@ export class DeptPlantMangComponent implements OnInit {
 
 
   //getusersNames
-  getUsersNames(): void {
+  getUsernames(): void {
     this.authservice.getUsers().subscribe(
       (data: any) => {
         this.users = data.map((user: any) => ({
@@ -74,7 +76,22 @@ export class DeptPlantMangComponent implements OnInit {
       },
       (error) => {
         console.error('An error occurred while fetching Users:', error);
-        console.log('Error response:', error.error); // Log the response object
+      }
+    );
+  }
+
+  getControllers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.controllers = data
+          .filter((user: any) => user.roles && user.roles.includes('Controller'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        console.error('An error occurred while fetching Users:', error);
       }
     );
   }

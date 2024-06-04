@@ -3,8 +3,7 @@ import { Plant } from "./plant"
 
 export class Location {
     locationId: any;
-    LocationName: any;
-    BuildingNumber: any;
+    locationName: any;
     departments!: Department[];
     plants!: Plant[];
 

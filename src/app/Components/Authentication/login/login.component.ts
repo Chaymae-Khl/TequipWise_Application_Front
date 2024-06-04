@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
 })
 export class LoginComponent {
   visible: boolean = false;
-  email:any;
+  email: any;
   isPasswordVisible: boolean = false;
 
   togglePasswordVisibility() {
@@ -27,64 +27,66 @@ export class LoginComponent {
     username: null,
     password: null
   };
-constructor(private authService: AuthServiceService, private router: Router,private localstorgeService:LocalStorageServiceService,private messageService: MessageService ){}
+  constructor(private authService: AuthServiceService, private router: Router, private localstorgeService: LocalStorageServiceService, private messageService: MessageService) { }
   showDialog() {
-      this.visible = true;
+    this.visible = true;
   }
-  
+
 
   //login function
 
   onSubmit(form: NgForm) {
-  const loginData = {
-    username: form.value.username,
-    password: form.value.password
-  };
-  this.authService.login(loginData).subscribe(
-    (response:any) => {
-      const localStorage = document.defaultView?.localStorage;
-      // Handle successful login response
-      if(localStorage)
-        this.localstorgeService.setItem('token',response.token);
-      console.log(response.token);
-      const token=response.token;
-      const helper = new JwtHelperService();
+    const loginData = {
+      username: form.value.username,
+      password: form.value.password
+    };
+    this.authService.login(loginData).subscribe(
+      (response: any) => {
+        const localStorage = document.defaultView?.localStorage;
+        // Handle successful login response
+        if (localStorage)
+          this.localstorgeService.setItem('token', response.token);
+        console.log(response.token);
+        this.router.navigate(['/Menu']);
+        //     const token=response.token;
+        //     const helper = new JwtHelperService();
 
-      const decodedToken = helper.decodeToken(token);
-      console.log(decodedToken);
-      const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-      console.log('User role:', role);
+        //     const decodedToken = helper.decodeToken(token);
+        //     console.log(decodedToken);
+        //     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        //     console.log('User role:', role);
 
-   if(role==="Admin"){
-    this.router.navigate(['/Menu']);
-   } 
-   else{
-    console.log("your are not admin.");
-   }
+        //  if(role==="Admin"){
+        //   this.router.navigate(['/Menu']);
+        //  } 
+        //  else{
+        //   console.log("your are not admin.");
+        //  }
 
 
-    },
-    error => {
-      // Handle error
-      console.error('Login error:', error);
-    }
-  );
-}
+      },
+      error => {
+        // Handle error
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Te identifier or Password Incorrect', life: 10000 });
+        console.error('Login error:', error);
+      }
+    );
+  }
 
-//sendemail function
-passwordEmail(){
-  this.authService.SendForgetPasswordEmail(this.email).subscribe(
-    (response) => {
-      console.log('Reset link sent successfully:', response);
-      this.visible=false;
-      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'An Email was sent to your MailBox',life: 15000 });
-    },
-    (error) => {
-      console.error('Error sending reset link:', error);
-      // Handle error (e.g., show an error message)
-    }
-  );
-}
+  //sendemail function
+  passwordEmail() {
+    this.authService.SendForgetPasswordEmail(this.email).subscribe(
+      (response) => {
+        console.log('Reset link sent successfully:', response);
+        this.visible = false;
+        this.messageService.add({ severity: 'info', summary: 'Info', detail: 'An Email was sent to your MailBox', life: 15000 });
+      },
+      (error) => {
+        console.error('Error sending reset link:', error);
+        // Handle error (e.g., show an error message)
+      }
+    );
+  }
 
 
 }

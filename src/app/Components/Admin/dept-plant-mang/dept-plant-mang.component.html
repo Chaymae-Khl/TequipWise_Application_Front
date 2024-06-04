@@ -10,8 +10,8 @@
     <div class="col-4">
       <div class="search-bar">
         <mat-form-field appearance="fill" class="search-field">
-          <mat-label>Search by Plant Name</mat-label>
-          <input matInput placeholder="Te identifier">
+          <mat-label>Search by Location Name</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Location Name">
         </mat-form-field>
       </div>
     </div>
@@ -19,12 +19,11 @@
 
   <div id="table" class="mat-elevation-z8">
     <div class="card">
-      <p-table [value]="plants" [paginator]="true" [rows]="5"
+      <p-table [value]="(plants | locationFilter:searchTerm) || []" [paginator]="true" [rows]="5"
         [tableStyle]="{ 'min-width': '50rem;border-radius: 30px;' }" [rowsPerPageOptions]="[5, 10, 20]" class="table">
         <ng-template pTemplate="header">
           <tr>
             <th>Location Name</th>
-            <th>Building Number</th>
             <th>Plants</th>
             <th>Departments</th>
             <th>Actions</th>
@@ -33,7 +32,6 @@
         <ng-template pTemplate="body" let-plant>
           <tr>
             <td>{{plant.locationName}}</td>
-            <td>{{plant.buildingNumber}}</td>
             <td>
               <button mat-icon-button color="link" aria-label="View departments"
                 (click)="openDepartmentModal(plant, 'plant')">
@@ -65,20 +63,15 @@
             <div class="flex-row gap-2 p-2">
               <div class="flex flex-column gap-2">
                 <label for="Location-name">Location Name</label>
-                <input pInputText id="Location-name" [(ngModel)]="location.LocationName" name="locationName"
+                <input pInputText id="Location-name" [(ngModel)]="location.locationName" name="locationName"
                   aria-describedby="Location-name-help" />
-              </div>
-              <div class="flex flex-column gap-2">
-                <label for="approver-name">Building Number</label>
-                <input pInputText id="approver-name" [(ngModel)]="location.BuildingNumber" name="buildingNumber"
-                  aria-describedby="approver-name-help" />
               </div>
             </div>
           </p-panel>
           <br>
           <p-tabView>
 
-            <p-panel class="panel" header="Plant Informations" [toggleable]="true" [collapsed]="true">
+            <p-panel class="panel" header="Plant Informations" [toggleable]="true" >
               <div *ngFor="let plant of plantes; let i = index" class="flex-row gap-2 p-2">
                 <div class="flex flex-column gap-2">
                   <label for="plant-name-{{i}}">Plant Name</label>
@@ -93,7 +86,7 @@
                 <div class="flex flex-column gap-2">
                   <label for="approver-name-{{i}}">Controller Name</label>
                   <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="approver-name-{{i}}"
-                    [(ngModel)]="plant.ApproverId" name="approverName-{{i}}" [options]="users" optionValue="id"
+                    [(ngModel)]="plant.ApproverId" name="approverName-{{i}}" [options]="controllers" optionValue="id"
                     optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the controller">
                   </p-dropdown>
                 </div>
@@ -101,7 +94,7 @@
               <p-button label="Add new plant" (click)="addPlant($event)" [text]="true" severity="secondary" />
             </p-panel>
             <br>
-            <p-panel header="Department Informations" [toggleable]="true" [collapsed]="true">
+            <p-panel header="Department Informations" [toggleable]="true" >
               <div *ngFor="let department of departments; let i = index" class="flex-row gap-2 p-2">
                 <div class="flex flex-column gap-2">
                   <label for="department-name-{{i}}">Department Name</label>

@@ -64,6 +64,7 @@ import { DividerModule } from 'primeng/divider';
 import { AccordionModule } from 'primeng/accordion';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { LocationFilterPipe } from './pipes/location-filter.pipe';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     TokenExpiredComponent,
     MenuComponent,
     DockComponent,
+    LocationFilterPipe,
    
    
   

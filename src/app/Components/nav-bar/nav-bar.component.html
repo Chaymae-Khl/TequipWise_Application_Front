@@ -2,14 +2,16 @@
   <a class="navbar-brand logo" href="/">
     <img class="TeLogo" src="assets/Images/logo.png" alt="">
   </a>
-    <p-button routerLink="/Menu" icon="pi pi-ellipsis-h" label="Menu" [rounded]="true" [text]="true" severity="secondary" />
-  
-    <p-button routerLink="/" icon="pi pi-home"  [rounded]="true" [text]="true" severity="secondary" />
+  <p-button *ngIf="isLoggedIn()" icon="pi pi-home" routerLink="/" severity="warning" />
+
+  <p-button *ngIf="isLoggedIn()" icon="pi pi-ellipsis-h" routerLink="/Menu" [outlined]="true" label="Menu"
+    severity="warning" />
+
   <button class="navbar-toggler" title="Toggle Navigation" name="toggle" type="button" data-bs-toggle="collapse"
     data-bs-target="#collapsibleNavbar">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse"  id="collapsibleNavbar">
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav ms-auto me-auto">
       <li class="nav-item" *ngIf="!isLoggedIn()">
 
@@ -17,7 +19,7 @@
       <li class="nav-item" *ngIf="!isLoggedIn()">
       </li>
     </ul>
-    
+
     <ul class="navbar-nav ms-auto">
       <li class="nav-item" *ngIf="!isLoggedIn()">
         <a class="nav-link" href="#services">Services</a>
@@ -29,8 +31,8 @@
         <a *ngIf="!isLoggedIn()" routerLink="/login" style="text-decoration: none;">
           <button class="btn btn-outline-dark my-2 my-sm-0" id="loginBtn" type="submit">Login</button>
         </a>
-      </li> 
-      
+      </li>
+
       <li class="nav-item" *ngIf="isLoggedIn()">
         <div class="dropdown">
           <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -52,7 +54,7 @@
           </svg>
         </button>
       </li>
-     
+
     </ul>
   </div>
 </nav>

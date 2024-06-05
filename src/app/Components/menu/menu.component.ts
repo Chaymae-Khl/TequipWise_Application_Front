@@ -10,6 +10,8 @@ import { LocalStorageServiceService } from '../../Services/local-storage-service
 export class MenuComponent {
   isAuthenticated: boolean;
   IsAdmin!:boolean;
+  visible: boolean = false;
+
   constructor(private route: ActivatedRoute,private localstorage:LocalStorageServiceService) {
     // Access the resolved data
     this.isAuthenticated = this.route.snapshot.data['isAuthenticated'];
@@ -37,5 +39,7 @@ export class MenuComponent {
       }
     );
   }
-
+  showDialog(): void {
+    this.visible = true;
+  }
 }

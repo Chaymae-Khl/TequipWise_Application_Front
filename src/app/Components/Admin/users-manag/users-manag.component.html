@@ -181,17 +181,17 @@
                   optionValue="name" [showClear]="true" [filter]="true" filterBy="name" placeholder="Select Roles"
                   multiple="multiple">
                 </p-multiSelect>
-              </div>
+              </div> 
               <div class="form-group">
                 <label for="managerName">Manager name :</label>
-                <p-dropdown [options]="users" [(ngModel)]="locationed.managerName" name="managerName"
+                <p-dropdown [appendTo]="'body'" [options]="users" [(ngModel)]="locationed.managerName" name="managerName"
                   optionLabel="teNum" optionValue="teNum" [showClear]="true" [filter]="true" filterBy="teNum"
                   placeholder="Select the Manager">
                 </p-dropdown>
               </div>
               <div class="form-group">
                 <label for="backupaprover_Name">Backup Approver :</label>
-                <p-dropdown [options]="users" [(ngModel)]="locationed.backupaprover_Name" name="backupaprover_Name"
+                <p-dropdown [appendTo]="'body'" [options]="users" [(ngModel)]="locationed.backupaprover_Name" name="backupaprover_Name"
                   optionLabel="teNum" optionValue="teNum" [showClear]="true" [filter]="true" filterBy="teNum"
                   placeholder="Select the Backup Approver">
                 </p-dropdown>

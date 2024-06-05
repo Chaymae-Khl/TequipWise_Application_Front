@@ -65,6 +65,9 @@ import { AccordionModule } from 'primeng/accordion';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { LocationFilterPipe } from './pipes/location-filter.pipe';
+import { EquipmentManagComponent } from './Components/Admin/equipment-manag/equipment-manag.component';
+import { EquipmentFilterPipe } from './pipes/equipment-filter.pipe';
+import { OrderListModule } from 'primeng/orderlist';
 
 
 @NgModule({
@@ -92,7 +95,9 @@ import { LocationFilterPipe } from './pipes/location-filter.pipe';
     MenuComponent,
     DockComponent,
     LocationFilterPipe,
-   
+    EquipmentManagComponent,
+    EquipmentFilterPipe,
+  
    
   
   ],
@@ -138,7 +143,8 @@ import { LocationFilterPipe } from './pipes/location-filter.pipe';
     DividerModule,
     AccordionModule,
     ConfirmPopupModule,
-    SplitButtonModule
+    SplitButtonModule,
+    OrderListModule
   ],
   providers: [
     provideClientHydration(),

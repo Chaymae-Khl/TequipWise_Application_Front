@@ -14,6 +14,7 @@ import { ForgetPasswordComponent } from './Components/forget-password/forget-pas
 import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/suppliers-manag.component';
 import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
 import { MenuComponent } from './Components/menu/menu.component';
+import { EquipmentManagComponent } from './Components/Admin/equipment-manag/equipment-manag.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -37,6 +38,9 @@ const routes: Routes = [
       },
       {
         path: 'suppliers', component: SuppliersManagComponent,
+      },
+      {
+        path: 'equipements', component: EquipmentManagComponent,
       }
     ],   resolve: { isAuthenticated: AuthGuard }
   },

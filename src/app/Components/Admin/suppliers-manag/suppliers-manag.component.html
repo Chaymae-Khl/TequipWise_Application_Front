@@ -17,21 +17,17 @@
       </div>
     </div>
   </div>
-  
+
   <div id="table" class="mat-elevation-z8">
     <div class="card">
-      <p-table
-        [value]="(suppliers | supplierFilte:searchTerm) || []"
-        [paginator]="true"
-        [rows]="5"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        [rowsPerPageOptions]="[5, 10, 20]"
-      >
+      <p-table [value]="(suppliers | supplierFilte:searchTerm) || []" [paginator]="true" [rows]="5"
+        [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
         <ng-template pTemplate="header">
           <tr>
             <th>Supplier Name</th>
-            <th >Address</th>
-            <th >Email</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Equipments</th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -40,6 +36,10 @@
             <td>{{ supplier.suuplier_name }}</td>
             <td>{{ supplier.address }}</td>
             <td>{{ supplier.email }}</td>
+            <td><button mat-icon-button color="link" aria-label="View departments"
+                (click)="showDialog('Equipements', supplier)">
+                <i class="pi pi-desktop" style="font-size: 1.3rem"></i>
+              </button></td>
             <td>
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
                 <mat-icon>more_vert</mat-icon>
@@ -65,36 +65,64 @@
     </div>
   </div>
 
- 
+
 </div>
- <p-dialog header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? 'View Supplier' : 'Update Supplier' }}" [modal]="true" [(visible)]="visible" [style]="{ width: '20rem'}">
-    <form *ngIf="mode !== 'view'" (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
-      <div class="row">
-        <p-floatLabel class="inputFloat">
-          <input pInputText [(ngModel)]="selectedSupplier.suuplier_name" name="suuplier_name" id="supplier_name" required />
-          <label for="supplier_name">Supplier Name</label>
-        </p-floatLabel>
-        <p-floatLabel class="inputFloat">
-          <input pInputText [(ngModel)]="selectedSupplier.address" name="address" id="address" required />
-          <label for="address">Address</label>
-        </p-floatLabel>
-        <p-floatLabel class="inputFloat">
-          <input pInputText [(ngModel)]="selectedSupplier.email" name="email" id="email" required />
-          <label for="email">Email</label>
-        </p-floatLabel>
-      </div>
-      <div class="confirmbtn col align-self-end">
-        <button type="submit" class="button">
-          {{ mode === 'add' ? 'Add' : 'Update' }}
-        </button>
-      </div>
-    </form>
-   
-    <div *ngIf="mode === 'view'">
-      <div class="row">
-        <p><strong>Supplier Name:</strong> {{ selectedSupplier.suuplier_name }}</p>
-        <p><strong>Address:</strong> {{ selectedSupplier.address }}</p>
-        <p><strong>Email:</strong> {{ selectedSupplier.email }}</p>
-      </div>
+<p-dialog
+  header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? 'View Supplier': mode === 'Equipements' ? 'Equipements of the supplier' : 'Update Supplier' }}"
+  [modal]="true" [(visible)]="visible">
+  <form *ngIf="mode !== 'view' ? mode !=='Equipements':mode !== 'view'"
+    (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
+    <div class="row">
+      <p-floatLabel class="inputFloat">
+        <input pInputText [(ngModel)]="selectedSupplier.suuplier_name" name="suuplier_name" id="supplier_name"
+          required />
+        <label for="supplier_name">Supplier Name</label>
+      </p-floatLabel>
+      <p-floatLabel class="inputFloat">
+        <input pInputText [(ngModel)]="selectedSupplier.address" name="address" id="address" required />
+        <label for="address">Address</label>
+      </p-floatLabel>
+      <p-floatLabel class="inputFloat">
+        <input pInputText [(ngModel)]="selectedSupplier.email" name="email" id="email" required />
+        <label for="email">Email</label>
+      </p-floatLabel>
     </div>
-  </p-dialog>
+    <div class="confirmbtn col align-self-end">
+      <button type="submit" class="button">
+        {{ mode === 'add' ? 'Add' : 'Update' }}
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="mode === 'view'">
+    <div class="row">
+      <p><strong>Supplier Name:</strong> {{ selectedSupplier.suuplier_name }}</p>
+      <p><strong>Address:</strong> {{ selectedSupplier.address }}</p>
+      <p><strong>Email:</strong> {{ selectedSupplier.email }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="mode==='Equipements'">
+
+    <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ height: '25rem' }" filterBy="equipementSN"
+      filterPlaceholder="Filter by name">
+      <ng-template let-equipemnt pTemplate="item">
+        <p-divider></p-divider>
+
+        <div class="col-8">
+          <div class="flex-1 flex flex-column gap-2">
+            <span class="font-bold">SN: {{ equipemnt.equipementSN }}</span>
+            <div class="flex align-items-center gap-2">
+
+              <span>Name: {{ equipemnt.equipName }}</span>
+            </div>
+          </div>
+        </div>
+        <p-divider></p-divider>
+      </ng-template>
+
+
+    </p-orderList>
+
+  </div>
+</p-dialog>

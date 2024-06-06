@@ -2,10 +2,9 @@
   <a class="navbar-brand logo" href="/">
     <img class="TeLogo" src="assets/Images/logo.png" alt="">
   </a>
-  <p-button *ngIf="isLoggedIn()" icon="pi pi-home" routerLink="/" severity="warning" />
-
-  <p-button *ngIf="isLoggedIn()" icon="pi pi-ellipsis-h" routerLink="/Menu" [outlined]="true" label="Menu"
-    severity="warning" />
+  <p-button  *ngIf="isLoggedIn()" icon="pi pi-home" routerLink="/" severity="warning" label="Home" [rounded]="true" [text]="true"  />
+  <p-button *ngIf="isLoggedIn()" icon="pi pi-ellipsis-h" routerLink="/Menu"  label="Menu"  severity="warning" [rounded]="true" [text]="true" />
+  
 
   <button class="navbar-toggler" title="Toggle Navigation" name="toggle" type="button" data-bs-toggle="collapse"
     data-bs-target="#collapsibleNavbar">

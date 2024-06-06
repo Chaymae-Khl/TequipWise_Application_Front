@@ -68,6 +68,10 @@ import { LocationFilterPipe } from './pipes/location-filter.pipe';
 import { EquipmentManagComponent } from './Components/Admin/equipment-manag/equipment-manag.component';
 import { EquipmentFilterPipe } from './pipes/equipment-filter.pipe';
 import { OrderListModule } from 'primeng/orderlist';
+import { EquipmentRequestComponent } from './Components/equipment-request/equipment-request.component';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 
 @NgModule({
@@ -97,6 +101,7 @@ import { OrderListModule } from 'primeng/orderlist';
     LocationFilterPipe,
     EquipmentManagComponent,
     EquipmentFilterPipe,
+    EquipmentRequestComponent,
   
    
   
@@ -144,7 +149,10 @@ import { OrderListModule } from 'primeng/orderlist';
     AccordionModule,
     ConfirmPopupModule,
     SplitButtonModule,
-    OrderListModule
+    OrderListModule,
+    CheckboxModule,
+    InputTextareaModule,
+    InputNumberModule
   ],
   providers: [
     provideClientHydration(),

@@ -15,6 +15,7 @@ import { SuppliersManagComponent } from './Components/Admin/suppliers-manag/supp
 import { TokenExpiredComponent } from './Components/token-expired/token-expired.component';
 import { MenuComponent } from './Components/menu/menu.component';
 import { EquipmentManagComponent } from './Components/Admin/equipment-manag/equipment-manag.component';
+import { EquipmentRequestComponent } from './Components/equipment-request/equipment-request.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -42,15 +43,18 @@ const routes: Routes = [
       {
         path: 'equipements', component: EquipmentManagComponent,
       }
-    ],   resolve: { isAuthenticated: AuthGuard }
+    ], resolve: { isAuthenticated: AuthGuard }
   },
   { path: 'loading', component: LoadingComponent },
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'tokenExpired', component: TokenExpiredComponent },
-  { path: 'Menu', component: MenuComponent ,resolve: { isAuthenticated: AuthGuard }},
+  { path: 'Menu', component: MenuComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'EquipementRequest', component: EquipmentRequestComponent, resolve: { isAuthenticated: AuthGuard } }
 
 
- 
+
+
+
 ];
 
 @NgModule({

@@ -55,4 +55,9 @@ getsupplierName(){
   return this.httpClient.get(`${this.apiUrl}/Admin/SuppliersName`,httpOptions);
 }
 
+getEquipmentName(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Admin/EquipemntName`,httpOptions);
+}
+
 }

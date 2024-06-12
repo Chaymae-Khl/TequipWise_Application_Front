@@ -10,12 +10,14 @@ import { LocalStorageServiceService } from '../../Services/local-storage-service
 export class MenuComponent {
   isAuthenticated: boolean;
   IsAdmin!:boolean;
+  IsManger!:boolean;
   visible: boolean = false;
 
   constructor(private route: ActivatedRoute,private localstorage:LocalStorageServiceService) {
     // Access the resolved data
     this.isAuthenticated = this.route.snapshot.data['isAuthenticated'];
   this.isReallyAdmin();
+  this.isManager();
   }
   token=this.localstorage.getItem("token");
   isReallyAdmin() {
@@ -39,6 +41,31 @@ export class MenuComponent {
       }
     );
   }
+
+  isManager() {
+    this.localstorage.IsManger(this.token).subscribe(
+      (isManger: boolean) => {
+        if (isManger) {
+          // User is an admin
+          console.log('User is an Manager');
+          this.IsManger=true;
+          // Add your logic for admin actions
+        } else {
+          // User is not an admin
+          console.log('User is not an Manager');
+          this.IsManger=false;
+          // Add your logic for non-admin actions
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching admin status:', error);
+        // Handle the error (e.g., show an error message)
+      }
+    );
+  }
+
+
+
   showDialog(): void {
     this.visible = true;
   }

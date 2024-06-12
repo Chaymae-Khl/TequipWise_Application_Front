@@ -33,8 +33,16 @@ export class UsersManagComponent implements OnInit{
   visible: boolean = false;
 
 
-
-
+  onApproverActiveChange() {
+    if (!this.locationed.approverActive) {
+      this.locationed.managerName = this.locationed.managerName;
+    }
+  }
+  onApproverActiveChangeBackup() {
+    if (!this.locationed.backupActive) {
+      this.locationed.backupaprover_Name = this.locationed.backupaprover_Name;
+    }
+  }
 
   // modalMode!: 'view' | 'update'|'changepassword';
   numberofusers:any;

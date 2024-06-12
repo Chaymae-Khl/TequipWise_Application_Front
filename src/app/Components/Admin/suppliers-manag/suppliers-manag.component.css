@@ -7,6 +7,9 @@
  i{
   color: #E98201;
  }
+ form{
+  align-items: center;
+ }
  th{
   color: #ffffff;
   background-color: #2E4957;

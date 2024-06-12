@@ -1,0 +1,23 @@
+.confirmed {
+   color: green;
+
+}
+
+.not-confirmed {
+   color: red;
+
+
+}
+
+#requestStatus {
+   background-color: #EA8300;
+   color: aliceblue;
+}
+
+.approved-request {
+   border-left: 5px solid green;
+}
+
+.not-approved-request {
+   border-left: 5px solid red;
+}

@@ -17,16 +17,24 @@
                 <p class="desc">Dashboard</p>
                 <span class="backdrop"></span>
             </div>
+            <div *ngIf="IsManger" >
+                <button class="button">
+                    <a routerLink="/RequestConfirmation"><img width="80px"  src="assets/Images/Quene.png" alt=""></a>
+                </button>
+                <p class="desc">Approval Queue</p>
+                <span class="backdrop"></span>
+            </div>
+
             <div>
                 <button class="button">
-                    <a routerLink="/"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
+                    <a routerLink="/EquipmentList"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
                 </button>
                 <p class="desc">My Requests</p>
                 <span class="backdrop"></span>
             </div>
             <div >
                 <button (click)="showDialog()" class="button">
-                    <a ><img  src="assets/Images/request.png" alt="" style="width: 3.5rem;margin-left: 0.7rem;"></a>
+                    <a ><img  src="assets/Images/request.png" alt="" style="width: 50px;margin-left: 0.7rem;"></a>
                 </button>
                 <p class="desc">Submit a request</p>
                 <span class="backdrop"></span>

@@ -16,6 +16,8 @@ import { TokenExpiredComponent } from './Components/token-expired/token-expired.
 import { MenuComponent } from './Components/menu/menu.component';
 import { EquipmentManagComponent } from './Components/Admin/equipment-manag/equipment-manag.component';
 import { EquipmentRequestComponent } from './Components/equipment-request/equipment-request.component';
+import { UserEquipmentRequestListComponent } from './Components/user-equipment-request-list/user-equipment-request-list.component';
+import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -49,7 +51,9 @@ const routes: Routes = [
   { path: 'forgetPassword', component: ForgetPasswordComponent },
   { path: 'tokenExpired', component: TokenExpiredComponent },
   { path: 'Menu', component: MenuComponent, resolve: { isAuthenticated: AuthGuard } },
-  { path: 'EquipementRequest', component: EquipmentRequestComponent, resolve: { isAuthenticated: AuthGuard } }
+  { path: 'EquipementRequest', component: EquipmentRequestComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'EquipmentList', component: UserEquipmentRequestListComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'RequestConfirmation', component: ConfirmationOperationsRequestListComponent, resolve: { isAuthenticated: AuthGuard } }
 
 
 

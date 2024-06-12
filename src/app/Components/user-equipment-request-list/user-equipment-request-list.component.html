@@ -1,0 +1,123 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="col text-center">
+    <h1 class="mt-5">Your Equipments Requests List ({{ NumberOfRequest.count }})</h1>
+</div>
+
+<div class="container-fluid">
+     <!-- Filter Dropdown -->
+     <div class="mb-3">
+        <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter" optionLabel="label" optionValue="value"
+            placeholder="Filter by Approval Status" (onChange)="filterRequests()"></p-dropdown>
+    </div>
+    <div class="mb-3">
+        <p-button type="button" icon="pi pi-chevron-left" (click)="prev()" [disabled]="isFirstPage()"
+            styleClass="p-button-text"></p-button>
+        <p-button type="button" icon="pi pi-refresh" (click)="reset()" styleClass="p-button-text"></p-button>
+        <p-button type="button" icon="pi pi-chevron-right" (click)="next()" [disabled]="isLastPage()"
+            styleClass="p-button-text"></p-button>
+    </div>
+    <p-table [value]="filteredEquipmentsList" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
+        [tableStyle]="{ 'min-width': '100rem' }" (onPage)="pageChange($event)" [rowsPerPageOptions]="[10, 25, 50]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Request Number</th>
+                <th>Request Date</th>
+                <th>Equipment</th>
+                <th>For new hire</th>
+                <th>Manager Confirmation</th>
+                <th>IT Confirmation</th>
+                <th>Finance Confirmation</th>
+                <th>PR Number</th>
+                <th>PR status</th>
+                <th>PO Number</th>
+                <th>Request Status</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-equip>
+            <tr [ngClass]="{'approved-request': equip.pR_Status && equip.poNum != null && equip.financeconfirmSatuts && equip.departmangconfirmStatus && equip.supplierOffer != null, 'not-approved-request': !equip.pR_Status || equip.pR_Not_ConfirmCause}">
+                <td>{{ equip.userEquipmentRequestId }}</td>
+                <td>{{ equip.requestDate | date:'dd/MM/yyyy hh:mm' }}</td>
+                <td>{{ equip.equipmentName }}</td>
+                <td>
+                    <span *ngIf="equip.isNewhire; else former">New Hire</span>
+                    <ng-template #former>For me</ng-template>
+                </td>
+                <td [ngClass]="{'text-success': equip.departmangconfirmStatus, 'text-danger': !equip.departmangconfirmStatus}">
+                    <i *ngIf="equip.departmangconfirmStatus" class="pi pi-check-circle"></i>
+                    <i *ngIf="!equip.departmangconfirmStatus" class="pi pi-times-circle"></i>
+                    {{ equip.departmangconfirmStatus ? 'Approved' : 'Open' }}
+                </td>
+                <td [ngClass]="{'text-success': equip.iTconfirmSatuts,'text-indigo':equip.supplierOffer, 'text-danger': !equip.iTconfirmSatuts && !equip.supplierOffer}">
+                    <i *ngIf="equip.supplierOffer && !equip.iTconfirmSatuts" class="pi pi-info-circle"></i>
+                    <i *ngIf="equip.iTconfirmSatuts" class="pi pi-check-circle"></i>
+                    <i *ngIf="!equip.iTconfirmSatuts && !equip.supplierOffer" class="pi pi-times-circle"></i>
+                    <ng-container *ngIf="equip.supplierOffer && !equip.iTconfirmSatuts">
+                        Offer
+                    </ng-container>
+                    <ng-container *ngIf="equip.iTconfirmSatuts && equip.supplierOffer">
+                        Approved
+                    </ng-container>
+                    <ng-container *ngIf="!equip.supplierOffer && !equip.iTconfirmSatuts">
+                        Open
+                    </ng-container>
+                </td>
+                <td [ngClass]="{'text-success': equip.financeconfirmSatuts, 'text-danger': !equip.financeconfirmSatuts}">
+                    <i *ngIf="equip.financeconfirmSatuts" class="pi pi-check-circle"></i>
+                    <i *ngIf="!equip.financeconfirmSatuts" class="pi pi-times-circle"></i>
+                    {{ equip.financeconfirmSatuts ? 'Approved' : 'Open' }}
+                </td>
+                <td>
+                    <ng-container *ngIf="equip.prNum != null; else noPr">
+                        {{ equip.prNum }}
+                    </ng-container>
+                    <ng-template #noPr><i class="pi pi-times-circle"></i></ng-template>
+                </td>
+                <td [ngClass]="{'text-success': equip.pR_Status && !equip.pR_Not_ConfirmCause, 'text-danger': !equip.pR_Status || equip.pR_Not_ConfirmCause}">
+                    <i *ngIf="equip.pR_Status && !equip.pR_Not_ConfirmCause" class="pi pi-check-circle"></i>
+                    <i *ngIf="!equip.pR_Status || equip.pR_Not_ConfirmCause" class="pi pi-times-circle"></i>
+                    <ng-container *ngIf="!equip.pR_Not_ConfirmCause">
+                        {{equip.pR_Status ? 'Approved' : 'Open'}}
+                    </ng-container>
+                    <ng-container *ngIf="equip.pR_Not_ConfirmCause">
+                        Not Confirmed
+                    </ng-container>
+                </td>
+                <td>
+                    <ng-container *ngIf="equip.poNum != null; else noPo">
+                        {{ equip.poNum }}
+                    </ng-container>
+                    <ng-template #noPo><i class="pi pi-times-circle"></i></ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf="equip.pR_Not_ConfirmCause !== null; else approvedStatus">
+                        <span class="text-danger"> <i class="pi pi-times-circle"></i> Not Approved</span>
+                    </ng-container>
+                    <ng-template #approvedStatus>
+                        <ng-container *ngIf="equip.departmangconfirmStatus; else notStarted">
+                            <ng-container *ngIf="equip.supplierOffer != null; else inProgress">
+                                <ng-container *ngIf="equip.financeconfirmSatuts; else waitingForFinance">
+                                    <ng-container *ngIf="equip.pR_Status && equip.poNum != null; else waitingForPRPO">
+                                        <span class="text-success"> <i class="pi pi-check-circle"></i> Approved</span>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template #notStarted>
+                        <span class="text-danger"> <i class="pi pi-times-circle"></i> Not Approved</span>
+                    </ng-template>
+                    <ng-template #inProgress>
+                        <span class="text-warning"><i class="pi pi-info-circle"></i> In Progress</span>
+                    </ng-template>
+                    <ng-template #waitingForFinance>
+                        <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for Finance Approval</span>
+                    </ng-template>
+                    <ng-template #waitingForPRPO>
+                        <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for PR</span>
+                    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

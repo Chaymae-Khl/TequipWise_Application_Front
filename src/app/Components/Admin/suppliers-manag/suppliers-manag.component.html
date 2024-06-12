@@ -64,13 +64,12 @@
       </p-table>
     </div>
   </div>
-
-
 </div>
-<p-dialog
-  header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? 'View Supplier': mode === 'Equipements' ? 'Equipements of the supplier' : 'Update Supplier' }}"
-  [modal]="true" [(visible)]="visible">
-  <form *ngIf="mode !== 'view' ? mode !=='Equipements':mode !== 'view'"
+
+<p-dialog 
+  header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? ' Supplier Details' : mode === 'Equipements' ? 'Equipements of the supplier' : 'Update Supplier' }}"
+  [modal]="true" [(visible)]="visible" [style]="{width: '20vw'}" styleClass="custom-dialog">
+  <form *ngIf="mode !== 'view' ? mode !== 'Equipements' : mode !== 'view'"
     (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
     <div class="row">
       <p-floatLabel class="inputFloat">
@@ -87,6 +86,8 @@
         <label for="email">Email</label>
       </p-floatLabel>
     </div>
+    <p-divider></p-divider>
+
     <div class="confirmbtn col align-self-end">
       <button type="submit" class="button">
         {{ mode === 'add' ? 'Add' : 'Update' }}
@@ -95,34 +96,32 @@
   </form>
 
   <div *ngIf="mode === 'view'">
+    <p-divider></p-divider>
+
     <div class="row">
       <p><strong>Supplier Name:</strong> {{ selectedSupplier.suuplier_name }}</p>
       <p><strong>Address:</strong> {{ selectedSupplier.address }}</p>
       <p><strong>Email:</strong> {{ selectedSupplier.email }}</p>
     </div>
+    <p-divider></p-divider>
+
   </div>
 
-  <div *ngIf="mode==='Equipements'">
-
+  <div *ngIf="mode === 'Equipements'">
     <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ height: '25rem' }" filterBy="equipementSN"
       filterPlaceholder="Filter by name">
       <ng-template let-equipemnt pTemplate="item">
         <p-divider></p-divider>
-
         <div class="col-8">
           <div class="flex-1 flex flex-column gap-2">
             <span class="font-bold">SN: {{ equipemnt.equipementSN }}</span>
             <div class="flex align-items-center gap-2">
-
               <span>Name: {{ equipemnt.equipName }}</span>
             </div>
           </div>
         </div>
         <p-divider></p-divider>
       </ng-template>
-
-
     </p-orderList>
-
   </div>
 </p-dialog>

@@ -10,6 +10,8 @@ export class User {
     password: any;
     confirmPassword:any;
     locationID:any;
+    backupActive:any;
+    approverActive:any;
     locationName:any;
     plantId:any;
     plant_name:any;
@@ -17,4 +19,6 @@ export class User {
     DeptId:any;
     departmentName:any;
     location:any;
+    subordinates:any;
+    SubordinateIds:any;
 }

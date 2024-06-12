@@ -1,0 +1,89 @@
+import { Component } from '@angular/core';
+import { EquipementServiceService } from '../../Services/equipement-service.service';
+import { EquipementRequestServiceService } from '../../Services/equipement-request-service.service';
+import { data } from 'jquery';
+import { error } from 'console';
+import { SelectItem } from 'primeng/api';
+
+@Component({
+  selector: 'app-user-equipment-request-list',
+  templateUrl: './user-equipment-request-list.component.html',
+  styleUrl: './user-equipment-request-list.component.css'
+})
+export class UserEquipmentRequestListComponent {
+  first = 0;
+  rows = 10;
+  EquipmentsList: any;
+  NumberOfRequest: any = { count: 0 };
+  filterOptions: SelectItem[] = [
+    { label: 'All', value: null },
+    { label: 'Approved', value: true },
+    { label: 'Not Approved', value: false }
+  ];
+  selectedFilter: any = null; // Initialize to null for "All" by default
+  filteredEquipmentsList: any; // Variable to hold filtered list
+
+  constructor(private equipementService: EquipementRequestServiceService) { }
+
+  ngOnInit() {
+    this.getReuestList();
+    this.getNumOfRequest();
+  }
+
+  filterRequests() {
+    // Filter the list based on selected filter
+    if (this.selectedFilter === null) {
+      // Show all requests
+      this.filteredEquipmentsList = this.EquipmentsList;
+    } else {
+      // Filter based on selected approval status
+      this.filteredEquipmentsList = this.EquipmentsList.filter((equip: any) =>
+        equip.pR_Status === this.selectedFilter
+      );
+    }
+  }
+
+  next() {
+    this.first = this.first + this.rows;
+  }
+
+  prev() {
+    this.first = this.first - this.rows;
+  }
+
+  reset() {
+    this.first = 0;
+  }
+
+  pageChange(event: { first: number; rows: number; }) {
+    this.first = event.first;
+    this.rows = event.rows;
+  }
+
+  isLastPage(): boolean {
+    return true;
+  }
+
+  isFirstPage(): boolean {
+    return true;
+  }
+
+  getReuestList() {
+    this.equipementService.GetAuthRequestList().subscribe(
+      (data) => {
+        this.EquipmentsList = data;
+        this.filteredEquipmentsList = data; // Initialize filtered list with original list
+      },
+      (error) => {
+      }
+    );
+  }
+
+  getNumOfRequest() {
+    this.equipementService.NumberOfRequest().subscribe(
+      (number) => {
+        this.NumberOfRequest = number;
+      }
+    );
+  }
+}

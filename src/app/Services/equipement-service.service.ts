@@ -57,7 +57,9 @@ getsupplierName(){
 
 getEquipmentName(){
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.get(`${this.apiUrl}/Admin/EquipemntName`,httpOptions);
+  return this.httpClient.get(`${this.apiUrl}/Request/EquipemntName`,httpOptions);
 }
+
+
 
 }

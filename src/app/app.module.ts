@@ -72,6 +72,8 @@ import { EquipmentRequestComponent } from './Components/equipment-request/equipm
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { UserEquipmentRequestListComponent } from './Components/user-equipment-request-list/user-equipment-request-list.component';
+import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 
 
 @NgModule({
@@ -102,6 +104,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
     EquipmentManagComponent,
     EquipmentFilterPipe,
     EquipmentRequestComponent,
+    UserEquipmentRequestListComponent,
+    ConfirmationOperationsRequestListComponent,
   
    
   

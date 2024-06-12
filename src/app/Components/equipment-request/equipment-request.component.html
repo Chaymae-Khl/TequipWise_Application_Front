@@ -1,47 +1,89 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="row">
-    <div class="col-6">
-        <div class="col-md-6 offset-md-2">
-            <form (ngSubmit)="ValidRequest()" class="form">
-                <p class="title">Equipment Request </p>
-                <p class="message">Enter your request informations. </p>
+  <div class="col-6">
+    <div class="col-md-6 offset-md-2">
+      <div class="col-6">
+        <!-- Aligning content to the right -->
+        <p-button
+          label="View My Requests"
+          icon="pi pi-list"
+          routerLink="/EquipmentList"
+          [outlined]="true"
+          severity="secondary"
+        />
+      </div>
+      <form (ngSubmit)="ValidRequest()" #requestForm="ngForm" class="form">
+        <p class="title">Equipment Request </p>
+        <p class="message">Enter your request information.</p>
 
-                <div class="flex flex-wrap gap-3">
-                    <p class="message">If you want to request an equest for another employee ckeck the box below. </p>
-                    <div class="flex align-items-center">
-                        <p-checkbox name="forme" [(ngModel)]="checked" [binary]="true" inputId="binary"
-                            label="For Another Employee" />
-                    </div>
-                </div>
-                <div class="flex" *ngIf="checked">
-                    <label>
-                        <input type="text" pInputText placeholder="Employee name" />
-                    </label>
-                </div>
-
-                <div class="flex">
-                    <label>
-                        <p-multiSelect [options]="equipemnts"  name="roles" optionLabel="equipName"
-                        optionValue="equipName" [showClear]="true" [filter]="true" filterBy="equipName" placeholder="select the equipment you want"
-                        multiple="multiple">
-                      </p-multiSelect>
-                    </label>
-
-                    <label>
-                        <p-inputNumber mode="decimal" placeholder="Number of equipment" [min]="1"
-                            [max]="50"></p-inputNumber>
-                    </label>
-                </div>
-                <span>Why you want this Equipments:</span>
-                <label>
-
-                    <textarea rows="5" cols="70" pInputTextarea>
-                </textarea>
-                </label>
-                <button class="submit">Submit</button>
-
-            </form>
+        <div class="flex flex-wrap gap-3">
+          <p class="message">If you want to request equipment for another employee, check the box below.</p>
+          <div class="flex align-items-center">
+            <p-checkbox
+              name="forme"
+              [(ngModel)]="request.isNewhire"
+              [binary]="true"
+              inputId="binary"
+              label="For Another Employee"
+            ></p-checkbox>
+          </div>
         </div>
+        <div class="flex">
+          <label>
+            <p-dropdown
+              [options]="equipemnts"
+              [(ngModel)]="request.equipmentId"
+              optionLabel="equipName"
+              optionValue="equipementSN"
+              [filter]="true"
+              filterBy="equipName"
+              [showClear]="true"
+              placeholder="Select the equipment you want"
+              name="equipmentId"
+              required
+              [ngClass]="{'ng-invalid': requestForm.submitted && !request.equipmentId}"
+            ></p-dropdown>
+          </label>
+          <label>
+            <p-inputNumber
+              mode="decimal"
+              [(ngModel)]="request.numberEquipment"
+              name="numberEquipment"
+              placeholder="Number of equipment"
+              [min]="1"
+              [max]="50"
+              required
+              [ngClass]="{'ng-invalid': requestForm.submitted && !request.numberEquipment}"
+            ></p-inputNumber>
+          </label>
+        </div>
+        <span></span>
+        <label></label>
+        <mat-form-field class="example-full-width">
+          <mat-label>Why do you want this equipment?</mat-label>
+          <textarea
+            [(ngModel)]="request.comment"
+            name="comment"
+            matInput
+            required
+            [ngClass]="{'ng-invalid': requestForm.submitted && !request.comment}"
+          ></textarea>
+        </mat-form-field>
+        <button
+          class="submit"
+          [disabled]="loading || requestForm.invalid"
+        >
+          <span *ngIf="loading">
+            <i class="pi pi-spin pi-spinner"></i>
+            Sending...
+          </span>
+          <span *ngIf="!loading">
+            Submit
+          </span>
+        </button>
+      </form>
     </div>
+  </div>
 </div>
+<p-toast position="bottom-right" key="br"></p-toast>

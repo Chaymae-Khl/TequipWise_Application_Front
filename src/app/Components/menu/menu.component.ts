@@ -13,57 +13,42 @@ export class MenuComponent {
   IsManger!:boolean;
   visible: boolean = false;
 
-  constructor(private route: ActivatedRoute,private localstorage:LocalStorageServiceService) {
+  constructor(private route: ActivatedRoute,private localStorageService:LocalStorageServiceService) {
     // Access the resolved data
     this.isAuthenticated = this.route.snapshot.data['isAuthenticated'];
-  this.isReallyAdmin();
-  this.isManager();
+ 
   }
-  token=this.localstorage.getItem("token");
-  isReallyAdmin() {
-    this.localstorage.IsAdmin(this.token).subscribe(
-      (isAdmin: boolean) => {
-        if (isAdmin) {
-          // User is an admin
-          console.log('User is an admin');
-          this.IsAdmin=true;
-          // Add your logic for admin actions
-        } else {
-          // User is not an admin
-          console.log('User is not an admin');
-          this.IsAdmin=false;
-          // Add your logic for non-admin actions
-        }
-      },
-      (error: any) => {
-        console.error('Error fetching admin status:', error);
-        // Handle the error (e.g., show an error message)
-      }
-    );
+  ngOnInit(): void {
+    this.checkRoles();
   }
 
-  isManager() {
-    this.localstorage.IsManger(this.token).subscribe(
-      (isManger: boolean) => {
-        if (isManger) {
-          // User is an admin
-          console.log('User is an Manager');
-          this.IsManger=true;
-          // Add your logic for admin actions
-        } else {
-          // User is not an admin
-          console.log('User is not an Manager');
-          this.IsManger=false;
-          // Add your logic for non-admin actions
-        }
-      },
-      (error: any) => {
-        console.error('Error fetching admin status:', error);
-        // Handle the error (e.g., show an error message)
-      }
-    );
-  }
+  async checkRoles() {
+    const token = await this.localStorageService.getItem("token");
 
+    if (token) {
+      this.localStorageService.IsAdmin(token).subscribe(
+        (isAdmin: boolean) => {
+          this.IsAdmin = isAdmin;
+          console.log('Admin status:', isAdmin);
+        },
+        (error: any) => {
+          console.error('Error fetching admin status:', error);
+        }
+      );
+
+      this.localStorageService.IsManger(token).subscribe(
+        (isManager: boolean) => {
+          this.IsManger = isManager;
+          console.log('Manager status:', isManager);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+    } else {
+      //console.error('No token found');
+    }
+  }
 
 
   showDialog(): void {

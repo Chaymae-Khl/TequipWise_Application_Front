@@ -74,7 +74,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { UserEquipmentRequestListComponent } from './Components/user-equipment-request-list/user-equipment-request-list.component';
 import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
-
+import { TimelineModule } from 'primeng/timeline';
 
 @NgModule({
   declarations: [
@@ -156,7 +156,8 @@ import { ConfirmationOperationsRequestListComponent } from './Components/confirm
     OrderListModule,
     CheckboxModule,
     InputTextareaModule,
-    InputNumberModule
+    InputNumberModule,
+    TimelineModule,
   ],
   providers: [
     provideClientHydration(),

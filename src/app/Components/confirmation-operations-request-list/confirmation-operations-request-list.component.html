@@ -119,9 +119,71 @@
                     </ng-template>
                 </td>
                 <td><p-button icon="pi pi-check" severity="success" />
-                    <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" severity="secondary " />
+                    <p-button icon="pi pi-arrow-up-right" [rounded]="true" (click)="showDialog(equip)" [text]="true" severity="secondary " />
                 </td>
             </tr>
         </ng-template>
     </p-table>
 </div>
+
+<p-dialog header="Equipment Request Details" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}">
+   
+    @if(requeststatus==true){
+        <img  src="/assets/Images/approved.png" width="222rem" alt="" style="position: absolute; left: 11px;">
+    }
+    @else if (requeststatus==false) {
+        <img src="/assets/Images/rejected.png" width="222rem" alt="" style="position: absolute; left: 11px;">
+    }
+    @else {
+       
+    }
+    <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedRequest">
+        <ng-template pTemplate="marker" let-event>
+            <ng-container *ngIf="event.title === 'Manager approval'">
+              <span *ngIf="event.status" class="pi pi-check-circle" style="color:green;"></span>
+              <span *ngIf="!event.status" class="pi pi-times-circle" style="color:red;"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'IT approval'">
+              <span *ngIf="event.status " class="pi pi-check-circle" style="color:green;"></span>
+              <span *ngIf="!event.status && !event.supplierOffer" class="pi pi-times-circle" style="color:red;"></span>
+              <span *ngIf="event.supplierOffer && !event.status" class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'Finance approval'">
+              <span *ngIf="event.status" class="pi pi-check-circle" style="color:green;"></span>
+              <span *ngIf="!event.status" class="pi pi-times-circle" style="color:red;"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'PR & PO approval'">
+              <span *ngIf="event.statusPr && !event.RejectionCause" class="pi pi-check-circle" style="color:green;"></span>
+              <span *ngIf="event.RejectionCause" class="pi pi-times-circle" style="color:red;"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'Request approval'">
+              <span *ngIf="event.statusreq" class="pi pi-check-circle" style="color:green;"></span>
+              <span *ngIf="!event.statusreq" class="pi pi-times-circle" style="color:red;"></span>
+            </ng-container>
+          </ng-template>
+        <ng-template pTemplate="content" let-event>
+            <div class="p-timeline-event-content">
+                <h4 style="color: #104a7c; font-size: 1.2rem; ">{{ event.title }}</h4>
+                <p-divider type="dashed" />
+
+                <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                <p *ngIf="event.by"><b>By:</b> {{ event.by }} </p>
+                <p *ngIf="event.ForWho"><b>For Who:</b> {{ event.ForWho?'New Hire':'For Me' }}</p>
+                <p *ngIf="event.Equipment"><b>Equipment:</b> {{ event.Equipment }}</p>
+                <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+
+                <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
+                
+                <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusLabel(event.status, event.supplierOffer) }}</p>
+                <p *ngIf="event.statusPr != null"><b>Status PR:</b> {{ getPRStatusLabel(event.statusPr, event.RejectionCause) }}</p>
+                <p *ngIf="event.Ponum != null"><b>PO Number:</b> {{ event.Ponum }}</p>
+                <p *ngIf="event.PrNum != null"><b>PR Number:</b> {{ event.PrNum }}</p>
+
+                @if (event.statusreq==true) {
+                <p *ngIf="event.statusreq !== undefined"><b>Request Status:</b> Approved</p>}
+                @else if (event.statusreq==false) {<p *ngIf="event.statusreq !== undefined">Request Status: Rejected</p>}
+                @else {<p *ngIf="event.statusreq !== undefined"><b>Request Status:</b> open</p>}
+            </div>
+        </ng-template>
+    </p-timeline>
+</p-dialog>

@@ -35,7 +35,7 @@ export class UsersManagComponent implements OnInit{
 
   onApproverActiveChange() {
     if (!this.locationed.approverActive) {
-      this.locationed.managerName = this.locationed.managerName;
+      this.locationed.managerName =  null;
     }
   }
   onApproverActiveChangeBackup() {

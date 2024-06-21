@@ -9,8 +9,11 @@ import { Observable, of } from 'rxjs';
 })
 export class LocalStorageServiceService {
 
+  private jwtHelper: JwtHelperService;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { 
+    this.jwtHelper = new JwtHelperService();
+  }
 
   getItem(key: string): string | null {
     if (isPlatformBrowser(this.platformId)) {
@@ -38,24 +41,11 @@ export class LocalStorageServiceService {
     const token = await this.getToken();
     return !!token && !this.isTokenExpired(token);
   }
-  isTokenExpired(token: string): boolean { // Accepts token as an argument
-    if (!token) {
-      return true;
-    }
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expiry = payload.exp;
-      // console.log(expiry);
-      const now = Math.floor(Date.now() / 1000);
-      // console.log(now);
-
-      return now > expiry;
-    } catch (e) {
-      return true; // Assume expired if there's an error parsing the token
-    }
+  isTokenExpired(token: string): boolean {
+    return this.jwtHelper.isTokenExpired(token);
   }
 
-  async checkTokenExpiry(): Promise<boolean> { // New method to handle token check without argument
+  async checkTokenExpiry(): Promise<boolean> {
     const token = await this.getToken();
     console.log(token);
     return this.isTokenExpired(token!);

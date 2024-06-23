@@ -75,6 +75,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { UserEquipmentRequestListComponent } from './Components/user-equipment-request-list/user-equipment-request-list.component';
 import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 import { TimelineModule } from 'primeng/timeline';
+import { MyProfileComponent } from './Components/Authentication/my-profile/my-profile.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +107,7 @@ import { TimelineModule } from 'primeng/timeline';
     EquipmentRequestComponent,
     UserEquipmentRequestListComponent,
     ConfirmationOperationsRequestListComponent,
+    MyProfileComponent,
   
    
   

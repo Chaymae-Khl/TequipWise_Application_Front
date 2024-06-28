@@ -18,22 +18,22 @@ export class AppComponent {
   ) {}
 
   async ngOnInit() {
-    this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(async () => {
-      const isAuthenticated = await this.localStorageService.isAuthenticated();
-      if (isAuthenticated) {
-        const currentRoute = this.router.routerState.snapshot.url;
-        const protectedRoutes = ['/admin','/Menu']; // Add your protected routes here
+    // this.router.events
+    // .pipe(filter(event => event instanceof NavigationEnd))
+    // .subscribe(async () => {
+    //   const isAuthenticated = await this.localStorageService.isAuthenticated();
+    //   if (isAuthenticated) {
+    //     const currentRoute = this.router.routerState.snapshot.url;
+    //     const protectedRoutes = ['/admin','/Menu']; // Add your protected routes here
 
-        if (protectedRoutes.includes(currentRoute)) {
-          const isTokenExpired = await this.localStorageService.checkTokenExpiry();
+    //     if (protectedRoutes.includes(currentRoute)) {
+    //       const isTokenExpired = await this.localStorageService.checkTokenExpiration();
 
-          if (isTokenExpired) {
-            await this.router.navigate(['/tokenExpired']);
-          }
-        }
-      }
-    });
+    //       if (isTokenExpired) {
+    //         await this.router.navigate(['/tokenExpired']);
+    //       }
+    //     }
+    //   }
+    // });
   }
 }

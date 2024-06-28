@@ -1,4 +1,6 @@
 <app-nav-bar></app-nav-bar>
+<div class="container-fluid">
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -22,37 +24,37 @@
                 <p-card >
                     <div class="profile-info">
                         <div class="profile-item">
-                            <h4><i class="pi pi-hashtag" style="color: orange"></i>  Te Identifier</h4>
+                            <h4><i class="pi pi-hashtag" ></i>  Te Identifier</h4>
                             <p>{{Authenticated.userName}}</p>
                         </div>
                         <div class="profile-item">
-                            <h4><i class="pi pi-user" style="color: orange"></i>  Full Name</h4>
+                            <h4><i class="pi pi-user" ></i>  Full Name</h4>
                             <p>{{Authenticated.teNum}}</p>
                         </div>
                         <div class="profile-item">
-                            <h4><i class="pi pi-envelope" style="color: orange"></i>  Email</h4>
+                            <h4><i class="pi pi-envelope" ></i>  Email</h4>
                             <p>{{Authenticated.email}}</p>
                         </div>
                         <div class="profile-item">
-                            <h4><i class="pi pi-map-marker" style="color: orange"></i>  Location</h4>
+                            <h4><i class="pi pi-map-marker" ></i>  Location</h4>
                             <p>{{Authenticated.locationName}}</p>
                         </div>
                         <div class="profile-item">
-                            <h4><i class="pi pi-building" style="color: orange"></i>  Plant</h4>
+                            <h4><i class="pi pi-building" ></i>  Plant</h4>
                             <p>{{Authenticated.plant_name}}</p>
                         </div>
                         <div class="profile-item">
-                            <h4><i class="pi pi-warehouse" style="color: orange"></i>  Department</h4>
+                            <h4><i class="pi pi-warehouse" ></i>  Department</h4>
                             <p>{{Authenticated.departmentName}}</p>
                         </div>
 
                         @if (Authenticated.backupaprover_Name != null) {
                         <div class="profile-item">
-                            <h4><i class="pi pi-check" style="color: orange"></i>  BackUp Approver</h4>
+                            <h4><i class="pi pi-check" ></i>  BackUp Approver</h4>
                             <p>{{Authenticated.backupaprover_Name}}</p>
                         </div>}
                         <div class="profile-item">
-                            <h4><i class="pi pi-sliders-h" style="color: orange"></i>  Roles</h4>
+                            <h4><i class="pi pi-sliders-h" ></i>  Roles</h4>
                             <p *ngFor="let role of Authenticated.roles">
                                 -{{role}}-
                             </p>
@@ -61,31 +63,30 @@
                 </p-card>
             </div>
         </p-tabPanel>
-        <p-tabPanel header=" Change Personal Infos">
+        <p-tabPanel header="Change Personal Infos">
             <div class="updatemodal-content">
-              
-                <form>
+                <form (ngSubmit)="updateUser()">
                     <div class="form-row row">
                         <div class="form-group col-md-4">
                             <label for="userName" class="mb-2">Te Identifier</label><br>
-                            <input type="text" name="userName" pInputText [disabled]="true" [ngModel]="Authenticated.userName">
+                            <input type="text" name="userName" pInputText [disabled]="true" [(ngModel)]="user.userName">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="teNum" class="mb-2">Full Name</label><br>
-                            <input type="text" name="teNum" pInputText [ngModel]="Authenticated.teNum"/>
+                            <input type="text" name="teNum" pInputText [(ngModel)]="user.teNum">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="email" class="mb-2">Email</label><br>
-                            <input type="text" name="email" pInputText [ngModel]="Authenticated.email" />
+                            <input type="text" name="email" pInputText [(ngModel)]="user.email">
                         </div>
                     </div>
-                    <p-divider type="dashed" />
+                    <p-divider type="dashed"></p-divider>
                     <p-accordion [activeIndex]="0">
                         <p-accordionTab header="Location & Plant & Department">
                             <div class="form-row row">
                                 <div class="form-group col-md-4">
                                     <label for="locationName" class="mb-2">Location</label> <br>
-                                    <p-dropdown [options]="locations" [(ngModel)]="Authenticated.locationName" name="locationName"
+                                    <p-dropdown [options]="locations" [(ngModel)]="user.locationName" name="locationName"
                                     optionLabel="locationName" optionValue="locationName" (onChange)="onLocationChange($event)"
                                     [showClear]="true" [filter]="true" filterBy="locationName" placeholder="Select Location"
                                     class="custom-dropdown">
@@ -93,14 +94,14 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="plant_name" class="mb-2">Plant</label><br>
-                                    <p-dropdown [options]="plantsOfSelectedLocation" [(ngModel)]="Authenticated.plant_name" name="plant_name"
+                                    <p-dropdown [options]="plantsOfSelectedLocation" [(ngModel)]="user.plant_name" name="plant_name"
                                     optionLabel="plant_name" optionValue="plant_name" [showClear]="true" [filter]="true"
                                     filterBy="plant_name" placeholder="Select Plant">
                                   </p-dropdown>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="departmentName" class="mb-2">Department</label><br>
-                                    <p-dropdown [options]="departmentsOfSelectedPlant" [(ngModel)]="Authenticated.departmentName"
+                                    <p-dropdown [options]="departmentsOfSelectedPlant" [(ngModel)]="user.departmentName"
                   name="departmentName" optionLabel="departmentName" optionValue="departmentName" [showClear]="true"
                   [filter]="true" filterBy="departmentName" placeholder="Select Department">
                 </p-dropdown>
@@ -108,23 +109,15 @@
                             </div>
                         </p-accordionTab>
                     </p-accordion>
-                    <p-divider type="dashed" />
+                    <p-divider type="dashed"></p-divider>
                     <p-accordion [activeIndex]="0">
                         <p-accordionTab header="Other Informations">
                             <div class="form-row row">
                                 <div class="form-group col-md-6">
                                     <label for="backupaprover_Name" class="mb-2">
-                                        <p-checkbox 
-                                        [(ngModel)]="Authenticated.backupActive" 
-                                        name="backupActive" 
-                                        binary="true"
-                                        (onChange)="onApproverActiveChangeBackup()"> 
-                                    </p-checkbox> Active Backup Approver </label><br> 
-                                      <p-dropdown [appendTo]="'body'" [options]="users" [(ngModel)]="Authenticated.backupaprover_Name" name="backupaprover_Name"
-                                        optionLabel="teNum" optionValue="teNum" [showClear]="true" [filter]="true" filterBy="teNum"
-                                        placeholder="Select the Backup Approver" [disabled]="!Authenticated.backupActive">
-                                        
-                                      </p-dropdown>
+                                        <p-checkbox [(ngModel)]="user.backupActive" name="backupActive" binary="true" (onChange)="onApproverActiveChangeBackup()"></p-checkbox> Active Backup Approver
+                                    </label><br>
+                                    <p-dropdown [appendTo]="'body'" [options]="users" [(ngModel)]="user.backupaprover_Name" name="backupaprover_Name" optionLabel="teNum" optionValue="teNum" [showClear]="true" [filter]="true" filterBy="teNum" placeholder="Select the Backup Approver" [disabled]="!user.backupActive"></p-dropdown>
                                 </div>
                             </div>
                         </p-accordionTab>
@@ -138,30 +131,76 @@
             </div>
         </p-tabPanel>
         <p-tabPanel header=" Change Password">
-            <p-card >
-            <form class="file-upload">
-                <div>
+            <p-card>
+                <div class="row">
+                <div class="col-md-8">
+                <form
+                  class="file-upload"
+                  (ngSubmit)="onSubmit()"
+                  #passwordForm="ngForm"
+                >
+                  <div>
                     <div class="bg-secondary-soft px-4 py-5 rounded">
-                        <div class="row g-3">
-                           
-                            <!-- New password -->
-                            <div class="col-md-4">
-                                <label for="exampleInputPassword1" class="form-label mb-2">New Password * :</label> <br>
-                                <input type="password" pInputText id="exampleInputPassword1">
-                           
-                                <label for="exampleInputPassword2" class="form-label mb-2">Confirm Password * :</label> <br>
-                                <input type="password" pInputText id="exampleInputPassword2">
-                            </div>
-                                <p-button label="Update" [raised]="true"></p-button>
-
+                      <div class="row g-3">
+                        <!-- New password -->
+                        <div class="col-md-4">
+                          <label for="exampleInputPassword1" class="form-label mb-2"
+                            >New Password * :</label
+                          >
+                          <br />
+                          <p-password
+                            class="custom-password1"
+                            placeholder="New Password"
+                            type="password"
+                            [(ngModel)]="newPassword"
+                            name="newPassword"
+                            required
+                            [toggleMask]="true"
+                          ></p-password>
+              
+                          <label for="exampleInputPassword2" class="form-label mb-2"
+                            >Confirm Password * :</label
+                          >
+                          <br />
+                          <p-password
+                            class="custom-password2"
+                            placeholder="Confirm Password"
+                            type="password"
+                            [(ngModel)]="confirmPassword"
+                            name="confirmPassword"
+                            required
+                            [toggleMask]="true"
+                          ></p-password>
+              
+                          <div
+                            *ngIf="passwordMismatch && passwordForm.submitted"
+                            class="error-message"
+                            style="color: red"
+                          >
+                            Passwords do not match.
+                          </div>
                         </div>
+                        <p-button label="Update" [raised]="true" type="submit"></p-button>
+                      </div>
                     </div>
-                   
-                </div>
-            </form> <!-- Form END -->
-            
-           
-        </p-card>
+                  </div>
+                </form>
+            </div>
+                <!-- Form END -->
+                <div class="col-md-4">
+                    <div class="info-text bg-light p-4 rounded">
+                      <h5>Change Password Instructions</h5>
+                      <p>Please enter a new password and confirm it by typing it again in the confirm password field. Make sure both passwords match before submitting.</p>
+                      <ul>
+                        <li>Password must be at least 8 characters long.</li>
+                        <li>Include both uppercase and lowercase letters.</li>
+                        <li>Use at least one numeric digit.</li>
+                        <li>Special characters are recommended for better security.</li>
+                      </ul>
+                    </div>
+                  </div></div>
+              </p-card>
         </p-tabPanel>
     </p-tabView>
-</div>
+</div></div>
+<p-toast></p-toast>

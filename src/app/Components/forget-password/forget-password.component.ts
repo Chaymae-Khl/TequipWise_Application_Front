@@ -10,9 +10,11 @@ import { AuthServiceService } from '../../Services/auth-service.service';
   styleUrl: './forget-password.component.css'
 })
 export class ForgetPasswordComponent {
+  loading = false;
   constructor(private http: HttpClient, private router: Router,private authService: AuthServiceService) {}
 
-  onSubmit(form: NgForm) {
+  onSubmit(form: NgForm) { 
+    this.loading = true; 
     if (form.invalid) {
       return;
     }
@@ -23,6 +25,7 @@ export class ForgetPasswordComponent {
       alert("Passwords do not match");
       return;
     }
+   
     const forgotPasswordModel = {
       Email: email,
       Password: password,
@@ -31,9 +34,11 @@ export class ForgetPasswordComponent {
     };
     this.authService.ResetPassword(forgotPasswordModel).subscribe(
       (response: any) => {
+        this.loading = false;
         this.router.navigate(['/login']);
       },
       (error) => {
+        this.loading = false;
         console.log("Error resiting the password");
       }
 

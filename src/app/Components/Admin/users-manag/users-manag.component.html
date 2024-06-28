@@ -241,7 +241,13 @@
         </p-accordion>
         <div class="form-group">
                 <div class="d-flex flex-row-reverse">
-                  <button type="submit">Update</button>
+                  <button type="submit" [disabled]="loading">
+                    <ng-container *ngIf="loading; else notLoading">
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Loading...
+                    </ng-container>
+                    <ng-template #notLoading>Update</ng-template>
+                  </button>
                 </div>
               </div>
       </form>

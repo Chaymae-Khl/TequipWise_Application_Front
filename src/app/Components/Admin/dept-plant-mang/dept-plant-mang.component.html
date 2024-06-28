@@ -90,6 +90,13 @@
                     optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the controller">
                   </p-dropdown>
                 </div>
+                <div class="flex flex-column gap-2">
+                  <label for="approver-name-{{i}}">It Approver Name</label>
+                  <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="Itapprover-name-{{i}}"
+                    [(ngModel)]="plant.itApproverId" name="ItapproverName-{{i}}" [options]="ItApprovers" optionValue="id"
+                    optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the It Approver">
+                  </p-dropdown>
+                </div>
               </div>
               <p-button label="Add new plant" (click)="addPlant($event)" [text]="true" severity="secondary" />
             </p-panel>

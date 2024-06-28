@@ -1,68 +1,125 @@
-@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
 
-.vid{
-    width: 80%;
+.vid {
+    width: 100%;
 }
-.first-Col{
+
+.first-Col {
     box-shadow: #E98201;
 }
-.container{
-    margin-top: 4%;  
+
+.container {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
-.Welcome{
+
+.Welcome {
     font-size: 500%;
-    color:#122247 ;
+    color: #122247;
     letter-spacing: 21px;
 }
 
-h1{
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    
+h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     line-height: 111% !important;
-  }
-
- .paragrph{
-    color: rgb(46, 45, 45);
-    font-size: 150%;
-    line-height:141%;
-    text-align: justify;
- }
-
- svg {
-     font-family: "Russo One", sans-serif;
-     width: 100%; height: 100%;
- }
- svg text {
-     animation: stroke 5s infinite alternate;
-     stroke-width: 2;
-     stroke: #E98201;
-     font-size: 100px;
- }
- @keyframes stroke {
-     0%   {
-         fill: rgba(72,138,204,0); stroke: #E98201;
-         stroke-dashoffset: 25%; stroke-dasharray: 0 50%; stroke-width: 2;
-     }
-     70%  {fill: rgba(72,138,204,0); stroke: #E98201; }
-     80%  {fill: rgba(72,138,204,0); stroke: #E98201; stroke-width: 3; }
-     100% {
-         fill: #E98201; stroke: rgba(54,95,160,0);
-         stroke-dashoffset: -25%; stroke-dasharray: 50% 0; stroke-width: 0;
-     }
- }
-h1{
-    font-size:60px;
-    text-align: center;
-    font-family:Arial, Helvetica, sans-serif;
-    font-weight: bold;
 }
 
+.paragrph {
+    color: rgb(46, 45, 45);
+    font-size: 150%;
+    line-height: 141%;
+    text-align: justify;
+}
 
-.span1{
-    color: #75b2f4;
-    font-size: 150px;
-    word-spacing: 40px;
+svg {
+    font-family: "Russo One", sans-serif;
+    width: 100%;
+    height: 100%;
+}
+
+svg text {
+    animation: stroke 5s infinite alternate;
+    stroke-width: 2;
+    stroke: #E98201;
+    font-size: 100px;
+}
+
+@keyframes stroke {
+    0% {
+        fill: rgba(72, 138, 204, 0);
+        stroke: #E98201;
+        stroke-dashoffset: 25%;
+        stroke-dasharray: 0 50%;
+        stroke-width: 2;
+    }
+    70% {
+        fill: rgba(72, 138, 204, 0);
+        stroke: #E98201;
+    }
+    80% {
+        fill: rgba(72, 138, 204, 0);
+        stroke: #E98201;
+        stroke-width: 3;
+    }
+    100% {
+        fill: #E98201;
+        stroke: rgba(54, 95, 160, 0);
+        stroke-dashoffset: -25%;
+        stroke-dasharray: 50% 0;
+        stroke-width: 0;
+    }
+}
+
+h1 {
+    font-size: 60px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+.subText{
+    text-align: center;
+    padding: 12px;
+}
+.subText h2{
+   font-size: 45px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    letter-spacing:12px ;
+}
+@media (max-width: 768px) {
+    svg text {
+        font-size: 50px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+  
+
+    .paragrph {
+        font-size: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    svg text {
+        font-size: 30px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+
+    .paragrph {
+        font-size: 80%;
+    }
+}
+
+/* foter css */
+.footer{
+    text-align: center;
+    padding: 14px;
+    background-color: #75b2f4;
+    color: aliceblue;
 }

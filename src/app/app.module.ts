@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { LandingPageComponent } from './Components/WelcomePage/landing-page/landing-page.component';
 import { LoginComponent } from './Components/Authentication/login/login.component';
 import { RegisterComponent } from './Components/Authentication/register/register.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule } from '@angular/material/icon';
@@ -76,6 +76,10 @@ import { UserEquipmentRequestListComponent } from './Components/user-equipment-r
 import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 import { TimelineModule } from 'primeng/timeline';
 import { MyProfileComponent } from './Components/Authentication/my-profile/my-profile.component';
+import { NgxApexchartsModule } from 'ngx-apexcharts';
+import { MenuModule } from 'primeng/menu';
+import { ChartModule } from 'primeng/chart';
+
 
 @NgModule({
   declarations: [
@@ -160,12 +164,16 @@ import { MyProfileComponent } from './Components/Authentication/my-profile/my-pr
     InputTextareaModule,
     InputNumberModule,
     TimelineModule,
+    NgxApexchartsModule,
+    MenuModule,
+    ChartModule 
+
   ],
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
     MessageService,
-    AuthGuard
+    AuthGuard,
 
     
   ],

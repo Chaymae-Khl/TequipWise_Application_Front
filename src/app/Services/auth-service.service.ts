@@ -61,6 +61,8 @@ SendForgetPasswordEmail(Email:any){
   return this.httpClient.post(`${this.apiUrl}/Auth/tokenEmail?Email=${Email}`,{})
 }
 
+
+
 //resetpassword function
 ResetPassword(data: any){
   return this.httpClient.post(`${this.apiUrl}/Auth/reset-password`,data)
@@ -74,6 +76,12 @@ updatePassword(userId: any, newPassword: any) {
   return this.httpClient.post(`${this.apiUrl}/Admin/updatePassword/${userId}`, JSON.stringify(newPassword), httpOptions);
 }
 
+//updatePassword
+updatePasswordProfile(userId: any, newPassword: any) {
+  const httpOptions = this.getHttpOptions();
+  //here the server side is expecting a data type String, but the client send it as json so we use JSON.stringify to convert newPassword into a string enclosed in double quotes.
+  return this.httpClient.post(`${this.apiUrl}/User/updatePasswordProfile/${userId}`, JSON.stringify(newPassword), httpOptions);
+}
 
 //logout 
 
@@ -108,6 +116,12 @@ updateUser(data: User, id: any) {
   return this.httpClient.put(`${this.apiUrl}/Admin/update/${id}`, data, httpOptions);
 }
 
+// Update profile by ID
+updateProfile(data: User, id: any) {
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.put(`${this.apiUrl}/User/updateProfile/${id}`, data, httpOptions);
+}
+
 //get roles
 getRoles() {
   const httpOptions = this.getHttpOptions();
@@ -118,8 +132,13 @@ getRoles() {
 
 getAuthuser(){
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.get(`${this.apiUrl}/Auth/GetAuthenticatedUser`, httpOptions);
+  return this.httpClient.get(`${this.apiUrl}/User/GetAuthenticatedUser`, httpOptions);
 }
 
-
+//getusers for my profile
+// Get list of users
+getUsersforprofile() {
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/User/Users`, httpOptions);
+}
 }

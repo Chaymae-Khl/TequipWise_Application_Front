@@ -11,6 +11,7 @@ export class MenuComponent {
   isAuthenticated: boolean;
   IsAdmin!:boolean;
   IsManger!:boolean;
+  IsItApprover!:boolean;
   visible: boolean = false;
 
   constructor(private route: ActivatedRoute,private localStorageService:LocalStorageServiceService) {
@@ -45,6 +46,18 @@ export class MenuComponent {
           console.error('Error fetching manager status:', error);
         }
       );
+
+      this.localStorageService.IsItApprover(token).subscribe(
+        (isItApprover: boolean) => {
+          this.IsItApprover = isItApprover;
+          console.log('Manager status:', isItApprover);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+
+      
     } else {
       //console.error('No token found');
     }

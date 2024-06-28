@@ -31,11 +31,11 @@ export class UsersManagComponent implements OnInit{
   isPasswordVisible: boolean = false;
   mode: 'add' | 'view' | 'update' | 'changepassword' = 'add';
   visible: boolean = false;
-
+  loading: boolean = false;
 
   onApproverActiveChange() {
     if (!this.locationed.approverActive) {
-      this.locationed.managerName =  null;
+      this.locationed.managerName =  this.locationed.managerName;
     }
   }
   onApproverActiveChangeBackup() {
@@ -162,16 +162,18 @@ showDialog(mode: 'add' | 'view' | 'update'|'changepassword', user?: any): void {
 
 
 updateUser(updatedUser: User): void {
-
+  this.loading = true; 
       this.Authservice.updateUser(updatedUser, updatedUser.id).subscribe(
         () => {
           this.visible=false;
+          this.loading = false;
           // this.closeModal();
           this.messageService.add({severity:'success', summary: 'Success', detail: 'User updated successfully',life: 10000});
          this.getUsers();
           console.log(`User updated successfully.`);
         },
         (error) => {
+          this.loading = false;
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'User update failed',life: 10000 });
           console.error('Error updating user:', error);
         }
@@ -203,7 +205,6 @@ changePassword(data: { userId: any, newPassword: any }): void {
         console.error('Invalid userId or newPassword provided.');
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid userId or newPassword provided',life: 10000 });
 
-        // Handle error (e.g., show error message)
     }
  
 }

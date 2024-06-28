@@ -6,5 +6,6 @@ export class Plant {
   location: any;
   Approver_name: any;
   ApproverId?: any;
-  
+  itApprover_name:any;
+  itApproverId:any;
 }

@@ -1,54 +1,56 @@
-@media (min-width: 100px) {
-  .full-height {
-    height: calc(100% - 80.5px);
-  }
-
-  .row {
-    height: calc(50%);
-  }
-
-  #col2 {
-    background-color: #ea850024;
-    border-radius: 48% 52% 0% 0% / 32% 27% 27% 32%;
-    padding: 3rem;
-  }
-
-  .desc {
-    margin-top: 20%;
-    text-align: center;
-    font-size: 1.2rem;
-    margin-left: -4.5rem;
-
-  }
-
-  .button {
-    width: 90px;
-    height: 90px;
-    border-radius: 15px;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    background-color: rgb(255, 255, 255);
-    border: 0px;
-    cursor: pointer;
-    outline: 0px;
-    font-weight: 600;
-    font-size: 18px;
-    color: white;
-    box-shadow: rgba(0, 0, 0, 0.22) 0px 9px 9px;
-    margin-right: 5rem;
-  }
-
-  .dashicon {
-    width: 50px;
-  }
-
-  .allBtn {
-    margin-right: 4rem;
-  }
+.full-height {
+  height: calc(100% - 80.5px);
 }
 
-button:hover {
-  background-color: #3e637627;
+.inner-container {
+  margin-top: 1rem;
+}
+
+#col2 {
+  background-color: #ea850024;
+  border-radius: 48% 52% 0% 0% / 32% 27% 27% 32%;
+  padding: 3rem;
+}
+
+.menu-title-img {
+  width: 65%;
+}
+
+.menu-item {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.button {
+  width: 90px;
+  height: 90px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  background-color: rgb(255, 255, 255);
+  border: 0px;
+  cursor: pointer;
+  outline: 0px;
+  font-weight: 600;
+  font-size: 18px;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.22) 0px 9px 9px;
+  margin-right: 5rem;
+}
+
+.dashicon {
+  width: 50px;
+}
+
+.request-img {
+  width: 50px;
+  margin-left: 0.7rem;
+}
+
+.desc {
+  margin-top: 20%;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-left: -4.5rem;
 }
 
 .btn {
@@ -65,12 +67,13 @@ button:hover {
   z-index: 1;
   font-weight: 300;
   font-size: 17px;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   text-transform: uppercase;
   color: var(--color);
- }
- 
- .btn::after, .btn::before {
+}
+
+.btn::after,
+.btn::before {
   content: '';
   display: block;
   height: 100%;
@@ -82,27 +85,96 @@ button:hover {
   z-index: -1;
   transition: .5s ease-out;
   background-color: var(--color);
- }
- 
- .btn::before {
+}
+
+.btn::before {
   top: -50%;
   left: -25%;
   transform: skew(90deg) rotate(180deg) translate(-50%, -50%);
- }
- 
- .btn:hover::before {
+}
+
+.btn:hover::before {
   transform: skew(45deg) rotate(180deg) translate(-50%, -50%);
- }
- 
- .btn:hover::after {
+}
+
+.btn:hover::after {
   transform: skew(45deg) translate(-50%, -50%);
- }
- 
- .btn:hover {
+}
+
+.btn:hover {
   color: var(--color2);
- }
- 
- .btn:active {
+}
+
+.btn:active {
   filter: brightness(.7);
   transform: scale(.98);
- }
+}
+
+@media (max-width: 768px) {
+  .button {
+    width: 70px;
+    height: 70px;
+    margin-right: 1rem;
+  }
+
+  .dashicon {
+    width: 40px;
+  }
+
+  .request-img {
+    width: 40px;
+  }
+
+  .desc {
+    font-size: 1rem;
+    margin-left: 0;
+  }
+
+  #col2 {
+    padding: 2rem;
+  }
+
+  .btn {
+    padding: 1em 2em;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .button {
+    width: 50px;
+    height: 50px;
+    margin-right: 0.5rem;
+  }
+
+  .dashicon {
+    width: 30px;
+  }
+
+  .request-img {
+    width: 30px;
+  }
+
+  .desc {
+    font-size: 0.8rem;
+    margin-left: 0;
+  }
+
+  #col2 {
+    padding: 1rem;
+    border-radius: 0;
+  }
+
+  .btn {
+    padding: 0.5em 1em;
+    font-size: 12px;
+  }
+
+  .inner-container {
+    margin-top: 0.5rem;
+  }
+
+  .menu-item {
+    margin-bottom: 0.5rem;
+  }
+}

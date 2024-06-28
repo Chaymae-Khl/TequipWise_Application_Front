@@ -45,6 +45,9 @@ const routes: Routes = [
       },
       {
         path: 'equipements', component: EquipmentManagComponent,
+      },
+      {
+        path: 'dashboard', component: DashboardComponent,
       }
     ], resolve: { isAuthenticated: AuthGuard }
   },

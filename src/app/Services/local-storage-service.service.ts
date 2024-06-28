@@ -45,10 +45,12 @@ export class LocalStorageServiceService {
     return this.jwtHelper.isTokenExpired(token);
   }
 
-  async checkTokenExpiry(): Promise<boolean> {
-    const token = await this.getToken();
-    console.log(token);
-    return this.isTokenExpired(token!);
+  checkTokenExpiration() {
+    const expirationDate = new Date(localStorage.getItem('tokenExpiration')!);
+    if (expirationDate <= new Date()) {
+      return true;
+    }
+    return false;
   }
 
 
@@ -80,8 +82,27 @@ export class LocalStorageServiceService {
     }
   
     // Check if 'DeptManager' role exists in the roles array
-    const isDeptManager = roles.includes('DeptManager');    
+    const isDeptManager = roles.includes('Manager');    
     return of(isDeptManager);
+  }
+  IsItApprover(Token: any): Observable<boolean> {
+    if (!Token) {
+      return of(false); // Return false (not authenticated)
+    }
+  
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(Token);
+  
+    let roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Convert roles to an array if it's not already one
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+  
+    // Check if 'DeptManager' role exists in the roles array
+    const isItApprover = roles.includes('It Approver');    
+    return of(isItApprover);
   }
 
 

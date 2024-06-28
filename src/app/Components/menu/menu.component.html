@@ -1,74 +1,60 @@
-
 <div *ngIf="isAuthenticated; else loginTemplate">
     <app-nav-bar></app-nav-bar>
-<div class="container-fluid ">
-    <div class="row align-items-center inner-container">
+    <div class="container-fluid">
+      <div class="row align-items-center inner-container">
         <div class="col d-flex justify-content-center align-items-center">
-            <img src="/assets/Images/MEnuTitle.gif" alt="" style="width: 65%;">
+          <img src="/assets/Images/MEnuTitle.gif" alt="" class="menu-title-img">
         </div>
-    </div>
-    <div class="row align-items-center inner-container">
+      </div>
+      <div class="row align-items-center inner-container">
         <div class="col d-flex justify-content-center align-items-center" id="col2">
-            
-            <div *ngIf="IsAdmin">
-                <button class="button">
-                    <a routerLink="/admin"><img class="dashicon" src="assets/Images/dashboard.png" alt=""></a>
-                </button>
-                <p class="desc">Dashboard</p>
-                <span class="backdrop"></span>
-            </div>
-            <div *ngIf="IsManger" >
-                <button class="button">
-                    <a routerLink="/RequestConfirmation"><img width="80px"  src="assets/Images/Quene.png" alt=""></a>
-                </button>
-                <p class="desc">Approval Queue</p>
-                <span class="backdrop"></span>
-            </div>
-
-            <div>
-                <button class="button">
-                    <a routerLink="/EquipmentList"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
-                </button>
-                <p class="desc">My Requests</p>
-                <span class="backdrop"></span>
-            </div>
-            <div >
-                <button (click)="showDialog()" class="button">
-                    <a ><img  src="assets/Images/request.png" alt="" style="width: 50px;margin-left: 0.7rem;"></a>
-                </button>
-                <p class="desc">Submit a request</p>
-                <span class="backdrop"></span>
-            </div>
-         
+          <div *ngIf="IsAdmin" class="menu-item">
+            <button class="button">
+              <a routerLink="/admin"><img class="dashicon" src="assets/Images/dashboard.png" alt=""></a>
+            </button>
+            <p class="desc">Dashboard</p>
+            <span class="backdrop"></span>
+          </div>
+          <div *ngIf="IsManger || IsItApprover" class="menu-item">
+            <button class="button">
+              <a routerLink="/RequestConfirmation"><img width="80px" src="assets/Images/Quene.png" alt=""></a>
+            </button>
+            <p class="desc">Approval Queue</p>
+            <span class="backdrop"></span>
+          </div>
+          <div class="menu-item">
+            <button class="button">
+              <a routerLink="/EquipmentList"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
+            </button>
+            <p class="desc">My Requests</p>
+            <span class="backdrop"></span>
+          </div>
+          <div class="menu-item">
+            <button (click)="showDialog()" class="button">
+              <a><img src="assets/Images/request.png" alt="" class="request-img"></a>
+            </button>
+            <p class="desc">Submit a request</p>
+            <span class="backdrop"></span>
+          </div>
         </div>
-        
+      </div>
     </div>
-
-</div>
   </div>
   <ng-template #loginTemplate>
     <app-loading></app-loading>
-</ng-template>
-
-<p-dialog  header="Request Type"
-[modal]="true" [(visible)]="visible">
-<p-divider></p-divider>
-
-<div class="container">
-    
-    <div class="row align-items-start">
-      <div class="col">
-        <button routerLink="/EquipementRequest" class="btn"><i class="pi pi-desktop" style="font-size: 2rem;"></i> Equipments
-        </button>
+  </ng-template>
+  
+  <p-dialog header="Request Type" [modal]="true" [(visible)]="visible">
+    <p-divider></p-divider>
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col">
+          <button routerLink="/EquipementRequest" class="btn"><i class="pi pi-desktop" style="font-size: 2rem;"></i> Equipments</button>
+        </div>
+        <div class="col">
+          <button routerLink="/EquipementRequest" class="btn"><i class="pi pi-mobile" style="font-size: 2rem;"></i> <br> Phones</button>
+        </div>
       </div>
-      <div class="col">
-        <button routerLink="/EquipementRequest"  class="btn"> <i class="pi pi-mobile" style="font-size: 2rem;"></i> <br> Phones
-        </button>
-      </div>
-    
     </div>
-    
-  </div>
-  <p-divider></p-divider>
-
-</p-dialog>
+    <p-divider></p-divider>
+  </p-dialog>

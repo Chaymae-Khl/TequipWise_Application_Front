@@ -44,9 +44,12 @@ export class LoginComponent {
       (response: any) => {
         const localStorage = document.defaultView?.localStorage;
         // Handle successful login response
-        if (localStorage)
+        if (localStorage){
           this.localstorgeService.setItem('token', response.token);
         console.log(response.token);
+        // const expirationDate = new Date(new Date().getTime() + response.expiresIn * 1000); // Adjust the expiresIn value accordingly
+        //   this.localstorgeService.setItem('tokenExpiration', expirationDate.toISOString());
+        }
         this.router.navigate(['/Menu']);
         //     const token=response.token;
         //     const helper = new JwtHelperService();

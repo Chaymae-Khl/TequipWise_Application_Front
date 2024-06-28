@@ -26,6 +26,7 @@ export class DeptPlantMangComponent implements OnInit {
   checked: boolean = false;
   users: any;
   controllers:any;
+  ItApprovers:any;
   selectedExistingPlantIds:any;
   searchTerm: string = '';
   //for the form repititions
@@ -47,6 +48,7 @@ export class DeptPlantMangComponent implements OnInit {
     this.getPlants();
     this.getUsernames();
     this.getControllers();
+    this.getITApprovers();
   }
 
   // Get plants method
@@ -95,7 +97,21 @@ export class DeptPlantMangComponent implements OnInit {
       }
     );
   }
-
+  getITApprovers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.ItApprovers = data
+          .filter((user: any) => user.roles && user.roles.includes('It Approver'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
 
   showDialog(): void {
     this.visible = true;

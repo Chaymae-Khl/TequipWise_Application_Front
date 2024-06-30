@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { EquipementRequestServiceService } from '../../Services/equipement-request-service.service';
 import { SelectItem } from 'primeng/api';
+import { LocalStorageServiceService } from '../../Services/local-storage-service.service';
 
 @Component({
   selector: 'app-confirmation-operations-request-list',
@@ -23,10 +24,13 @@ export class ConfirmationOperationsRequestListComponent {
   visible: boolean = false;
   requeststatus:any;
   timelineEvents: any[] = [];
-  constructor(private equipementService: EquipementRequestServiceService) { }
+  IsManger!:boolean;
+  IsItApprover!:boolean;
+  constructor(private equipementService: EquipementRequestServiceService,private localStorageService:LocalStorageServiceService) { }
 
   ngOnInit() {
     this.getReuestList();
+    this.checkRoles();
   }
 
   filterRequests() {
@@ -116,4 +120,37 @@ export class ConfirmationOperationsRequestListComponent {
       }
     );
   }
+
+  async checkRoles() {
+    const token = await this.localStorageService.getItem("token");
+
+    if (token) {
+      this.localStorageService.IsManger(token).subscribe(
+        (isManager: boolean) => {
+          this.IsManger = isManager;
+          console.log('Manager status:', isManager);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+
+      this.localStorageService.IsItApprover(token).subscribe(
+        (isItApprover: boolean) => {
+          this.IsItApprover = isItApprover;
+          console.log('Manager status:', isItApprover);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+
+      
+    } else {
+      //console.error('No token found');
+    }
+  }
+
+
+
 }

@@ -118,8 +118,11 @@
                         <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for PR</span>
                     </ng-template>
                 </td>
-                <td><p-button icon="pi pi-check" severity="success" />
-                    <p-button icon="pi pi-arrow-up-right" [rounded]="true" (click)="showDialog(equip)" [text]="true" severity="secondary " />
+                <td>
+                    <div class="flex-container">
+                        <p-button *ngIf="IsManger" icon="pi pi-check" [outlined]="true" severity="Success"></p-button>
+                        <p-button icon="pi pi-arrow-up-right" (click)="showDialog(equip)" severity="warning" [outlined]="true"></p-button>
+                    </div>
                 </td>
             </tr>
         </ng-template>

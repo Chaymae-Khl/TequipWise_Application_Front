@@ -42,4 +42,10 @@ getRequestOfDepartement(){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.get(`${this.apiUrl}/Request/DepartmentRequests`,httpOptions);
 }
+
+updateRequest(requestToUpdate:EquipmentRequest){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.put(`${this.apiUrl}/Request/UpdateEquipemntRequest`,requestToUpdate,httpOptions);
 }
+}
+

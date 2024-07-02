@@ -93,8 +93,8 @@
               </td>
               <td>
                 <ng-container *ngIf="editingRowIndexDept !== rowIndex2; else editModeStatusDept">
-                  <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}" *ngIf="department.status; else inactiveIconDept">check_circle</mat-icon>
-                  <ng-template #inactiveIconDept><mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}">cancel</mat-icon></ng-template>
+                  <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}" *ngIf="department.status; else inactiveIconDept"><i class="pi pi-check-circle" style="color: #49b852"></i> </mat-icon>
+                  <ng-template #inactiveIconDept><mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}"><i class="pi pi-times-circle" style="color: #fd2828"></i></mat-icon></ng-template>
                 </ng-container>
                 <ng-template #editModeStatusDept>
                   <p-inputSwitch id="status" [(ngModel)]="department.status" name="status"></p-inputSwitch>
@@ -157,7 +157,7 @@
               </td>
               <td>
                 <button (click)="DeletePlantfromLocation(plant.plantNumber)" mat-icon-button color="warn">
-                  <mat-icon>delete</mat-icon>
+                  <i class="pi pi-trash" style="color: #fd2828"></i>
                 </button>
               </td>
             </tr>

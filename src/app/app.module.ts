@@ -79,7 +79,9 @@ import { MyProfileComponent } from './Components/Authentication/my-profile/my-pr
 import { NgxApexchartsModule } from 'ngx-apexcharts';
 import { MenuModule } from 'primeng/menu';
 import { ChartModule } from 'primeng/chart';
-
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { RequestFilterPipe } from './pipes/request-filter.pipe';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -112,6 +114,7 @@ import { ChartModule } from 'primeng/chart';
     UserEquipmentRequestListComponent,
     ConfirmationOperationsRequestListComponent,
     MyProfileComponent,
+    RequestFilterPipe,
   
    
   
@@ -166,7 +169,10 @@ import { ChartModule } from 'primeng/chart';
     TimelineModule,
     NgxApexchartsModule,
     MenuModule,
-    ChartModule 
+    ChartModule,
+    SelectButtonModule,
+      CalendarModule 
+  
 
   ],
   providers: [

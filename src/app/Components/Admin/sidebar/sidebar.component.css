@@ -855,9 +855,10 @@ color: #ffffff;
   }
   #sidenav-collapse-main{
     background-color: #1212130b;
-    border: solid 3px  #EA8300;
+    border: solid 3px  #ffffff;
     border-top: none;
 border-bottom: none;
+height:87%;
   }
  
   

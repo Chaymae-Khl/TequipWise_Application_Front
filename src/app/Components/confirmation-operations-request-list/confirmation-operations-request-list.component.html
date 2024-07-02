@@ -2,25 +2,38 @@
 <div class="col text-center">
     <h1 class="mt-5">Approval Queue List</h1>
 </div>
+<p-divider type="dashed"></p-divider>
 
 <div class="container-fluid">
-     <!-- Filter Dropdown -->
-     <div class="mb-3">
-        <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter" optionLabel="label" optionValue="value"
-            placeholder="Filter by Approval Status" (onChange)="filterRequests()"></p-dropdown>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Filter Dropdown -->
+        <div>
+            <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter" optionLabel="label" optionValue="value"
+                placeholder="Filter by Approval Status" (onChange)="filterRequests()"></p-dropdown>
+        </div>
+        <div class="flex-auto">
+            <p-calendar class="ml-2" [(ngModel)]="date1" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay"
+                (onSelect)="filterRequestsByDate()" />
+            <button *ngIf="date1" class="btn  ml-2" (click)="clearDate()">
+                <i class="pi pi-times" style="color: #EA8300"></i>
+            </button>
+        </div>
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <mat-form-field appearance="fill" class="search-field">
+                <mat-label>Search by User FullName</mat-label>
+                <input matInput [(ngModel)]="searchTerm" name="nameOfUser" placeholder="Fullname">
+            </mat-form-field>
+        </div>
     </div>
-    <div class="mb-3">
-        <p-button type="button" icon="pi pi-chevron-left" (click)="prev()" [disabled]="isFirstPage()"
-            styleClass="p-button-text"></p-button>
-        <p-button type="button" icon="pi pi-refresh" (click)="reset()" styleClass="p-button-text"></p-button>
-        <p-button type="button" icon="pi pi-chevron-right" (click)="next()" [disabled]="isLastPage()"
-            styleClass="p-button-text"></p-button>
-    </div>
-    <p-table [value]="filteredEquipmentsList" [paginator]="true" [rows]="5" [first]="first" [showCurrentPageReport]="true"
-        [tableStyle]="{ 'min-width': '100rem' }" (onPage)="pageChange($event)" [rowsPerPageOptions]="[10, 25, 50]">
+    <p-divider type="dashed"></p-divider>
+
+    <p-table [value]="(filteredRequestList | requestFilter:searchTerm)|| []" [paginator]="true" [rows]="5"
+        [first]="first" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '100rem' }"
+        (onPage)="pageChange($event)"  [rowsPerPageOptions]="[10, 25, 50]">
         <ng-template pTemplate="header">
-            <tr>
-                <th>Request Number</th>
+            <tr >
+                <th >Request Number</th>
                 <th>Request Date</th>
                 <th>Equipment</th>
                 <th>For new hire</th>
@@ -32,11 +45,14 @@
                 <th>PO Number</th>
                 <th>Request Status</th>
                 <th>Actions</th>
-                
+
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-equip>
-            <tr [ngClass]="{'approved-request': equip.pR_Status && equip.poNum != null && equip.financeconfirmSatuts && equip.departmangconfirmStatus && equip.supplierOffer != null, 'not-approved-request': !equip.pR_Status || equip.pR_Not_ConfirmCause}">
+            <tr [ngClass]="{
+                    'approved-request':  equip.requestStatus===true,
+                    'not-approved-request': !equip.pR_Status || equip.pR_Not_ConfirmCause
+                }">
                 <td>{{ equip.userEquipmentRequestId }}</td>
                 <td>{{ equip.requestDate | date:'dd/MM/yyyy hh:mm' }}</td>
                 <td>{{ equip.equipmentName }}</td>
@@ -44,29 +60,40 @@
                     <span *ngIf="equip.isNewhire; else former">New Hire</span>
                     <ng-template #former>For me</ng-template>
                 </td>
-                <td [ngClass]="{'text-success': equip.departmangconfirmStatus, 'text-danger': !equip.departmangconfirmStatus}">
-                    <i *ngIf="equip.departmangconfirmStatus" class="pi pi-check-circle"></i>
-                    <i *ngIf="!equip.departmangconfirmStatus" class="pi pi-times-circle"></i>
-                    {{ equip.departmangconfirmStatus ? 'Approved' : 'Open' }}
+                <td [ngClass]="{
+                        'text-success': equip.departmangconfirmStatus === true,
+                        'text-danger': equip.departmangconfirmStatus === false,
+                        'text-primary': equip.departmangconfirmStatus === null
+                    }">
+                    <i *ngIf="equip.departmangconfirmStatus === true" class="pi pi-check-circle"></i>
+                    <i *ngIf="equip.departmangconfirmStatus === false" class="pi pi-times-circle"></i>
+                    <i *ngIf="equip.departmangconfirmStatus === null" class="pi pi-hourglass"></i>
+                    {{ equip.departmangconfirmStatus === true ? 'Approved' : equip.departmangconfirmStatus === false ?
+                    'Rejected' : 'Open' }}
                 </td>
-                <td [ngClass]="{'text-success': equip.iTconfirmSatuts,'text-indigo':equip.supplierOffer, 'text-danger': !equip.iTconfirmSatuts && !equip.supplierOffer}">
-                    <i *ngIf="equip.supplierOffer && !equip.iTconfirmSatuts" class="pi pi-info-circle"></i>
-                    <i *ngIf="equip.iTconfirmSatuts" class="pi pi-check-circle"></i>
-                    <i *ngIf="!equip.iTconfirmSatuts && !equip.supplierOffer" class="pi pi-times-circle"></i>
-                    <ng-container *ngIf="equip.supplierOffer && !equip.iTconfirmSatuts">
-                        Offer
-                    </ng-container>
-                    <ng-container *ngIf="equip.iTconfirmSatuts && equip.supplierOffer">
-                        Approved
-                    </ng-container>
-                    <ng-container *ngIf="!equip.supplierOffer && !equip.iTconfirmSatuts">
-                        Open
-                    </ng-container>
+                <td [ngClass]="{
+                    'text-success': equip.iTconfirmSatuts === true,
+                    'text-danger': equip.iTconfirmSatuts === false && !equip.supplierOffer,
+                    'text-info': equip.supplierOffer != null && equip.iTconfirmSatuts === null,
+                    'text-primary': equip.iTconfirmSatuts === null && equip.supplierOffer === null
+                }">
+                    <i *ngIf="equip.iTconfirmSatuts === true" class="pi pi-check-circle"></i>
+                    <i *ngIf="equip.iTconfirmSatuts === false && !equip.supplierOffer" class="pi pi-times-circle"></i>
+                    <i *ngIf="equip.supplierOffer != null" class="pi pi-info-circle"></i>
+                    <i *ngIf="equip.iTconfirmSatuts === null && equip.supplierOffer === null"
+                        class="pi pi-hourglass"></i>
+                    {{ equip.supplierOffer != null ? 'Offer' : equip.iTconfirmSatuts === true ? 'Approved' : 'Open' }}
                 </td>
-                <td [ngClass]="{'text-success': equip.financeconfirmSatuts, 'text-danger': !equip.financeconfirmSatuts}">
-                    <i *ngIf="equip.financeconfirmSatuts" class="pi pi-check-circle"></i>
-                    <i *ngIf="!equip.financeconfirmSatuts" class="pi pi-times-circle"></i>
-                    {{ equip.financeconfirmSatuts ? 'Approved' : 'Open' }}
+                <td [ngClass]="{
+                        'text-success': equip.financeconfirmSatuts === true,
+                        'text-danger': equip.financeconfirmSatuts === false,
+                        'text-primary': equip.financeconfirmSatuts === null
+                    }">
+                    <i *ngIf="equip.financeconfirmSatuts === true" class="pi pi-check-circle"></i>
+                    <i *ngIf="equip.financeconfirmSatuts === false" class="pi pi-times-circle"></i>
+                    <i *ngIf="equip.financeconfirmSatuts === null" class="pi pi-hourglass"></i>
+                    {{ equip.financeconfirmSatuts === true ? 'Approved' : equip.financeconfirmSatuts === false ?
+                    'Rejected' : 'Open' }}
                 </td>
                 <td>
                     <ng-container *ngIf="equip.prNum != null; else noPr">
@@ -74,15 +101,16 @@
                     </ng-container>
                     <ng-template #noPr><i class="pi pi-times-circle"></i></ng-template>
                 </td>
-                <td [ngClass]="{'text-success': equip.pR_Status && !equip.pR_Not_ConfirmCause, 'text-danger': !equip.pR_Status || equip.pR_Not_ConfirmCause}">
-                    <i *ngIf="equip.pR_Status && !equip.pR_Not_ConfirmCause" class="pi pi-check-circle"></i>
-                    <i *ngIf="!equip.pR_Status || equip.pR_Not_ConfirmCause" class="pi pi-times-circle"></i>
-                    <ng-container *ngIf="!equip.pR_Not_ConfirmCause">
-                        {{equip.pR_Status ? 'Approved' : 'Open'}}
-                    </ng-container>
-                    <ng-container *ngIf="equip.pR_Not_ConfirmCause">
-                        Not Confirmed
-                    </ng-container>
+                <td [ngClass]="{
+                        'text-success': equip.pR_Status=== true ,
+                        'text-danger': equip.pR_Status=== false ,
+                        'text-primary': equip.pR_Status === null
+                    }">
+                    <i *ngIf="equip.pR_Status=== true" class="pi pi-check-circle"></i>
+                    <i *ngIf="equip.pR_Status=== false" class="pi pi-times-circle"></i>
+                    <i *ngIf="equip.pR_Status === null" class="pi pi-hourglass"></i>
+
+                    {{ equip.pR_Status === true ? 'Approved' : equip.pR_Status === false ? 'Rejected' : 'Open' }}
                 </td>
                 <td>
                     <ng-container *ngIf="equip.poNum != null; else noPo">
@@ -91,102 +119,163 @@
                     <ng-template #noPo><i class="pi pi-times-circle"></i></ng-template>
                 </td>
                 <td>
-                    <ng-container *ngIf="equip.pR_Not_ConfirmCause !== null; else approvedStatus">
-                        <span class="text-danger"> <i class="pi pi-times-circle"></i> Not Approved</span>
+                    <ng-container *ngIf="equip.requestStatus === true; else defaultCheck">
+                        <span class="text-success"><i class="pi pi-check-circle"></i> Approved</span>
                     </ng-container>
-                    <ng-template #approvedStatus>
-                        <ng-container *ngIf="equip.departmangconfirmStatus; else notStarted">
-                            <ng-container *ngIf="equip.supplierOffer != null; else inProgress">
-                                <ng-container *ngIf="equip.financeconfirmSatuts; else waitingForFinance">
-                                    <ng-container *ngIf="equip.pR_Status && equip.poNum != null; else waitingForPRPO">
-                                        <span class="text-success"> <i class="pi pi-check-circle"></i> Approved</span>
+                    <ng-template #defaultCheck>
+                        <ng-container *ngIf="equip.pR_Status !== false; else notApprovedStatus">
+                            <ng-container *ngIf="equip.pR_Not_ConfirmCause !== null; else approvedStatus">
+                                <span class="text-danger"><i class="pi pi-times-circle"></i> Not Approved</span>
+                            </ng-container>
+                            <ng-template #approvedStatus>
+                                <ng-container *ngIf="equip.departmangconfirmStatus === true; else notStarted">
+                                    <ng-container *ngIf="equip.supplierOffer !== null; else inProgress">
+                                        <ng-container *ngIf="equip.financeconfirmSatuts === true; else waitingForFinanceOrRejected">
+                                            <ng-container *ngIf="equip.poNum !== null; else waitingForPRPO">
+                                                <span class="text-success"><i class="pi pi-check-circle"></i> Approved</span>
+                                            </ng-container>
+                                        </ng-container>
                                     </ng-container>
                                 </ng-container>
-                            </ng-container>
+                            </ng-template>
+                            <ng-template #notStarted>
+                                <span class="text-danger"><i class="pi pi-times-circle"></i> Not Approved</span>
+                            </ng-template>
+                            <ng-template #inProgress>
+                                <span class="text-warning"><i class="pi pi-info-circle"></i> In Progress</span>
+                            </ng-template>
+                            <ng-template #waitingForFinanceOrRejected>
+                                <ng-container *ngIf="equip.financeconfirmSatuts === false">
+                                    <span class="text-danger"><i class="pi pi-times-circle"></i> Not Approved</span>
+                                </ng-container>
+                                <ng-container *ngIf="equip.financeconfirmSatuts === null">
+                                    <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for Finance Approval</span>
+                                </ng-container>
+                            </ng-template>
+                            <ng-template #waitingForPRPO>
+                                <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for PR</span>
+                            </ng-template>
                         </ng-container>
-                    </ng-template>
-                    <ng-template #notStarted>
-                        <span class="text-danger"> <i class="pi pi-times-circle"></i> Not Approved</span>
-                    </ng-template>
-                    <ng-template #inProgress>
-                        <span class="text-warning"><i class="pi pi-info-circle"></i> In Progress</span>
-                    </ng-template>
-                    <ng-template #waitingForFinance>
-                        <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for Finance Approval</span>
-                    </ng-template>
-                    <ng-template #waitingForPRPO>
-                        <span class="text-info"><i class="pi pi-info-circle"></i> Waiting for PR</span>
+                        <ng-template #notApprovedStatus>
+                            <span class="text-danger"><i class="pi pi-times-circle"></i> Not Approved</span>
+                        </ng-template>
                     </ng-template>
                 </td>
                 <td>
                     <div class="flex-container">
-                        <p-button *ngIf="IsManger" icon="pi pi-check" [outlined]="true" severity="Success"></p-button>
-                        <p-button icon="pi pi-arrow-up-right" (click)="showDialog(equip)" severity="warning" [outlined]="true"></p-button>
+                        <div *ngIf="equip.departmangconfirmStatus == null">
+                            <p-button *ngIf="IsManger" icon="pi pi-check" [outlined]="true"
+                                (click)="showDialog(equip, 'approve')" severity="Success"></p-button>
+                        </div>
+                        <p-button icon="pi pi-arrow-up-right" (click)="showDialog(equip, 'view')" severity="warning"
+                            [outlined]="true"></p-button>
                     </div>
                 </td>
             </tr>
         </ng-template>
     </p-table>
 </div>
+<p-dialog header="{{ mode === 'view' ? 'Request Details' : ' Request Response' }}" [(visible)]="visible" [modal]="true"
+    [style]="{width: '50vw'}">
 
-<p-dialog header="Equipment Request Details" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}">
-   
-    @if(requeststatus==true){
-        <img  src="/assets/Images/approved.png" width="222rem" alt="" style="position: absolute; left: 11px;">
-    }
-    @else if (requeststatus==false) {
-        <img src="/assets/Images/rejected.png" width="222rem" alt="" style="position: absolute; left: 11px;">
-    }
-    @else {
-       
-    }
-    <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedRequest">
-        <ng-template pTemplate="marker" let-event>
-            <ng-container *ngIf="event.title === 'Manager approval'">
-              <span *ngIf="event.status" class="pi pi-check-circle" style="color:green;"></span>
-              <span *ngIf="!event.status" class="pi pi-times-circle" style="color:red;"></span>
-            </ng-container>
-            <ng-container *ngIf="event.title === 'IT approval'">
-              <span *ngIf="event.status " class="pi pi-check-circle" style="color:green;"></span>
-              <span *ngIf="!event.status && !event.supplierOffer" class="pi pi-times-circle" style="color:red;"></span>
-              <span *ngIf="event.supplierOffer && !event.status" class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
-            </ng-container>
-            <ng-container *ngIf="event.title === 'Finance approval'">
-              <span *ngIf="event.status" class="pi pi-check-circle" style="color:green;"></span>
-              <span *ngIf="!event.status" class="pi pi-times-circle" style="color:red;"></span>
-            </ng-container>
-            <ng-container *ngIf="event.title === 'PR & PO approval'">
-              <span *ngIf="event.statusPr && !event.RejectionCause" class="pi pi-check-circle" style="color:green;"></span>
-              <span *ngIf="event.RejectionCause" class="pi pi-times-circle" style="color:red;"></span>
-            </ng-container>
-            <ng-container *ngIf="event.title === 'Request approval'">
-              <span *ngIf="event.statusreq" class="pi pi-check-circle" style="color:green;"></span>
-              <span *ngIf="!event.statusreq" class="pi pi-times-circle" style="color:red;"></span>
-            </ng-container>
-          </ng-template>
-        <ng-template pTemplate="content" let-event>
-            <div class="p-timeline-event-content">
-                <h4 style="color: #104a7c; font-size: 1.2rem; ">{{ event.title }}</h4>
-                <p-divider type="dashed" />
+    <div *ngIf="mode === 'approve'" class="d-flex justify-content-center align-items-center text-center ">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+            <form (ngSubmit)="updateRequest(selectedRequest)" class="position-relative">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="departmangconfirmStatus"
+                    [(ngModel)]="selectedRequest.departmangconfirmStatus"></p-selectButton>
+                <h2 *ngIf="selectedRequest.departmangconfirmStatus === false">Your Rejection cause:</h2>
+                <textarea rows="5" cols="30" pInputTextarea name="departmang_Not_confirmCause"
+                    *ngIf="selectedRequest.departmangconfirmStatus === false"
+                    [(ngModel)]="selectedRequest.departmang_Not_confirmCause"></textarea>
+                <div class="position-absolute end-0 bottom-0">
+                    <p-button label="Confirm" type="submit" [outlined]="true"></p-button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-                <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
-                <p *ngIf="event.by"><b>By:</b> {{ event.by }} </p>
-                <p *ngIf="event.ForWho"><b>For Who:</b> {{ event.ForWho?'New Hire':'For Me' }}</p>
-                <p *ngIf="event.Equipment"><b>Equipment:</b> {{ event.Equipment }}</p>
-                <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+    <div *ngIf="mode === 'view'">
+        <div class="position-relative">
+            <img *ngIf="selectedRequest.requestStatus === true " src="/assets/Images/approved.png" width="222rem" alt=""
+                style="position: absolute; left: 11px;">
+            <img *ngIf="selectedRequest.requestStatus === false" src="/assets/Images/rejected.png" width="222rem" alt=""
+                style="position: absolute; left: 11px;">
+        </div>
 
-                <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
-                
-                <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusLabel(event.status, event.supplierOffer) }}</p>
-                <p *ngIf="event.statusPr != null"><b>Status PR:</b> {{ getPRStatusLabel(event.statusPr, event.RejectionCause) }}</p>
-                <p *ngIf="event.Ponum != null"><b>PO Number:</b> {{ event.Ponum }}</p>
-                <p *ngIf="event.PrNum != null"><b>PR Number:</b> {{ event.PrNum }}</p>
-
-                @if (event.statusreq==true) {
-                <p *ngIf="event.statusreq !== undefined"><b>Request Status:</b> Approved</p>}
-                @else if (event.statusreq==false) {<p *ngIf="event.statusreq !== undefined">Request Status: Rejected</p>}
-                @else {<p *ngIf="event.statusreq !== undefined"><b>Request Status:</b> open</p>}
-            </div>
-        </ng-template>
-    </p-timeline>
+        <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedRequest">
+            <ng-template pTemplate="marker" let-event>
+                <ng-container *ngIf="event.title === 'Manager approval'">
+                    <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                </ng-container>
+                <ng-container *ngIf="event.title === 'IT approval'">
+                    <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="event.status === false && !event.supplierOffer" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="event.supplierOffer && event.status === null" class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                    <span *ngIf="event.status === null && event.supplierOffer === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                </ng-container>
+                <ng-container *ngIf="event.title === 'Finance approval'">
+                    <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                </ng-container>
+                <ng-container *ngIf="event.title === 'PR & PO approval'">
+                    <span *ngIf="event.statusPr === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="event.statusPr === false" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="event.statusPr === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                </ng-container>
+                <ng-container *ngIf="event.title === 'Request approval'">
+                    <ng-container *ngIf="event.statusreq === true; else checkInProgress">
+                        <span class="pi pi-check-circle" style="color:green;"></span>
+                    </ng-container>
+                    <ng-template #checkInProgress>
+                        <ng-container *ngIf="event.statusreq === false; else checkInProgressFurther">
+                            <span class="pi pi-times-circle" style="color:red;"></span>
+                        </ng-container>
+                        <ng-template #checkInProgressFurther>
+                            <ng-container *ngIf="event.supplierOffer !== null; else checkFinanceApproval">
+                                <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                            </ng-container>
+                            <ng-template #checkFinanceApproval>
+                                <ng-container *ngIf="event.financeconfirmSatuts === null; else checkPRApproval">
+                                    <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                                </ng-container>
+                                <ng-template #checkPRApproval>
+                                    <ng-container *ngIf="event.poNum === null; else defaultNotApproved">
+                                        <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                                    </ng-container>
+                                    <ng-template #defaultNotApproved>
+                                        <span class="pi pi-times-circle" style="color:red;"></span>
+                                    </ng-template>
+                                </ng-template>
+                            </ng-template>
+                        </ng-template>
+                    </ng-template>
+                </ng-container>
+            </ng-template>
+            <ng-template pTemplate="content" let-event>
+                <div class="p-timeline-event-content">
+                    <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
+                    <p-divider type="dashed" />
+                    <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                    <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
+                    <p *ngIf="event.ForWho"><b>For Who:</b> {{ event.ForWho ? 'New Hire' : 'For Me' }}</p>
+                    <p *ngIf="event.Equipment"><b>Equipment:</b> {{ event.Equipment }}</p>
+                    <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+                    <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
+                    <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusText(event) }}</p>
+                    <p *ngIf="event.statusPr != null"><b>Status PR:</b> {{ getStatusPRText(event) }}</p>
+                    <p *ngIf="event.Ponum != null"><b>PO Number:</b> {{ event.Ponum }}</p>
+                    <p *ngIf="event.PrNum != null"><b>PR Number:</b> {{ event.PrNum }}</p>
+                    <p *ngIf="event.statusreq != null"><b>Request Status:</b> 
+                        {{ event.statusreq ? 'Approved' : 'Rejected' }}
+                    </p>
+                </div>
+            </ng-template>
+        </p-timeline>
+    </div>
 </p-dialog>

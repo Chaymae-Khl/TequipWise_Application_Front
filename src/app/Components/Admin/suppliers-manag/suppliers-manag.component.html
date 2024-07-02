@@ -1,7 +1,8 @@
 <p-toast></p-toast>
 <div class="menu-item">
   <div class="arrow"></div>
-  <h2 class="title">Suppliers({{NumberSuppliers}})</h2>
+  <h2 class="title"><i class="pi pi-shop" style="font-size: 1.5rem"></i>   Suppliers({{NumberSuppliers}})</h2>
+  <p-divider type="dashed" />
   <div class="row">
     <div class="col-8">
       <div>
@@ -42,20 +43,20 @@
               </button></td>
             <td>
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
-                <mat-icon>more_vert</mat-icon>
+                <i class="pi pi-ellipsis-v" style="color: #EA8300"></i>
               </button>
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="showDialog('view', supplier)">
-                  <mat-icon>visibility</mat-icon>
-                  <span>View Details</span>
+                  <i class="pi pi-eye" style="color: #060606"></i>
+                  <span>    View Details</span>
                 </button>
                 <button mat-menu-item (click)="showDialog('update', supplier)">
-                  <mat-icon>edit</mat-icon>
-                  <span>Update</span>
+                  <i class="pi pi-pencil" style="color: #060606"></i>
+                  <span>    Update</span>
                 </button>
                 <button mat-menu-item (click)="deleteSupplier(supplier.suplierId)">
-                  <mat-icon>delete</mat-icon>
-                  <span>Delete</span>
+                  <i class="pi pi-trash" style="color: #060606"></i>
+                  <span>    Delete</span>
                 </button>
               </mat-menu>
             </td>
@@ -68,32 +69,38 @@
 
 <p-dialog 
   header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? ' Supplier Details' : mode === 'Equipements' ? 'Equipements of the supplier' : 'Update Supplier' }}"
-  [modal]="true" [(visible)]="visible" [style]="{width: '20vw'}" styleClass="custom-dialog">
-  <form *ngIf="mode !== 'view' ? mode !== 'Equipements' : mode !== 'view'"
-    (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
-    <div class="row">
-      <p-floatLabel class="inputFloat">
-        <input pInputText [(ngModel)]="selectedSupplier.suuplier_name" name="suuplier_name" id="supplier_name"
-          required />
-        <label for="supplier_name">Supplier Name</label>
-      </p-floatLabel>
-      <p-floatLabel class="inputFloat">
-        <input pInputText [(ngModel)]="selectedSupplier.address" name="address" id="address" required />
-        <label for="address">Address</label>
-      </p-floatLabel>
-      <p-floatLabel class="inputFloat">
-        <input pInputText [(ngModel)]="selectedSupplier.email" name="email" id="email" required />
-        <label for="email">Email</label>
-      </p-floatLabel>
+  [modal]="true" [(visible)]="visible"  styleClass="custom-dialog">
+  <div class="container"> <!-- Replace container with your preferred wrapper -->
+    <div class="row justify-content-center">
+      <div class="col-md-8"> <!-- Adjust col-md-8 based on your layout needs -->
+        <form *ngIf="mode !== 'view' ? mode !== 'Equipements' : mode !== 'view'"
+              (ngSubmit)="mode === 'add' ? addSupplier() : updateSupplier()">
+          <div class="row">
+            <p-floatLabel class="inputFloat">
+              <input pInputText [(ngModel)]="selectedSupplier.suuplier_name" name="suuplier_name" id="supplier_name"
+                required />
+              <label for="supplier_name">Supplier Name</label>
+            </p-floatLabel>
+            <p-floatLabel class="inputFloat">
+              <input pInputText [(ngModel)]="selectedSupplier.address" name="address" id="address" required />
+              <label for="address">Address</label>
+            </p-floatLabel>
+            <p-floatLabel class="inputFloat">
+              <input pInputText [(ngModel)]="selectedSupplier.email" name="email" id="email" required />
+              <label for="email">Email</label>
+            </p-floatLabel>
+          </div>
+          <p-divider></p-divider>
+  
+          <div class="confirmbtn col align-self-end">
+            <button type="submit" class="button">
+              {{ mode === 'add' ? 'Add' : 'Update' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-    <p-divider></p-divider>
-
-    <div class="confirmbtn col align-self-end">
-      <button type="submit" class="button">
-        {{ mode === 'add' ? 'Add' : 'Update' }}
-      </button>
-    </div>
-  </form>
+  </div>
 
   <div *ngIf="mode === 'view'">
     <p-divider></p-divider>
@@ -108,8 +115,8 @@
   </div>
 
   <div *ngIf="mode === 'Equipements'">
-    <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ height: '25rem' }" filterBy="equipementSN"
-      filterPlaceholder="Filter by name">
+    <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ width:'20rem' }" filterBy="equipementSN"
+      filterPlaceholder="Filter by Serial Number">
       <ng-template let-equipemnt pTemplate="item">
         <p-divider></p-divider>
         <div class="col-8">

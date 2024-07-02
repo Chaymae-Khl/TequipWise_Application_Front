@@ -107,6 +107,7 @@ export class MyProfileComponent {
       }
     );
   }
+
   updateUser(): void {
     this.loading = true; 
         this.authservice.updateProfile(this.user, this.user.id).subscribe(

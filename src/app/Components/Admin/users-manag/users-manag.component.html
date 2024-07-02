@@ -2,7 +2,8 @@
 <!-- Search Bar -->
 <div class="container-fluid p-0 menu-item">
   <div class="arrow"></div>
-  <h2 class="title">Users ({{numberofusers}})</h2>
+  <h2 class="title"><i class="pi pi-users" style="font-size: 1.5rem"></i>   Users ({{numberofusers}})</h2>
+  <p-divider type="dashed" />
   <div class="search-bar">
     <mat-form-field appearance="fill" class="search-field">
       <mat-label> Search by Te identifier/Fullname</mat-label>
@@ -60,29 +61,29 @@
 
             <td> <!-- Actions Button -->
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
-                <mat-icon>more_vert</mat-icon>
+                <i class="pi pi-ellipsis-v" style="color: #EA8300"></i>
               </button>
 
               <mat-menu #menu="matMenu">
                 <!-- View Details Button -->
                 <button mat-menu-item (click)="showDialog('view',user)">
-                  <mat-icon>visibility</mat-icon>
-                  <span>View Details</span>
+                  <i class="pi pi-eye" style="color: #060606"></i>
+                  <span>    View Details</span>
                 </button>
                 <!-- Update Button -->
                 <button mat-menu-item (click)="showDialog('update',user)">
-                  <mat-icon>edit</mat-icon>
-                  <span>Update</span>
+                  <i class="pi pi-user-edit" style="color: #060606"></i>
+                  <span>    Update</span>
                 </button>
                 <!-- Delete Button -->
                 <button mat-menu-item (click)="deleteUser(user)">
-                  <mat-icon>delete</mat-icon>
-                  <span>Delete</span>
+                  <i class="pi pi-trash" style="color: #060606"></i>
+                  <span>    Delete</span>
                 </button>
                 <!-- Change Password Button -->
                 <button mat-menu-item (click)="showDialog('changepassword',user)">
-                  <mat-icon>vpn_key</mat-icon>
-                  <span>Change Password</span>
+                  <i class="pi pi-key" style="color: #060606"></i>
+                  <span>    Change Password</span>
                 </button>
               </mat-menu>
             </td>

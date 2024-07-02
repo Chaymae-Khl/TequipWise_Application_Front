@@ -4,6 +4,7 @@ import { EquipementRequestServiceService } from '../../Services/equipement-reque
 import { data } from 'jquery';
 import { error } from 'console';
 import { SelectItem } from 'primeng/api';
+import { EquipmentRequest } from '../../Models/equipment-request';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { SelectItem } from 'primeng/api';
 export class UserEquipmentRequestListComponent {
   first = 0;
   rows = 10;
-  EquipmentsList: any;
+  RequestsList: any;  
   NumberOfRequest: any = { count: 0 };
   filterOptions: SelectItem[] = [
     { label: 'All', value: null },
@@ -22,9 +23,9 @@ export class UserEquipmentRequestListComponent {
     { label: 'Not Approved', value: false }
   ];
   selectedFilter: any = null; // Initialize to null for "All" by default
-  filteredEquipmentsList: any; // Variable to hold filtered list
+  filteredRequestList: any; // Variable to hold filtered list
   visible: boolean = false;
-  selectedRequest: any;
+  selectedRequest: EquipmentRequest = new EquipmentRequest();
   
   timelineEvents: any[] = [];
 
@@ -38,9 +39,33 @@ export class UserEquipmentRequestListComponent {
     this.getNumOfRequest();
   }
   
+  getStatusText(event:any): string {
+    if (event.status === true) {
+        return 'Approved';
+    } else if (event.status === false) {
+        return 'Not Approved';
+    } else if (event.supplierOffer !== null) {
+        return 'Offer';
+    } else if (event.financeconfirmSatuts === null) {
+        return 'Waiting for Finance Approval';
+    } else if (event.poNum === null) {
+        return 'Waiting for PR';
+    } else {
+        return 'Open';
+    }
+}
 
+getStatusPRText(event:any): string {
+    if (event.statusPr === true) {
+        return 'Approved';
+    } else if (event.statusPr === false) {
+        return 'Rejected';
+    } else {
+        return 'Open';
+    }
+}
   showDialog(equip:any) {
-    this.selectedRequest = [equip];
+    this.selectedRequest = equip;
       this.visible = true;
       this.timelineEvents = [
         { title: 'Request Created', date: equip.requestDate, by: equip.nameOfUser , ForWho: equip.isNewhire, Equipment: equip.equipmentName,Comments:equip.comment },
@@ -74,22 +99,26 @@ export class UserEquipmentRequestListComponent {
     // Filter the list based on selected filter
     if (this.selectedFilter === null) {
       // Show all requests
-      this.filteredEquipmentsList = this.EquipmentsList;
+      this.filteredRequestList = this.RequestsList;
     } else {
       // Filter based on selected approval status
-      this.filteredEquipmentsList = this.EquipmentsList.filter((equip: any) =>
-        equip.pR_Status === this.selectedFilter
+      this.filteredRequestList = this.RequestsList.filter((equip: any) =>
+        equip.requestStatus === this.selectedFilter
       );
     }
   }
 
   next() {
-    this.first = this.first + this.rows;
+    this.first += this.rows;
   }
 
   prev() {
-    this.first = this.first - this.rows;
+    this.first -= this.rows;
+    if (this.first < 0) {
+      this.first = 0;
+    }
   }
+
 
   reset() {
     this.first = 0;
@@ -101,19 +130,19 @@ export class UserEquipmentRequestListComponent {
   }
 
   isLastPage(): boolean {
-    return true;
+    return this.RequestsList ? this.first >= (this.RequestsList.length - this.rows) : true;
   }
 
   isFirstPage(): boolean {
-    return true;
+    return this.first === 0;
   }
 
   getReuestList() {
     this.equipementService.GetAuthRequestList().subscribe(
       (data) => {
-        this.EquipmentsList = data;
-        this.filteredEquipmentsList = data; // Initialize filtered list with original list
-        console.log(this.filteredEquipmentsList);
+        this.RequestsList = data;
+        this.filteredRequestList = data; // Initialize filtered list with original list
+        console.log(this.filteredRequestList);
       },
       (error) => {
       }

@@ -32,6 +32,7 @@ export class ConfirmationOperationsRequestListComponent {
   IsManger!: boolean;
   IsItApprover!: boolean;
   mode: 'approve' | 'view' = 'approve';
+  loading: boolean = false; // Loading flag for password email operation
   stateOptions: any[] = [
     { label: 'Approve', value: true },
     { label: 'Reject', value: false }
@@ -48,15 +49,16 @@ export class ConfirmationOperationsRequestListComponent {
 
   updateRequest(requesttoUpdate: EquipmentRequest) {
     console.log(requesttoUpdate);
-
+    this.loading = true; // Set loading flag to true
     this.equipementService.updateRequest(requesttoUpdate).subscribe(response => {
       // handle the response
       this.getReuestList();
       this.visible = false;
-
+      this.loading = false; // Set loading flag to false on success
     },
       (error) => {
         console.log(error);
+        this.loading = false; // Set loading flag to false on success
 
       }
     );

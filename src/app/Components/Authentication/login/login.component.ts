@@ -17,7 +17,7 @@ export class LoginComponent {
   visible: boolean = false;
   email: any;
   isPasswordVisible: boolean = false;
-
+  loadingPasswordEmail: boolean = false; // Loading flag for password email operation
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
@@ -78,14 +78,17 @@ export class LoginComponent {
 
   //sendemail function
   passwordEmail() {
+    this.loadingPasswordEmail = true; // Set loading flag to true
     this.authService.SendForgetPasswordEmail(this.email).subscribe(
       (response) => {
         console.log('Reset link sent successfully:', response);
         this.visible = false;
         this.messageService.add({ severity: 'info', summary: 'Info', detail: 'An Email was sent to your MailBox', life: 15000 });
+        this.loadingPasswordEmail = false; // Set loading flag to false on success
       },
       (error) => {
         console.error('Error sending reset link:', error);
+        this.loadingPasswordEmail = false;
         // Handle error (e.g., show an error message)
       }
     );

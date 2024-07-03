@@ -191,8 +191,16 @@
                     *ngIf="selectedRequest.departmangconfirmStatus === false"
                     [(ngModel)]="selectedRequest.departmang_Not_confirmCause"></textarea>
                 <div class="position-absolute end-0 bottom-0">
-                    <p-button label="Confirm" type="submit" [outlined]="true"></p-button>
+                    <p-button  type="submit" [outlined]="true" [disabled]="loading">
+                        <ng-container *ngIf="!loading; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
                 </div>
+                
             </form>
         </div>
     </div>

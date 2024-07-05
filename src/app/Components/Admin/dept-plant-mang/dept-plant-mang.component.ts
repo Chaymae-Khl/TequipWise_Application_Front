@@ -30,6 +30,7 @@ export class DeptPlantMangComponent implements OnInit {
   selectedExistingPlantIds:any;
   searchTerm: string = '';
   loading2: boolean = true; // Initialize as true to show loading initially
+  loading!: boolean ; // Initialize as true to show loading initially
 
   //for the form repititions
   public locations: any[] = [{ name: '', buildingNumber: '' }];
@@ -126,6 +127,7 @@ export class DeptPlantMangComponent implements OnInit {
   //locaions crud
   AddNewLocation() {
     // Include plants and departments data in the location object
+    this.loading = true; 
     this.location.plants = this.plantes;
     this.location.departments = this.departments;
     console.log(this.location);
@@ -133,6 +135,7 @@ export class DeptPlantMangComponent implements OnInit {
       .subscribe(
         response => {
           this.visible = false;
+          this.loading = false;
           this.getPlants();
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Location Added successfully', life: 10000 });
          
@@ -140,6 +143,7 @@ export class DeptPlantMangComponent implements OnInit {
           // Reset the form or do any other necessary action
         },
         error => {
+          this.loading = false;
           console.error('Error creating location:', error);
           // Handle error, show error message, etc.
         }

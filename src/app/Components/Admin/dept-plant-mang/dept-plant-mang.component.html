@@ -149,7 +149,13 @@
           </p-tabView>
 
           <div class="button-container">
-            <button type="submit">Confirm</button>
+            <button type="submit" [disabled]="loading">
+              <ng-container *ngIf="loading; else notLoading">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </ng-container>
+              <ng-template #notLoading>Confirm</ng-template>
+            </button>
           </div>
         </form>
       </div>

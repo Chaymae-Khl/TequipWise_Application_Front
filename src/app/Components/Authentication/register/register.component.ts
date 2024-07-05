@@ -19,6 +19,7 @@ export class RegisterComponent  {
   plantsOfSelectedLocation: any[] = [];
   departmentsOfSelectedPlant: any[] = [];
   registerForm: FormGroup;
+  loading!: boolean  // Initialize as true to show loading initially
 
   constructor(
     private openDataServiceService: OpenDataServiceService,
@@ -72,6 +73,7 @@ export class RegisterComponent  {
   }
 
   Register() {
+    this.loading = true; 
     if (this.user.password !== this.user.confirmPassword) {
       this.snackBar.open('Passwords do not match', 'Close', {
         duration: 5000,
@@ -86,10 +88,12 @@ export class RegisterComponent  {
 
     this.authService.UserRegister(formValues, role).subscribe(
       (res) => {
+      this.loading = false;
         console.log("Registration successful");
         this.router.navigate(['/login']);
       },
       (error) => {
+        this.loading = false;
         console.error("Error occurred during registration:", error);
       }
     );

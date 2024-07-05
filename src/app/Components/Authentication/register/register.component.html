@@ -201,9 +201,15 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <button id="registerbtn" class="submit action-button" type="submit">
-          <span class="font-weight-bold" style="color: white;">Register</span>
-        </button> <br>
+        
+          <button id="registerbtn" class="submit action-button" type="submit" [disabled]="loading">
+            <ng-container *ngIf="loading; else notLoading">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Loading...
+            </ng-container>
+            <ng-template #notLoading><span class="font-weight-bold" style="color: white;">Register</span></ng-template>
+          </button>
+      <br>
         <p>Already have an account? <a class="login" routerLink="/login">Login</a></p>
       </fieldset>
     </form>

@@ -32,6 +32,7 @@ export class UsersManagComponent implements OnInit{
   mode: 'add' | 'view' | 'update' | 'changepassword' = 'add';
   visible: boolean = false;
   loading: boolean = false;
+  loading2: boolean = true; // Initialize as true to show loading initially
 
   onApproverActiveChange() {
     if (!this.locationed.approverActive) {
@@ -58,12 +59,18 @@ this.getRoles();
 
 
 getUsers(){
+  this.loading2 = true; // Set loading to true before fetching data
+
   this.Authservice.getUsers().subscribe(
     (data) => {
+      this.loading2 = false; // Set loading to false after data is fetched
+
       this.users = data;
       console.log(this.users);
     },
     (error) => {
+      this.loading2 = false; // Ensure loading is turned off even in case of error
+
       console.error('An error occurred while fetching Users:', error);
       console.log('Error response:', error.error); // Log the response object
     }

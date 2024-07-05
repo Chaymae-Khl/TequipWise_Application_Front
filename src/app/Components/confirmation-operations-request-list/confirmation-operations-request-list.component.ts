@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { EquipementRequestServiceService } from '../../Services/equipement-request-service.service';
-import { SelectItem } from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { LocalStorageServiceService } from '../../Services/local-storage-service.service';
 import { EquipmentRequest } from '../../Models/equipment-request';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialogComponent } from '../../message-dialog/message-dialog.component';
 
 @Component({
   selector: 'app-confirmation-operations-request-list',
@@ -18,11 +20,12 @@ export class ConfirmationOperationsRequestListComponent {
   date1: any;
   filterOptions: SelectItem[] = [
     { label: 'All', value: null },
+    { label: 'Open', value: 'Open' },
     { label: 'You Approved', value: true },
-    { label: ' You Rejected', value: false }
+    { label: 'You Rejected', value: false }
   ];
-  selectedFilter: any = null; // Initialize to null for "All" by default
-  filteredRequestList: any; // Variable to hold filtered list
+  selectedFilter: any = null;
+  filteredRequestList: any;
   selectedRequest: EquipmentRequest = new EquipmentRequest();
   requestToUpdate: EquipmentRequest = new EquipmentRequest();
   visible: boolean = false;
@@ -31,35 +34,51 @@ export class ConfirmationOperationsRequestListComponent {
   timelineEvents: any[] = [];
   IsManger!: boolean;
   IsItApprover!: boolean;
-  mode: 'approve' | 'view' = 'approve';
-  loading: boolean = false; // Loading flag for password email operation
+  mode: 'approve' | 'view' | 'Offer' = 'Offer';
+  loading: boolean = false;
   stateOptions: any[] = [
     { label: 'Approve', value: true },
     { label: 'Reject', value: false }
-    // Use null or another value for the "Return" option
   ];
-  // selectedOption: boolean | null = null; // Initialize as null or based on your default logic
+  loading2: boolean = true;
 
-  constructor(private equipementService: EquipementRequestServiceService, private localStorageService: LocalStorageServiceService) { }
+  constructor(
+    public dialog: MatDialog,
+    private equipementService: EquipementRequestServiceService,
+    private localStorageService: LocalStorageServiceService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.getReuestList();
     this.checkRoles();
   }
 
-  updateRequest(requesttoUpdate: EquipmentRequest) {
-    console.log(requesttoUpdate);
-    this.loading = true; // Set loading flag to true
-    this.equipementService.updateRequest(requesttoUpdate).subscribe(response => {
-      // handle the response
-      this.getReuestList();
-      this.visible = false;
-      this.loading = false; // Set loading flag to false on success
-    },
+  updateRequest(requestToUpdate: EquipmentRequest) {
+    this.loading = true;
+    this.equipementService.updateRequest(requestToUpdate).subscribe(
+      (response) => {
+        this.getReuestList();
+        this.visible = false;
+        this.loading = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: requestToUpdate.departmangconfirmStatus ? 'The request has been approved' : 'The request has been rejected',
+          key: 'br',
+          life: 10000
+        });
+      },
       (error) => {
         console.log(error);
-        this.loading = false; // Set loading flag to false on success
-
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'We faced a problem while saving status',
+          key: 'br',
+          life: 10000
+        });
       }
     );
   }
@@ -85,19 +104,31 @@ export class ConfirmationOperationsRequestListComponent {
   }
 
   filterRequests() {
-    // Filter the list based on selected filter
     if (this.selectedFilter === null) {
-      // Show all requests
       this.filteredRequestList = this.RequestsList;
-    } else {
-      // Filter based on selected approval status
+    } else if (this.selectedFilter === 'Open') {
       this.filteredRequestList = this.RequestsList.filter((equip: any) =>
-        equip.departmangconfirmStatus === this.selectedFilter
+        equip.departmangconfirmStatus === null &&
+        equip.iTconfirmSatuts === null &&
+        equip.financeconfirmSatuts === null &&
+        equip.pR_Status === null
+      );
+    } else if (this.selectedFilter === true) {
+      this.filteredRequestList = this.RequestsList.filter((equip: any) =>
+        equip.departmangconfirmStatus === true ||
+        equip.iTconfirmSatuts === true ||
+        equip.financeconfirmSatuts === true ||
+        equip.pR_Status === true
+      );
+    } else if (this.selectedFilter === false) {
+      this.filteredRequestList = this.RequestsList.filter((equip: any) =>
+        equip.departmangconfirmStatus === false 
+       
       );
     }
   }
-  showDialog(equip: any, mode: 'approve' | 'view') {
 
+  showDialog(equip: any, mode: 'approve' | 'view' | 'Offer') {
     this.selectedRequest = equip;
     this.mode = mode;
     this.visible = true;
@@ -114,36 +145,27 @@ export class ConfirmationOperationsRequestListComponent {
 
     if (requestApprovalEvent || requestDeptApprovalEvent) {
       this.requeststatus = requestApprovalEvent.statusreq;
-      this.requestrejected=requestDeptApprovalEvent.status;
+      this.requestrejected = requestDeptApprovalEvent.status;
       console.log('Extracted statusreq:', this.requeststatus);
       console.log('Extracted rrrr:', this.requestrejected);
-      // You can now use statusreq as needed in your component
     }
   }
-  getStatusText(event:any): string {
-    if (event.status === true) {
-        return 'Approved';
-    } else if (event.status === false) {
-        return 'Not Approved';
-    } else if (event.supplierOffer !== null) {
-        return 'Offer';
-    } else if (event.financeconfirmSatuts === null) {
-        return 'Waiting for Finance Approval';
-    } else if (event.poNum === null) {
-        return 'Waiting for PR';
-    } else {
-        return 'Open';
-    }
+
+  getStatusText(event: any): string {
+    if (event.status === true) return 'Approved';
+    if (event.status === false) return 'Rejected';
+    if (event.status === null) return 'Open';
+    if (event.status === 'Closed') return 'Closed';
+    if (event.supplierOffer != null) return 'Offer';
+    return 'In Progress';
 }
 
-getStatusPRText(event:any): string {
-    if (event.statusPr === true) {
-        return 'Approved';
-    } else if (event.statusPr === false) {
-        return 'Rejected';
-    } else {
-        return 'Open';
-    }
+getStatusPRText(event: any): string {
+    if (event.statusPr === true) return 'Approved';
+    if (event.statusPr === false) return 'Rejected';
+    if (event.statusPr === null) return 'Open';
+    if (event.statusPr === 'Closed') return 'Closed';
+    return 'In Progress';
 }
   next() {
     this.first += this.rows;
@@ -155,7 +177,6 @@ getStatusPRText(event:any): string {
       this.first = 0;
     }
   }
-
 
   reset() {
     this.first = 0;
@@ -175,21 +196,26 @@ getStatusPRText(event:any): string {
   }
 
   getReuestList() {
+    this.loading2 = true;
     this.equipementService.getRequestOfDepartement().subscribe(
       (data) => {
         this.RequestsList = data;
-        this.filteredRequestList = data; // Initialize filtered list with original list
-        console.log(this.RequestsList); // Check if data is correctly fetched
+        this.filteredRequestList = data;
+        console.log(this.RequestsList);
+        this.loading2 = false;
       },
       (error) => {
         console.error('Error fetching requests:', error);
+        this.loading2 = true;
       }
     );
   }
+
   clearDate() {
     this.date1 = null;
     this.filterRequestsByDate();
   }
+
   getNumOfRequest() {
     this.equipementService.NumberOfRequest().subscribe(
       (number) => {
@@ -221,13 +247,6 @@ getStatusPRText(event:any): string {
           console.error('Error fetching manager status:', error);
         }
       );
-
-
-    } else {
-      //console.error('No token found');
     }
   }
-
-
-
 }

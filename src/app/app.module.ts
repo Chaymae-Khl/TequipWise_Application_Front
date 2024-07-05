@@ -82,6 +82,8 @@ import { ChartModule } from 'primeng/chart';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RequestFilterPipe } from './pipes/request-filter.pipe';
 import { CalendarModule } from 'primeng/calendar';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 @NgModule({
   declarations: [
@@ -171,7 +173,8 @@ import { CalendarModule } from 'primeng/calendar';
     MenuModule,
     ChartModule,
     SelectButtonModule,
-      CalendarModule 
+    CalendarModule,
+    ProgressSpinnerModule
   
 
   ],

@@ -20,6 +20,8 @@ export class SuppliersManagComponent implements OnInit {
   searchTerm: string = '';
   supplier: Supplier = new Supplier();
   NumberSuppliers: any;
+  loading2: boolean = true; // Initialize as true to show loading initially
+
   constructor(private SupplierService: SupplierServiceService, private messageService: MessageService, public dialog: MatDialog) {
   }
   ngOnInit(): void {
@@ -32,12 +34,17 @@ export class SuppliersManagComponent implements OnInit {
     this.visible = true;
   }
   getSupliers() {
+    this.loading2 = true; // Set loading to true before fetching data
+
     this.SupplierService.getALlSupliers().subscribe(
       (data) => {
         this.suppliers = data;
+        this.loading2 = false; // Set loading to false after data is fetched
+
         console.log(this.suppliers);
       },
       (error) => {
+        this.loading2 = true; // Set loading to true before fetching data
         console.error('An error occurred while fetching Suppliers:', error);
         console.log('Error response:', error.error); // Log the response object
       }

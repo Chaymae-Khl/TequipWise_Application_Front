@@ -5,8 +5,10 @@
     border-radius: 1rem;
     background-color: rgba(255, 255, 255, 1);
     padding: 1rem;
+    z-index: 900 !important; /* Higher value than the approve dialog */
+
   }
-  
+ 
   .header {
     display: flex;
     align-items: center;

@@ -20,3 +20,38 @@
 .not-approved-request {
   border-left: 5px solid red;
 }
+
+
+
+.status-text {
+  border: 1px solid #ccc; /* Default border */
+  color: white; /* Default text color */
+  padding: 6px 9px;
+  border-radius: 6px; /* Rounded corners */
+  display: inline-block; /* Ensure the span only takes up as much space as needed */
+}
+
+.status-text.approved {
+  background-color: green; /* Approved background color */
+  border-color: green; /* Approved border color */
+}
+
+.status-text.rejected {
+  background-color: rgb(249, 56, 56); /* Rejected background color */
+  border-color: red; /* Rejected border color */
+}
+
+.status-text.open {
+  background-color: rgb(92, 92, 238); /* Open background color */
+  border-color: blue; /* Open border color */
+}
+
+.status-text.closed {
+  background-color: rgba(232, 36, 36, 0.419); /* Closed background color */
+  border-color: rgb(255, 255, 255); /* Closed border color */
+}
+
+.status-text.offer {
+  background-color: rgb(251, 180, 47); /* Offer background color */
+  border-color: orange; /* Offer border color */
+}

@@ -28,7 +28,7 @@
             <th>Supplier Name</th>
             <th>Address</th>
             <th>Email</th>
-            <th><a style="color: white;" routerLink="/admin/equipements">Equipments</a></th>
+            <th><a style="color: white;" routerLink="/admin/equipements">IT Assets</a></th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -63,12 +63,21 @@
           </tr>
         </ng-template>
       </p-table>
+      <div *ngIf="loading2" class="text-center">
+        <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
+    </div>
     </div>
   </div>
 </div>
 
 <p-dialog 
-  header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? ' Supplier Details' : mode === 'Equipements' ? 'Equipements of the supplier' : 'Update Supplier' }}"
+  header="{{ mode === 'add' ? 'Add Supplier' : mode === 'view' ? ' Supplier Details' : mode === 'Equipements' ? 'Assets' : 'Update Supplier' }}"
   [modal]="true" [(visible)]="visible"  styleClass="custom-dialog">
   <div class="container"> <!-- Replace container with your preferred wrapper -->
     <div class="row justify-content-center">
@@ -115,13 +124,12 @@
   </div>
 
   <div *ngIf="mode === 'Equipements'">
-    <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ width:'20rem' }" filterBy="equipementSN"
-      filterPlaceholder="Filter by Serial Number">
+    <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ width:'20rem' }" filterBy="equipName"
+      filterPlaceholder="Filter by asset name">
       <ng-template let-equipemnt pTemplate="item">
         <p-divider></p-divider>
         <div class="col-8">
           <div class="flex-1 flex flex-column gap-2">
-            <span class="font-bold">SN: {{ equipemnt.equipementSN }}</span>
             <div class="flex align-items-center gap-2">
               <span>Name: {{ equipemnt.equipName }}</span>
             </div>

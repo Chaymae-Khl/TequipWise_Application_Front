@@ -28,14 +28,14 @@
     </div>
     <p-divider type="dashed"></p-divider>
 
-    <p-table [value]="(filteredRequestList | requestFilter:searchTerm)|| []" [paginator]="true" [rows]="5"
+    <p-table *ngIf="!loading2" [value]="(filteredRequestList | requestFilter:searchTerm)|| []" [paginator]="true" [rows]="5"
         [first]="first" [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '100rem' }"
         (onPage)="pageChange($event)"  [rowsPerPageOptions]="[10, 25, 50]">
         <ng-template pTemplate="header">
             <tr >
                 <th >Request Number</th>
                 <th>Request Date</th>
-                <th>Equipment</th>
+                <th>Asset</th>
                 <th>For new hire</th>
                 <th>Manager Confirmation</th>
                 <th>IT Confirmation</th>
@@ -50,7 +50,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-equip>
             <tr [ngClass]="{
-                    'approved-request':  equip.requestStatus===true,
+                    'approved-request': equip.requestStatus === true,
                     'not-approved-request': !equip.pR_Status || equip.pR_Not_ConfirmCause
                 }">
                 <td>{{ equip.userEquipmentRequestId }}</td>
@@ -60,57 +60,51 @@
                     <span *ngIf="equip.isNewhire; else former">New Hire</span>
                     <ng-template #former>For me</ng-template>
                 </td>
-                <td [ngClass]="{
-                        'text-success': equip.departmangconfirmStatus === true,
-                        'text-danger': equip.departmangconfirmStatus === false,
-                        'text-primary': equip.departmangconfirmStatus === null
-                    }">
-                    <i *ngIf="equip.departmangconfirmStatus === true" class="pi pi-check-circle"></i>
-                    <i *ngIf="equip.departmangconfirmStatus === false" class="pi pi-times-circle"></i>
-                    <i *ngIf="equip.departmangconfirmStatus === null" class="pi pi-hourglass"></i>
-                    {{ equip.departmangconfirmStatus === true ? 'Approved' : equip.departmangconfirmStatus === false ?
-                    'Rejected' : 'Open' }}
+                <td>
+                    <span class="status-text" [ngClass]="{
+                            'approved': equip.departmangconfirmStatus === true,
+                            'rejected': equip.departmangconfirmStatus === false,
+                            'open': equip.departmangconfirmStatus === null
+                        }">
+                        {{ equip.departmangconfirmStatus === true ? 'Approved' : equip.departmangconfirmStatus === false ? 'Rejected' : 'Open' }}
+                    </span>
                 </td>
-                <td [ngClass]="{
-                    'text-success': equip.iTconfirmSatuts === true,
-                    'text-danger': equip.iTconfirmSatuts === false && !equip.supplierOffer,
-                    'text-info': equip.supplierOffer != null && equip.iTconfirmSatuts === null,
-                    'text-primary': equip.iTconfirmSatuts === null && equip.supplierOffer === null
-                }">
-                    <i *ngIf="equip.iTconfirmSatuts === true" class="pi pi-check-circle"></i>
-                    <i *ngIf="equip.iTconfirmSatuts === false && !equip.supplierOffer" class="pi pi-times-circle"></i>
-                    <i *ngIf="equip.supplierOffer != null" class="pi pi-info-circle"></i>
-                    <i *ngIf="equip.iTconfirmSatuts === null && equip.supplierOffer === null"
-                        class="pi pi-hourglass"></i>
-                    {{ equip.supplierOffer != null ? 'Offer' : equip.iTconfirmSatuts === true ? 'Approved' : 'Open' }}
+                <td>
+                    <span class="status-text" [ngClass]="{
+                            'approved': equip.iTconfirmSatuts === true,
+                            'rejected': equip.iTconfirmSatuts === false,
+                            'offer': equip.supplierOffer != null && equip.iTconfirmSatuts === null,
+                            'open': equip.iTconfirmSatuts === null && equip.supplierOffer === null && equip.requestStatus === null,
+                            'closed': equip.departmangconfirmStatus === false || equip.iTconfirmSatuts === false
+                        }">
+                        {{ equip.supplierOffer != null ? 'Offer' : equip.iTconfirmSatuts === true ? 'Approved' : equip.departmangconfirmStatus === false ? 'Closed' : 'Open' }}
+                    </span>
                 </td>
-                <td [ngClass]="{
-                        'text-success': equip.financeconfirmSatuts === true,
-                        'text-danger': equip.financeconfirmSatuts === false,
-                        'text-primary': equip.financeconfirmSatuts === null
-                    }">
-                    <i *ngIf="equip.financeconfirmSatuts === true" class="pi pi-check-circle"></i>
-                    <i *ngIf="equip.financeconfirmSatuts === false" class="pi pi-times-circle"></i>
-                    <i *ngIf="equip.financeconfirmSatuts === null" class="pi pi-hourglass"></i>
-                    {{ equip.financeconfirmSatuts === true ? 'Approved' : equip.financeconfirmSatuts === false ?
-                    'Rejected' : 'Open' }}
+                <td>
+                    <span class="status-text" [ngClass]="{
+                            'approved': equip.financeconfirmSatuts === true,
+                            'rejected': equip.financeconfirmSatuts === false,
+                            'open': equip.financeconfirmSatuts === null,
+                            'closed': equip.supplierOffer === null && equip.departmangconfirmStatus === false
+                        }">
+                        {{ equip.financeconfirmSatuts === true ? 'Approved' : equip.financeconfirmSatuts === false ? 'Rejected' : equip.departmangconfirmStatus === false ? 'Closed' : 'Open' }}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-text" [ngClass]="{
+                            'approved': equip.pR_Status === true,
+                            'rejected': equip.pR_Status === false,
+                            'open': equip.pR_Status === null,
+                            'closed': equip.departmangconfirmStatus === false || equip.financeconfirmSatuts === false
+                        }">
+                        {{ equip.pR_Status === true ? 'Approved' : equip.pR_Status === false ? 'Rejected' : equip.departmangconfirmStatus === false || equip.financeconfirmSatuts === false ? 'Closed' : 'Open' }}
+                    </span>
                 </td>
                 <td>
                     <ng-container *ngIf="equip.prNum != null; else noPr">
                         {{ equip.prNum }}
                     </ng-container>
                     <ng-template #noPr><i class="pi pi-times-circle"></i></ng-template>
-                </td>
-                <td [ngClass]="{
-                        'text-success': equip.pR_Status=== true ,
-                        'text-danger': equip.pR_Status=== false ,
-                        'text-primary': equip.pR_Status === null
-                    }">
-                    <i *ngIf="equip.pR_Status=== true" class="pi pi-check-circle"></i>
-                    <i *ngIf="equip.pR_Status=== false" class="pi pi-times-circle"></i>
-                    <i *ngIf="equip.pR_Status === null" class="pi pi-hourglass"></i>
-
-                    {{ equip.pR_Status === true ? 'Approved' : equip.pR_Status === false ? 'Rejected' : 'Open' }}
                 </td>
                 <td>
                     <ng-container *ngIf="equip.poNum != null; else noPo">
@@ -167,6 +161,10 @@
                             <p-button *ngIf="IsManger" icon="pi pi-check" [outlined]="true"
                                 (click)="showDialog(equip, 'approve')" severity="Success"></p-button>
                         </div>
+                        <div *ngIf="equip.supplierOffer == null && equip.departmangconfirmStatus === true && equip.requestStatus === null">
+                            <p-button *ngIf="IsItApprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
+                                (click)="showDialog(equip, 'Offer')" severity="Success"></p-button>
+                        </div>
                         <p-button icon="pi pi-arrow-up-right" (click)="showDialog(equip, 'view')" severity="warning"
                             [outlined]="true"></p-button>
                     </div>
@@ -175,115 +173,123 @@
         </ng-template>
     </p-table>
 </div>
-<p-dialog header="{{ mode === 'view' ? 'Request Details' : ' Request Response' }}" [(visible)]="visible" [modal]="true"
-    [style]="{width: '50vw'}">
-
-    <div *ngIf="mode === 'approve'" class="d-flex justify-content-center align-items-center text-center ">
-        <div class="w-100">
-            <p-divider type="dashed"></p-divider>
-            <form (ngSubmit)="updateRequest(selectedRequest)" class="position-relative">
-                <h2>Select your response:</h2>
-                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
-                    name="departmangconfirmStatus"
-                    [(ngModel)]="selectedRequest.departmangconfirmStatus"></p-selectButton>
-                <h2 *ngIf="selectedRequest.departmangconfirmStatus === false">Your Rejection cause:</h2>
-                <textarea rows="5" cols="30" pInputTextarea name="departmang_Not_confirmCause"
-                    *ngIf="selectedRequest.departmangconfirmStatus === false"
-                    [(ngModel)]="selectedRequest.departmang_Not_confirmCause"></textarea>
-                <div class="position-absolute end-0 bottom-0">
-                    <p-button  type="submit" [outlined]="true" [disabled]="loading">
-                        <ng-container *ngIf="!loading; else loadingTemplate">
-                            Confirm
-                        </ng-container>
-                        <ng-template #loadingTemplate>
-                            <i class="pi pi-spinner pi-spin"></i> Loading...
-                        </ng-template>
-                    </p-button>
-                </div>
-                
-            </form>
-        </div>
+<div *ngIf="loading2" class="text-center">
+        <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
     </div>
-
-    <div *ngIf="mode === 'view'">
-        <div class="position-relative">
-            <img *ngIf="selectedRequest.requestStatus === true " src="/assets/Images/approved.png" width="222rem" alt=""
-                style="position: absolute; left: 11px;">
-            <img *ngIf="selectedRequest.requestStatus === false" src="/assets/Images/rejected.png" width="222rem" alt=""
-                style="position: absolute; left: 11px;">
-        </div>
-
-        <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedRequest">
-            <ng-template pTemplate="marker" let-event>
-                <ng-container *ngIf="event.title === 'Manager approval'">
-                    <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
-                    <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
-                    <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
-                </ng-container>
-                <ng-container *ngIf="event.title === 'IT approval'">
-                    <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
-                    <span *ngIf="event.status === false && !event.supplierOffer" class="pi pi-times-circle" style="color:red;"></span>
-                    <span *ngIf="event.supplierOffer && event.status === null" class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
-                    <span *ngIf="event.status === null && event.supplierOffer === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
-                </ng-container>
-                <ng-container *ngIf="event.title === 'Finance approval'">
-                    <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
-                    <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
-                    <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
-                </ng-container>
-                <ng-container *ngIf="event.title === 'PR & PO approval'">
-                    <span *ngIf="event.statusPr === true" class="pi pi-check-circle" style="color:green;"></span>
-                    <span *ngIf="event.statusPr === false" class="pi pi-times-circle" style="color:red;"></span>
-                    <span *ngIf="event.statusPr === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
-                </ng-container>
-                <ng-container *ngIf="event.title === 'Request approval'">
-                    <ng-container *ngIf="event.statusreq === true; else checkInProgress">
-                        <span class="pi pi-check-circle" style="color:green;"></span>
+<p-toast key="br"></p-toast>
+<div class="approve-dialog">
+    <p-dialog header="{{ mode === 'view' ? 'Request Details' : mode === 'approve' ? 'Request Approval' : 'Supplier Offer Importation' }}" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}">
+        <div *ngIf="mode === 'view'">
+            <div class="position-relative">
+                <img *ngIf="selectedRequest.requestStatus === true" src="/assets/Images/approved.png" width="222rem" alt="" style="position: absolute; left: 11px;">
+                <img *ngIf="selectedRequest.requestStatus === false" src="/assets/Images/rejected.png" width="222rem" alt="" style="position: absolute; left: 11px;">
+            </div>
+            <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedRequest">
+                <ng-template pTemplate="marker" let-event>
+                    <ng-container *ngIf="event.title === 'Manager approval'">
+                        <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                        <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
+                        <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                        <span *ngIf="event.status === 'Closed'" class="pi pi-lock" style="color:grey;"></span>
                     </ng-container>
-                    <ng-template #checkInProgress>
-                        <ng-container *ngIf="event.statusreq === false; else checkInProgressFurther">
-                            <span class="pi pi-times-circle" style="color:red;"></span>
+                    <ng-container *ngIf="event.title === 'IT approval'">
+                        <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                        <span *ngIf="event.status === false && !event.supplierOffer" class="pi pi-times-circle" style="color:red;"></span>
+                        <span *ngIf="event.supplierOffer && event.status === null" class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                        <span *ngIf="event.status === null && event.supplierOffer === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                        <span *ngIf="event.status === 'Closed'" class="pi pi-lock" style="color:grey;"></span>
+                    </ng-container>
+                    <ng-container *ngIf="event.title === 'Finance approval'">
+                        <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                        <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
+                        <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                        <span *ngIf="event.status === 'Closed'" class="pi pi-lock" style="color:grey;"></span>
+                    </ng-container>
+                    <ng-container *ngIf="event.title === 'PR & PO approval'">
+                        <span *ngIf="event.statusPr === true" class="pi pi-check-circle" style="color:green;"></span>
+                        <span *ngIf="event.statusPr === false" class="pi pi-times-circle" style="color:red;"></span>
+                        <span *ngIf="event.statusPr === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+                        <span *ngIf="event.statusPr === 'Closed'" class="pi pi-lock" style="color:grey;"></span>
+                    </ng-container>
+                    <ng-container *ngIf="event.title === 'Request approval'">
+                        <ng-container *ngIf="event.statusreq === true; else checkInProgress">
+                            <span class="pi pi-check-circle" style="color:green;"></span>
                         </ng-container>
-                        <ng-template #checkInProgressFurther>
-                            <ng-container *ngIf="event.supplierOffer !== null; else checkFinanceApproval">
-                                <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                        <ng-template #checkInProgress>
+                            <ng-container *ngIf="event.statusreq === false; else checkInProgressFurther">
+                                <span class="pi pi-times-circle" style="color:red;"></span>
                             </ng-container>
-                            <ng-template #checkFinanceApproval>
-                                <ng-container *ngIf="event.financeconfirmSatuts === null; else checkPRApproval">
+                            <ng-template #checkInProgressFurther>
+                                <ng-container *ngIf="event.supplierOffer !== null; else checkFinanceApproval">
                                     <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
                                 </ng-container>
-                                <ng-template #checkPRApproval>
-                                    <ng-container *ngIf="event.poNum === null; else defaultNotApproved">
+                                <ng-template #checkFinanceApproval>
+                                    <ng-container *ngIf="event.financeconfirmSatuts === null; else checkPRApproval">
                                         <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
                                     </ng-container>
-                                    <ng-template #defaultNotApproved>
-                                        <span class="pi pi-times-circle" style="color:red;"></span>
+                                    <ng-template #checkPRApproval>
+                                        <ng-container *ngIf="event.poNum === null; else defaultNotApproved">
+                                            <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                                        </ng-container>
+                                        <ng-template #defaultNotApproved>
+                                            <span class="pi pi-times-circle" style="color:red;"></span>
+                                        </ng-template>
                                     </ng-template>
                                 </ng-template>
                             </ng-template>
                         </ng-template>
-                    </ng-template>
-                </ng-container>
-            </ng-template>
-            <ng-template pTemplate="content" let-event>
-                <div class="p-timeline-event-content">
-                    <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
-                    <p-divider type="dashed" />
-                    <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
-                    <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
-                    <p *ngIf="event.ForWho"><b>For Who:</b> {{ event.ForWho ? 'New Hire' : 'For Me' }}</p>
-                    <p *ngIf="event.Equipment"><b>Equipment:</b> {{ event.Equipment }}</p>
-                    <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
-                    <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
-                    <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusText(event) }}</p>
-                    <p *ngIf="event.statusPr != null"><b>Status PR:</b> {{ getStatusPRText(event) }}</p>
-                    <p *ngIf="event.Ponum != null"><b>PO Number:</b> {{ event.Ponum }}</p>
-                    <p *ngIf="event.PrNum != null"><b>PR Number:</b> {{ event.PrNum }}</p>
-                    <p *ngIf="event.statusreq != null"><b>Request Status:</b> 
-                        {{ event.statusreq ? 'Approved' : 'Rejected' }}
-                    </p>
-                </div>
-            </ng-template>
-        </p-timeline>
-    </div>
-</p-dialog>
+                        <span *ngIf="event.statusreq === 'Closed'" class="pi pi-lock" style="color:grey;"></span>
+                    </ng-container>
+                </ng-template>
+                <ng-template pTemplate="content" let-event>
+                    <div class="p-timeline-event-content">
+                        <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
+                        <p-divider type="dashed" />
+                        <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                        <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
+                        <p *ngIf="event.ForWho"><b>For Who:</b> {{ event.ForWho ? 'New Hire' : 'For Me' }}</p>
+                        <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
+                        <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+                        <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
+                        <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusText(event) }}</p>
+                        <p *ngIf="event.statusPr != null"><b>Status PR:</b> {{ getStatusPRText(event) }}</p>
+                        <p *ngIf="event.Ponum != null"><b>PO Number:</b> {{ event.Ponum }}</p>
+                        <p *ngIf="event.PrNum != null"><b>PR Number:</b> {{ event.PrNum }}</p>
+                        <p *ngIf="event.statusreq != null"><b>Request Status:</b> {{ event.statusreq ? 'Approved' : 'Rejected' }}</p>
+                        <p *ngIf="event.status === 'Closed' || event.statusPr === 'Closed' || event.statusreq === 'Closed'"><b>Status:</b> Closed</p>
+                    </div>
+                </ng-template>
+            </p-timeline>
+        </div>
+        <div *ngIf="mode === 'approve'" class="d-flex justify-content-center align-items-center text-center ">
+            <div class="w-100">
+                <p-divider type="dashed"></p-divider>
+                <form (ngSubmit)="updateRequest(selectedRequest)" class="position-relative">
+                    <h2>Select your response:</h2>
+                    <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value" name="departmangconfirmStatus" [(ngModel)]="selectedRequest.departmangconfirmStatus"></p-selectButton>
+                    <h2 *ngIf="selectedRequest.departmangconfirmStatus === false">Your Rejection cause:</h2>
+                    <textarea rows="5" cols="30" pInputTextarea name="departmang_Not_confirmCause" *ngIf="selectedRequest.departmangconfirmStatus === false" [(ngModel)]="selectedRequest.departmang_Not_confirmCause"></textarea>
+                    <div class="position-absolute end-0 bottom-0">
+                        <p-button type="submit" [outlined]="true" [disabled]="loading">
+                            <ng-container *ngIf="!loading; else loadingTemplate">
+                                Confirm
+                            </ng-container>
+                            <ng-template #loadingTemplate>
+                                <i class="pi pi-spinner pi-spin"></i> Loading...
+                            </ng-template>
+                        </p-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="mode === 'Offer'">
+            <!-- Content for supplier offer goes here -->
+        </div>
+    </p-dialog>
+</div>

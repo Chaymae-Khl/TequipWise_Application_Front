@@ -39,6 +39,18 @@
               placeholder="Departement Name" required />
           </div>
           <div class="col">
+            <input pInputText name="EmailManger" [(ngModel)]="department.EmailManger"
+              placeholder="Manager Email" required />
+          </div>
+          <div class="w-full md:w-2">
+            <p-divider layout="vertical" styleClass="hidden md:flex">
+                <b>OR</b>
+            </p-divider>
+            <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'">
+                <b>OR</b>
+            </p-divider>
+        </div>
+          <div class="col">
             <p-dropdown [filter]="true" [appendTo]="'body'" [(ngModel)]="department.ManagerId" filterBy="fullName"
               [options]="users" [showClear]="true" optionValue="id" optionLabel="fullName"
               aria-describedby="manager-name-help" placeholder="Select the manager" name="ManagerId">
@@ -48,8 +60,8 @@
             <label for="Status">Status</label> <br>
             <p-inputSwitch id="status" [(ngModel)]="department.status" name="status"></p-inputSwitch>
           </div>
-          <div class="col">
-            <p-button icon="pi pi-check" type="submit" severity="secondary"></p-button>
+          <div class="col d-flex align-items-end">
+            <p-button icon="pi pi-check" type="submit" label="Confirm" severity="secondary"></p-button>
           </div>
         </div>
       </div>
@@ -67,6 +79,7 @@
             <tr>
               <th>Departement Name</th>
               <th>Manager Name</th>
+              <th>Manager Email</th>
               <th>Status</th>
             </tr>
           </ng-template>
@@ -86,10 +99,18 @@
                 </ng-container>
                 <ng-template #editModeDept>
                   <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="users"
-                    [(ngModel)]="department.ManagerId" optionValue="id" optionLabel="fullName"
+                    [(ngModel)]="department.managerId" optionValue="id" optionLabel="fullName"
                     placeholder="Select the manager">
                   </p-dropdown>
                 </ng-template>
+              </td>
+              <td>
+                <ng-container *ngIf="editingRowIndexDept === rowIndex2">
+                  <input pInputText [(ngModel)]="department.emailManger" />
+                </ng-container>
+                <ng-container *ngIf="editingRowIndexDept !== rowIndex2">
+                  {{department.emailManger }}
+                </ng-container>
               </td>
               <td>
                 <ng-container *ngIf="editingRowIndexDept !== rowIndex2; else editModeStatusDept">
@@ -139,7 +160,7 @@
                 </ng-container>
                 <ng-template #editModePlant>
                   <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="controllers"
-                    [(ngModel)]="plant.ApproverId" optionValue="id" optionLabel="fullName"
+                    [(ngModel)]="plant.approverId" optionValue="id" optionLabel="fullName"
                     placeholder="Select the controller">
                   </p-dropdown>
                 </ng-template>

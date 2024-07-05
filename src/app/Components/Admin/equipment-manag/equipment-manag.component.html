@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <div class="menu-item">
   <div class="arrow"></div>
-  <h2 class="title"><i class="pi pi-desktop" style="font-size: 1.5rem"></i>   Equipements({{NumberEquipments}})</h2>
+  <h2 class="title"><i class="pi pi-desktop" style="font-size: 1.5rem"></i>   IT Assets ({{NumberEquipments}})</h2>
   <p-divider type="dashed" />
   <div class="row">
     <div class="col-8">
@@ -25,7 +25,6 @@
         [rowsPerPageOptions]="[5, 10, 20]">
         <ng-template pTemplate="header">
           <tr>
-            <th>Equipement Serial Number</th>
             <th>Equipment Name</th>
             <th><a style="color: white;" routerLink="/admin/suppliers">Supplier Name</a></th>
             <th>Actions</th>
@@ -33,7 +32,6 @@
         </ng-template>
         <ng-template pTemplate="body" let-equipment>
           <tr>
-            <td>{{ equipment.equipementSN }}</td>
             <td>{{ equipment.equipName }}</td>
             <td>{{ equipment.supplierName }}</td>
             <td>
@@ -58,6 +56,15 @@
           </tr>
         </ng-template>
       </p-table>
+      <div *ngIf="loading2" class="text-center">
+        <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
+    </div>
     </div>
   </div>
 

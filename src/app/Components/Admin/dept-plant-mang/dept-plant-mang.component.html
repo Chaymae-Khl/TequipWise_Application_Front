@@ -53,6 +53,15 @@
           </tr>
         </ng-template>
       </p-table>
+      <div *ngIf="loading2" class="text-center">
+        <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
+    </div>
     </div>
   </div>
 
@@ -109,6 +118,19 @@
                   <input pInputText id="department-name-{{i}}" [(ngModel)]="department.departmentName"
                     name="departmentName-{{i}}" aria-describedby="department-name-help" />
                 </div>
+                <div class="flex flex-column gap-2">
+                  <label for="manager-email-{{i}}">Manager Email</label>
+                  <input pInputText id="manager-email-{{i}}" [(ngModel)]="department.EmailManger"
+                    name="EmailManger-{{i}}" aria-describedby="manager-email-help" />
+                </div>
+                <div class="w-full md:w-2">
+                  <p-divider layout="vertical" styleClass="hidden md:flex">
+                      <b>OR</b>
+                  </p-divider>
+                  <p-divider layout="horizontal" styleClass="flex md:hidden" [align]="'center'">
+                      <b>OR</b>
+                  </p-divider>
+              </div>
                 <div class="flex flex-column gap-2">
                   <label for="manager-name-{{i}}">Manager Name</label>
                   <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="manager-name-{{i}}"

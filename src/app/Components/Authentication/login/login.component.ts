@@ -89,6 +89,8 @@ export class LoginComponent {
       (error) => {
         console.error('Error sending reset link:', error);
         this.loadingPasswordEmail = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.message, life: 15000 });
+
         // Handle error (e.g., show an error message)
       }
     );

@@ -3,5 +3,6 @@ export class Department {
   departmentName: any;
   status: any;
   ManagerName: any;
+  EmailManger:any;
   ManagerId?: any;
 }

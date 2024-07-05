@@ -29,6 +29,8 @@ export class DeptPlantMangComponent implements OnInit {
   ItApprovers:any;
   selectedExistingPlantIds:any;
   searchTerm: string = '';
+  loading2: boolean = true; // Initialize as true to show loading initially
+
   //for the form repititions
   public locations: any[] = [{ name: '', buildingNumber: '' }];
   public departments: any[] = [{ departmentName: '', managerName: '', status: false }];
@@ -53,13 +55,16 @@ export class DeptPlantMangComponent implements OnInit {
 
   // Get plants method
   getPlants(): void {
+    this.loading2 = true; // Set loading to true before fetching data
+
     this.openDataServiceService.getPlantsWDept().subscribe(
       (data: any) => {
+        this.loading2 = false; // Ensure loading is turned off even in case of error
         this.plants = data;
-
         console.log(this.plants);
       },
       (error) => {
+        this.loading2 = true; // Ensure loading is turned off even in case of error
         console.error('An error occurred while fetching plants:', error);
         console.log('Error response:', error.error);
       }

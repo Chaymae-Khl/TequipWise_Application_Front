@@ -26,9 +26,8 @@ export class UserEquipmentRequestListComponent {
   filteredRequestList: any; // Variable to hold filtered list
   visible: boolean = false;
   selectedRequest: EquipmentRequest = new EquipmentRequest();
-  
+  loading2: boolean = true; // Initialize as true to show loading initially
   timelineEvents: any[] = [];
-
   requeststatus:any;
   constructor(private equipementService: EquipementRequestServiceService) {
 
@@ -138,13 +137,16 @@ getStatusPRText(event:any): string {
   }
 
   getReuestList() {
+    this.loading2 = true; // Set loading to true before fetching data
     this.equipementService.GetAuthRequestList().subscribe(
       (data) => {
         this.RequestsList = data;
+        this.loading2 = false; // Set loading to false after data is fetched
         this.filteredRequestList = data; // Initialize filtered list with original list
         console.log(this.filteredRequestList);
       },
       (error) => {
+        this.loading2 = true; // Ensure loading is turned off even in case of error
       }
     );
   }

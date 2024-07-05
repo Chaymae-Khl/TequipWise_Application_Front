@@ -14,11 +14,11 @@
         />
       </div>
       <form (ngSubmit)="ValidRequest()" #requestForm="ngForm" class="form">
-        <p class="title">Equipment Request </p>
+        <p class="title">It Assets Request </p>
         <p class="message">Enter your request information.</p>
 
         <div class="flex flex-wrap gap-3">
-          <p class="message">If you want to request equipment for another employee, check the box below.</p>
+          <p class="message">If you want to request an asset for another employee, check the box below.</p>
           <div class="flex align-items-center">
             <p-checkbox
               name="forme"
@@ -39,7 +39,7 @@
               [filter]="true"
               filterBy="equipName"
               [showClear]="true"
-              placeholder="Select the equipment you want"
+              placeholder="Select the asset you want"
               name="equipmentId"
               required
               [ngClass]="{'ng-invalid': requestForm.submitted && !request.equipmentId}"
@@ -50,7 +50,7 @@
               mode="decimal"
               [(ngModel)]="request.numberEquipment"
               name="numberEquipment"
-              placeholder="Number of equipment"
+              placeholder="Number of assets"
               [min]="1"
               [max]="50"
               required
@@ -61,7 +61,7 @@
         <span></span>
         <label></label>
         <mat-form-field class="example-full-width">
-          <mat-label>Why do you want this equipment?</mat-label>
+          <mat-label>Why do you want this asset?</mat-label>
           <textarea
             [(ngModel)]="request.comment"
             name="comment"

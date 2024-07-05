@@ -21,6 +21,8 @@ export class EquipmentManagComponent {
   Equipment:Equipment=new Equipment();
   searchTerm: any;
   supliersNames:any;
+  loading2: boolean = true; // Initialize as true to show loading initially
+
   constructor(private equipementService: EquipementServiceService,private messageService: MessageService,public dialog: MatDialog) { }
   ngOnInit(): void {
     this.getEquipments();
@@ -29,12 +31,16 @@ export class EquipmentManagComponent {
   }
 
   getEquipments() {
+    this.loading2 = true; // Set loading to true before fetching data
+
     this.equipementService.getALlEquipements().subscribe(
       (data) => {
         this.Equipments = data;
+        this.loading2 = false; // Set loading to false after data is fetched
         console.log(this.Equipments);
       },
       (error) => {
+        this.loading2 = true; // Set loading to true before fetching data
         console.error('An error occurred while fetching Equipments:', error);
         console.log('Error response:', error.error); // Log the response object
       }

@@ -6,6 +6,7 @@ import { OpenDataServiceService } from '../../../Services/open-data-service.serv
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../Validators/validators';
+import { SapNumberServiceService } from '../../../Services/sap-number-service.service';
 
 @Component({
   selector: 'app-register',
@@ -20,13 +21,15 @@ export class RegisterComponent  {
   departmentsOfSelectedPlant: any[] = [];
   registerForm: FormGroup;
   loading!: boolean  // Initialize as true to show loading initially
-
+  sapnumbers:any;
   constructor(
     private openDataServiceService: OpenDataServiceService,
     private authService: AuthServiceService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private sapnumService:SapNumberServiceService
+
   ) {
     this.registerForm = this.fb.group({
       teNum: ['', Validators.required],
@@ -42,6 +45,7 @@ export class RegisterComponent  {
 
   ngOnInit(): void {
     this.getLocations();
+    this.getSapNumber();
   }
 
   getLocations() {
@@ -55,6 +59,17 @@ export class RegisterComponent  {
     );
   }
 
+  getSapNumber(){
+   this.sapnumService.getALSapNum().subscribe(
+    (res) => {
+      this.sapnumbers=res;
+    },
+    (error) => {
+      
+      console.error("Error occurred during fetching data:", error);
+    }
+  );
+  }
   onLocationChange(event: any) {
     const selectedLocationID = event.value;
     const selectedLocation = this.locations.find((location: any) => location.locationId === selectedLocationID);

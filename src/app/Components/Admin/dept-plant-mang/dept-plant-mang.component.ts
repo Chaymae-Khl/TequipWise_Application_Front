@@ -9,6 +9,9 @@ import { response } from 'express';
 import { Location } from '../../../Models/location';
 import { MessageService } from 'primeng/api';
 import { MessageDialogComponent } from '../../../message-dialog/message-dialog.component';
+import { SapNumberServiceService } from '../../../Services/sap-number-service.service';
+import { SapNumber } from '../../../Models/sap-number';
+import { error } from 'console';
 
 
 @Component({
@@ -23,6 +26,7 @@ export class DeptPlantMangComponent implements OnInit {
   visible: boolean = false;
   location: Location = new Location();
   mode: 'add' | 'view' | 'update' = 'add';
+  mode2:'location'|'sapNumber'='location';
   checked: boolean = false;
   users: any;
   controllers:any;
@@ -31,7 +35,8 @@ export class DeptPlantMangComponent implements OnInit {
   searchTerm: string = '';
   loading2: boolean = true; // Initialize as true to show loading initially
   loading!: boolean ; // Initialize as true to show loading initially
-
+ sapNumList!:any[];
+ newsapNum:SapNumber=new SapNumber();
   //for the form repititions
   public locations: any[] = [{ name: '', buildingNumber: '' }];
   public departments: any[] = [{ departmentName: '', managerName: '', status: false }];
@@ -41,7 +46,9 @@ export class DeptPlantMangComponent implements OnInit {
     public dialog: MatDialog,
     private authservice: AuthServiceService,
     public locationService: LocationServiceService,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private sapnumService:SapNumberServiceService
+  ) {
     inject(NgZone).runOutsideAngular(() => {
       setInterval(() => { }, 1000);
     })
@@ -52,6 +59,7 @@ export class DeptPlantMangComponent implements OnInit {
     this.getUsernames();
     this.getControllers();
     this.getITApprovers();
+    this.getSapNum();
   }
 
   // Get plants method
@@ -119,7 +127,8 @@ export class DeptPlantMangComponent implements OnInit {
     );
   }
 
-  showDialog(): void {
+  showDialog(mode:'location'|'sapNumber'): void {
+    this.mode2=mode;
     this.visible = true;
   }
 
@@ -199,9 +208,69 @@ export class DeptPlantMangComponent implements OnInit {
     });
   }
 
+  //SapNumbers operations
+getSapNum(){
+  this.sapnumService.getALSapNum().subscribe(
+    (data: any) => {
+      this.sapNumList = data;
+    },
+    (error) => {
+      console.error('An error occurred while fetching sap number list:', error);
+    }
+  );
+}
+addSapNumber(){
+  this.sapnumService.AddSapNum(this.newsapNum)
+  .subscribe(
+    response => {
+      this.getSapNum();
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sap Number Added successfully', life: 10000 });
+      // Reset the form or do any other necessary action
+    },
+    error => {
+      console.error('Error creating sap number:', error);
+      // Handle error, show error message, etc.
+    }
+  );
+}
 
+deleteSapNum(id:any){
+this.sapnumService.DeleteSapNum(id).subscribe(
+  response=>{
+    this.getSapNum();
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sap number deleted successfully', life: 10000 });
 
-  
+  },
+  error=>{
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Sap number delete failed, there is some relations depends on this Locations', life: 10000 });
 
+  }
+);
+}
+updateSapNum(id:any,sapToUpdate:SapNumber){
+this.sapnumService.UpdateSapNum(id,sapToUpdate).subscribe(
+  response=>{
+    this.getSapNum();
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sap number updated successfully', life: 10000 });
 
+  },
+  error=>{
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Sap number update failed', life: 10000 });
+
+  }
+)
+}
+editSapNum(sap: any) {
+  sap.isEditing = true;
+}
+
+saveSapNum(sap: any) {
+  this.updateSapNum(sap.sApID, sap);
+  sap.isEditing = false;
+}
+
+cancelEdit(sap: any) {
+  sap.isEditing = false;
+  this.getSapNum(); // Fetch the updated list to reset any changes
+}
 }

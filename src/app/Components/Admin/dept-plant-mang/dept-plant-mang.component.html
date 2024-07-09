@@ -5,7 +5,8 @@
   <div class="row">
     <div class="col-8">
       <div>
-        <button type="button" class="btn btn-outline-secondary" (click)="showDialog()">+ Add</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="showDialog('location')">+ Add Location</button>
+        <button type="button" class="btn btn-outline-secondary m-4" (click)="showDialog('sapNumber')">Sap Numbers</button>
       </div>
     </div>
     <div class="col-4">
@@ -65,8 +66,10 @@
     </div>
   </div>
 
-  <p-dialog header="Add Location & Plant & Department" [modal]="true" [(visible)]="visible">
-    <div class="all">
+  <p-dialog header="{{ mode2=='location'?'Add Location & Plant & Department':'Sap Numbers'}}" [modal]="true" [(visible)]="visible">
+   
+   
+    <div *ngIf="mode2=='location'" class="all">
       <div class="container">
         <form (ngSubmit)="AddNewLocation()">
           <p-panel header="Location Informations">
@@ -88,18 +91,8 @@
                   <input pInputText id="plant-name-{{i}}" [(ngModel)]="plant.plant_name" name="plantName-{{i}}"
                     aria-describedby="plant-name-help" />
                 </div>
-                <div class="flex flex-column gap-2">
-                  <label for="sap-Number-{{i}}">SAP Number</label>
-                  <input pInputText id="sap-Number-{{i}}" [(ngModel)]="plant.SapNumber" name="SapNumber-{{i}}"
-                    aria-describedby="sap-Number-help" />
-                </div>
-                <div class="flex flex-column gap-2">
-                  <label for="approver-name-{{i}}">Controller Name</label>
-                  <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="approver-name-{{i}}"
-                    [(ngModel)]="plant.ApproverId" name="approverName-{{i}}" [options]="controllers" optionValue="id"
-                    optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the controller">
-                  </p-dropdown>
-                </div>
+              
+           
                 <div class="flex flex-column gap-2">
                   <label for="approver-name-{{i}}">It Approver Name</label>
                   <p-dropdown [filter]="true" filterBy="fullName" [showClear]="true" id="Itapprover-name-{{i}}"
@@ -159,6 +152,74 @@
           </div>
         </form>
       </div>
+    </div>
+
+    <div *ngIf="mode2=='sapNumber'">
+      <p-accordion [activeIndex]="0">
+        <p-accordionTab header="Add new Sap Number">
+          <form (ngSubmit)="addSapNumber()" class="flex align-items-center gap-3" style="width: 100%;">
+            <div class="flex flex-column" style="align-self: flex-end;">
+              <label for="sapNumber">Sap number</label>
+              <input type="text" name="sapNum" [(ngModel)]="newsapNum.sapNum" pInputText />
+            </div>
+            <div class="flex flex-column" style="align-self: flex-end;">
+              <label for="approvername">Controller Name</label>
+              <p-dropdown [filter]="true" filterBy="fullName" [appendTo]="'body'" [(ngModel)]="newsapNum.Idcontroller" [showClear]="true" id="approvername"
+                name="controllerId" [options]="controllers" optionValue="id" optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the controller">
+              </p-dropdown>
+            </div>
+            <div style="align-self: flex-end;">
+              <p-button label="Confirm" type="submit" [outlined]="true" severity="secondary" />
+            </div>
+          </form>
+        </p-accordionTab>
+      </p-accordion>
+      
+      <p-accordion [activeIndex]="0">
+        <p-accordionTab header="Sap Number List">
+          <p-table [value]="sapNumList" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width:25%">Sap Number</th>
+                <th style="width:25%">Controller Name</th>
+                <th style="width:25%">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-sap>
+              <tr *ngIf="!sap.isEditing">
+                <td>{{ sap.sapNum }}</td>
+                <td>{{ sap.controller_name }}</td>
+                <td>
+                  <button (click)="deleteSapNum(sap.sApID)" mat-icon-button color="warn">
+                    <i class="pi pi-trash" style="color: #fd2828"></i>
+                  </button>
+                  <button (click)="editSapNum(sap)" mat-icon-button color="warn">
+                    <i class="pi pi-pencil" style="color: #fb7916"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="sap.isEditing">
+                <td>
+                  <input type="text" [(ngModel)]="sap.sapNum" pInputText />
+                </td>
+                <td>
+                  <p-dropdown [filter]="true" filterBy="fullName" [appendTo]="'body'" [(ngModel)]="sap.Idcontroller" [showClear]="true"
+                    [options]="controllers" optionValue="id" optionLabel="fullName" aria-describedby="manager-name-help" placeholder="Select the manager" name="ManagerId">
+                  </p-dropdown>
+                </td>
+                <td>
+                  <button (click)="saveSapNum(sap)" mat-icon-button color="warn">
+                    <i class="pi pi-check" style="color: #28a745"></i>
+                  </button>
+                  <button (click)="cancelEdit(sap)" mat-icon-button color="warn">
+                    <i class="pi pi-times" style="color: #dc3545"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-accordionTab>
+      </p-accordion>
     </div>
   </p-dialog>
 </div>

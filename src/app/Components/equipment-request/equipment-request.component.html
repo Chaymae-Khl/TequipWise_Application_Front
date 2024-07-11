@@ -8,70 +8,83 @@
         <p-button
           label="View My Requests"
           icon="pi pi-list"
-          routerLink="/EquipmentList"
+          routerLink="/UserEquipementRequest"
           [outlined]="true"
           severity="secondary"
-        />
+        ></p-button>
       </div>
       <form (ngSubmit)="ValidRequest()" #requestForm="ngForm" class="form">
-        <p class="title">It Assets Request </p>
+        <p class="title">IT Assets Request</p>
         <p class="message">Enter your request information.</p>
 
         <div class="flex flex-wrap gap-3">
           <p class="message">If you want to request an asset for another employee, check the box below.</p>
-          <div class="flex align-items-center">
-            <p-checkbox
-              name="forme"
-              [(ngModel)]="request.isNewhire"
-              [binary]="true"
-              inputId="binary"
-              label="For Another Employee"
-            ></p-checkbox>
+          <div class="d-flex align-items-center">
+            <div class="form-check mr-2">
+              <p-checkbox
+                name="forme"
+                [(ngModel)]="request.isNewhire"
+                [binary]="true"
+                inputId="binary"
+                label="For Another Employee"
+              ></p-checkbox>
+            </div>
+            <input type="text" pInputText [(ngModel)]="request.newHireName" name="newHireName" class="form-control ml-2" placeholder="Name of new Employee" />
           </div>
         </div>
-        <div class="flex">
-          <label>
-            <p-dropdown
-              [options]="equipemnts"
-              [(ngModel)]="request.equipmentId"
-              optionLabel="equipName"
-              optionValue="equipementSN"
-              [filter]="true"
-              filterBy="equipName"
-              [showClear]="true"
-              placeholder="Select the asset you want"
-              name="equipmentId"
-              required
-              [ngClass]="{'ng-invalid': requestForm.submitted && !request.equipmentId}"
+        <div *ngFor="let subRequest of request.equipmentSubRequests; let i = index" class="sub-request">
+          <p-divider align="left" type="solid">
+            <b> 
+              <p-button icon="pi pi-times" [rounded]="true" [text]="true" label="Asset {{i+1}}" (click)="removeSubRequest(i)" severity="warning " />
+            </b>
+            </p-divider>
+          <div class="d-flex align-items-center">
+            <div class="mr-2">
+             
+              <label> 
+                <p-dropdown
+                [options]="equipemnts"
+                [(ngModel)]="subRequest.equipmentId"
+                optionLabel="equipName"
+                optionValue="equipementSN"
+                [filter]="true"
+                filterBy="equipName"
+                [showClear]="true"
+                placeholder="Select the asset you want"
+                name="equipmentId{{i}}"
+                required
+                [ngClass]="{'ng-invalid': requestForm.submitted && !subRequest.equipmentId}"
             ></p-dropdown>
-          </label>
-          <label>
-            <p-inputNumber
-              mode="decimal"
-              [(ngModel)]="request.numberEquipment"
-              name="numberEquipment"
-              placeholder="Number of assets"
-              [min]="1"
-              [max]="50"
-              required
-              [ngClass]="{'ng-invalid': requestForm.submitted && !request.numberEquipment}"
-            ></p-inputNumber>
-          </label>
+              </label>
+            </div>
+            <div class="mr-2">
+             
+
+              <label>
+                <p-inputNumber
+                  mode="decimal"
+                  [(ngModel)]="subRequest.qtEquipment"
+                  name="numberEquipment{{i}}"
+                  placeholder="Number of assets"
+                  [min]="1"
+                  [max]="50"
+                  required
+                ></p-inputNumber>
+              </label>
+            </div>
+          </div> 
+          <br>
+          <mat-form-field class="w-100">
+            <mat-label>Why do you want this asset?</mat-label>
+            <textarea matInput [(ngModel)]="subRequest.comment" name="comment{{i}}" required></textarea>
+          </mat-form-field>
+         
         </div>
-        <span></span>
-        <label></label>
-        <mat-form-field class="example-full-width">
-          <mat-label>Why do you want this asset?</mat-label>
-          <textarea
-            [(ngModel)]="request.comment"
-            name="comment"
-            matInput
-            required
-            [ngClass]="{'ng-invalid': requestForm.submitted && !request.comment}"
-          ></textarea>
-        </mat-form-field>
+        <p-button label="Add new Asset"  (click)="addSubRequest()" [text]="true" severity="secondary" />
+
+        <p-divider></p-divider>
         <button
-          class="submit"
+          class="submit btn btn-primary"
           [disabled]="loading || requestForm.invalid"
         >
           <span *ngIf="loading">

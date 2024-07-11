@@ -24,6 +24,7 @@
             <th> Roles </th>
            <th ><a style="color: white;" routerLink="/admin/plants"> Location </a></th>
             <th><a style="color: white;" routerLink="/admin/plants">Plant </a></th>
+            <th><a style="color: white;" routerLink="/admin/plants">Sap number </a></th>
             <th><a style="color: white;" routerLink="/admin/plants">Departement</a> </th>
             <th>Backup Aprover </th>
             <th>Approver</th>
@@ -42,6 +43,7 @@
             </td>
             <td>{{user.locationName}} </td>
             <td>{{user.plant_name}}</td>
+            <td>{{user.sapNumb}}</td>
             <td>{{user.departmentName}}</td>
             <td>
               @if(user.backupActive){
@@ -141,6 +143,7 @@
     <p><strong>Email:</strong> {{ locationed.email }}</p>
     <p><strong>Location:</strong> {{ locationed.locationName}}</p>
     <p><strong>Plant:</strong> {{locationed.plant_name}}</p>
+    <p><strong>Sap number:</strong> {{locationed.sapNumb}}</p>
     <p><strong>Department:</strong> {{ locationed.departmentName }}</p>
     <p><strong>Backup Aprover:</strong> {{ locationed.backupaprover_Name }}</p>
     <p><strong>Approver:</strong> {{ locationed.managerName }}</p>
@@ -185,6 +188,22 @@
                   filterBy="plant_name" placeholder="Select Plant">
                 </p-dropdown>
               </div>
+           
+              <div class="form-group">
+                <label for="sapNumb">Sap Number :</label>
+                <p-dropdown 
+                  [options]="sapnumbers" 
+                  [(ngModel)]="locationed.sapNumb" 
+                  name="sapNumb"
+                  optionLabel="sapNum" 
+                  optionValue="sapNum" 
+                  [showClear]="true" 
+                  [filter]="true"
+                  filterBy="sapNum" 
+                  placeholder="Select SAP Number">
+                </p-dropdown>
+              </div>
+              
               <div class="form-group">
                 <label for="departmentName">Departemnt :</label>
                 <p-dropdown [options]="departmentsOfSelectedPlant" [(ngModel)]="locationed.departmentName"

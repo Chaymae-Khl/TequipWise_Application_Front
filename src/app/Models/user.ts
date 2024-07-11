@@ -14,9 +14,11 @@ export class User {
     approverActive:any;
     locationName:any;
     plantId:any;
+    SapNumberId:any;
     plant_name:any;
     roles!:string[];
     DeptId:any;
+    sapNumb:any
     departmentName:any;
     location:any;
     subordinates:any;

@@ -4,13 +4,14 @@ import { EquipementRequestServiceService } from '../../Services/equipement-reque
 import { EquipmentRequest } from '../../Models/equipment-request';
 import { error } from 'console';
 import { MessageService } from 'primeng/api';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SubRequest } from '../../Models/sub-request';
 @Component({
   selector: 'app-equipment-request',
   templateUrl: './equipment-request.component.html',
   styleUrl: './equipment-request.component.css'
 })
 export class EquipmentRequestComponent {
-  checked!: boolean;
   equipemnts: any;
   request: EquipmentRequest = new EquipmentRequest();
   loading: boolean = false;
@@ -18,8 +19,10 @@ export class EquipmentRequestComponent {
   constructor(
     private messageService: MessageService,
     private equipementService: EquipementServiceService,
-    private RequestService: EquipementRequestServiceService
-  ) {}
+    private requestService: EquipementRequestServiceService
+  ) {
+    this.request.equipmentSubRequests = [new SubRequest()];
+  }
 
   ngOnInit() {
     this.getEquipmentNames();
@@ -29,43 +32,48 @@ export class EquipmentRequestComponent {
     this.equipementService.getEquipmentName().subscribe(
       (data) => {
         this.equipemnts = data;
-        console.log(this.equipemnts);
       },
       (error) => {
-        console.log("error displaying the equipemnts data", error);
       }
     );
   }
 
+  addSubRequest() {
+    let newSubRequest = new SubRequest();
+    this.request.equipmentSubRequests.push(newSubRequest);
+  }
+
+  removeSubRequest(index: number) {
+    this.request.equipmentSubRequests.splice(index, 1);
+  }
+
   ValidRequest() {
-    this.loading = true; // Start loading
-    console.log(this.request);
-    this.RequestService.PassRequest(this.request).subscribe(
+    this.loading = true;
+    this.requestService.PassRequest(this.request).subscribe(
       (response: any) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Success Message',
           detail: response.message,
-          key: 'br',
           life: 10000
         });
-        console.log(response);
         this.resetForm();
-        this.loading = false; // Stop loading
+        this.loading = false;
       },
       (error) => {
-        console.log(error);
+        console.log("Error submitting request:", error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: error.message
         });
-        this.loading = false; // Stop loading
+        this.loading = false;
       }
     );
   }
 
   resetForm() {
     this.request = new EquipmentRequest();
+    this.request.equipmentSubRequests = [new SubRequest()];
   }
 }

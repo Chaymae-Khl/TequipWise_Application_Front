@@ -83,6 +83,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { RequestFilterPipe } from './pipes/request-filter.pipe';
 import { CalendarModule } from 'primeng/calendar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FileUploadModule } from 'primeng/fileupload';
+import { InplaceModule } from 'primeng/inplace';
+import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
+import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
 
 
 @NgModule({
@@ -117,6 +121,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ConfirmationOperationsRequestListComponent,
     MyProfileComponent,
     RequestFilterPipe,
+    UserEquipmentListComponent,
+    ConfirmationEquipmentListComponent,
   
    
   
@@ -174,7 +180,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ChartModule,
     SelectButtonModule,
     CalendarModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    FileUploadModule,
+    InplaceModule
   
 
   ],

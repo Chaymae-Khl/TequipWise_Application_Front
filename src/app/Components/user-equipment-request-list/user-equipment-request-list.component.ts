@@ -36,6 +36,7 @@ export class UserEquipmentRequestListComponent {
   ngOnInit() {
     this.getReuestList();
     this.getNumOfRequest();
+    // console.log(this.RequestsList);
   }
   
   getStatusText(event:any): string {
@@ -67,7 +68,7 @@ getStatusPRText(event:any): string {
     this.selectedRequest = equip;
       this.visible = true;
       this.timelineEvents = [
-        { title: 'Request Created', date: equip.requestDate, by: equip.nameOfUser , ForWho: equip.isNewhire, Equipment: equip.equipmentName,Comments:equip.comment },
+        { title: 'Request Created', date: equip.requestDate, by: equip.nameOfUser , ForWho: equip.isNewhire, Equipment: equip.equipmentName,Comments:equip.comment,Quantity:equip.numberEquipment },
         { title: 'Manager approval', date: equip.departmangconfirmedAt, by: equip.deptMangApproverName, RejectionCause: equip.departmang_Not_confirmCause, status: equip.departmangconfirmStatus },
         { title: 'IT approval', date: equip.iTconfirmedAt, by: equip.itApproverName, RejectionCause: equip.iT_Not_confirmCause, status: equip.iTconfirmSatuts, supplierOffer: equip.supplierOffer },
         { title: 'Finance approval', date: equip.financeconfirmedAt, by: equip.controllerApproverName, RejectionCause: equip.finance_Not_confirmCause, status: equip.financeconfirmSatuts },

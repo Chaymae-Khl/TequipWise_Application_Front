@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LocalStorageServiceService } from './local-storage-service.service';
 import { EquipmentRequest } from '../Models/equipment-request';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,6 @@ constructor(private httpClient:HttpClient,private localstorgeService:LocalStorag
   const token = this.localstorgeService.getItem('token');
   return {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
       'Authorization': token ? `Bearer ${token}` : ''
     })
   };
@@ -47,5 +47,15 @@ updateRequest(requestToUpdate:EquipmentRequest){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.put(`${this.apiUrl}/Request/UpdateEquipemntRequest`,requestToUpdate,httpOptions);
 }
+
+uploadSupplierOffer(requestId: number, file: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('requestId', requestId.toString());
+  formData.append('file', file);
+
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.post(`${this.apiUrl}/Request/UploadSupplierOffer`, formData, httpOptions);
+}
+
 }
 

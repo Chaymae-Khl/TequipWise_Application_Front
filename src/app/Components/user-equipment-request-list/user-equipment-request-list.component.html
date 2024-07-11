@@ -4,9 +4,9 @@
     <h1 class="mt-5">Your Assets Requests List ({{ NumberOfRequest.count }})</h1>
 </div>
 
-<div class="container-fluid">
+<!-- <div class="container-fluid"> -->
      <!-- Filter Dropdown -->
-     <div class="mb-3">
+     <!-- <div class="mb-3">
         <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter" optionLabel="label" optionValue="value"
             placeholder="Filter by Approval Status" (onChange)="filterRequests()"></p-dropdown>
     </div>
@@ -29,8 +29,8 @@
             <th>Manager Confirmation</th>
             <th>IT Confirmation</th>
             <th>Finance Confirmation</th>
-            <th>PR Number</th>
-            <th>PR status</th>
+             <th>PR status</th>
+             <th>PR Number</th>
             <th>PO Number</th>
             <th>Request Status</th>
             <th>Actions</th>
@@ -159,15 +159,15 @@
     styleClass="w-4rem h-4rem" 
     strokeWidth="8" 
     fill="var(--surface-ground)" 
-    animationDuration=".5s" />
+    animationDuration=".5s" /> -->
         <!-- or any loading indicator/message you prefer -->
-        <p>Fetching data...</p>
+        <!-- <p>Fetching data...</p>
     </div>
-</div>
+</div> -->
 
 
 
-<p-dialog header="Asset Request Details" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}">
+<!-- <p-dialog header="Asset Request Details" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}">
     <div class="position-relative">
         <img *ngIf="selectedRequest.requestStatus === true" src="/assets/Images/approved.png" width="222rem" alt=""
             style="position: absolute; left: 11px;">
@@ -235,6 +235,7 @@
                 <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
                 <p *ngIf="event.ForWho"><b>For Who:</b> {{ event.ForWho ? 'New Hire' : 'For Me' }}</p>
                 <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
+                <p *ngIf="event.Quantity"><b>Quantity:</b> {{ event.Quantity }}</p>
                 <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
                 <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
                 <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusText(event) }}</p>
@@ -247,4 +248,4 @@
             </div>
         </ng-template>
     </p-timeline>
-</p-dialog>
+</p-dialog> -->

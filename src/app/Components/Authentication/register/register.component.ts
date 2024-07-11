@@ -37,6 +37,7 @@ export class RegisterComponent  {
       email: ['', [Validators.required, CustomValidators.emailPattern]],
       password: ['', [Validators.required, CustomValidators.strongPassword]],
       confirmPassword: ['', Validators.required],
+      SapNumberId: [0, Validators.required],
       locationID: [0, Validators.required],
       plantId: [{ value: 0, disabled: true }, Validators.required],
       DeptId: [{ value: 0, disabled: true }, Validators.required],
@@ -46,6 +47,7 @@ export class RegisterComponent  {
   ngOnInit(): void {
     this.getLocations();
     this.getSapNumber();
+    console.log(this.sapnumbers);
   }
 
   getLocations() {
@@ -79,11 +81,15 @@ export class RegisterComponent  {
       this.departmentsOfSelectedPlant = selectedLocation.departments;
       this.registerForm.get('plantId')?.enable();
       this.registerForm.get('DeptId')?.enable();
+      this.registerForm.get('SapNumberId')?.enable();
+
     } else {
       this.plantsOfSelectedLocation = [];
       this.departmentsOfSelectedPlant = [];
       this.registerForm.get('plantId')?.disable();
       this.registerForm.get('DeptId')?.disable();
+      this.registerForm.get('SapNumberId')?.disable();
+
     }
   }
 

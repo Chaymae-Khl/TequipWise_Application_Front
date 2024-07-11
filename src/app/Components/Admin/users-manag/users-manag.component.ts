@@ -5,6 +5,7 @@ import { User } from '../../../Models/user';
 import { MessageDialogComponent } from '../../../message-dialog/message-dialog.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
+import { SapNumberServiceService } from '../../../Services/sap-number-service.service';
 
 @Component({
   selector: 'app-users-manag',
@@ -33,7 +34,7 @@ export class UsersManagComponent implements OnInit{
   visible: boolean = false;
   loading: boolean = false;
   loading2: boolean = true; // Initialize as true to show loading initially
-
+  sapnumbers:any;
   onApproverActiveChange() {
     if (!this.locationed.approverActive) {
       this.locationed.managerName =  this.locationed.managerName;
@@ -47,7 +48,9 @@ export class UsersManagComponent implements OnInit{
 
   // modalMode!: 'view' | 'update'|'changepassword';
   numberofusers:any;
-constructor(private Authservice:AuthServiceService,public dialog: MatDialog,private messageService: MessageService,private openDataService: OpenDataServiceService){
+    
+    constructor(  private changeDetectorRef: ChangeDetectorRef // Inject ChangeDetectorRef
+,      private Authservice:AuthServiceService,public dialog: MatDialog,private messageService: MessageService,private openDataService: OpenDataServiceService,private sapnumService:SapNumberServiceService){
 }
 
 ngOnInit(): void {
@@ -55,8 +58,21 @@ this.getUsers();
 this.getNumofUsers();
 this.getLocations();
 this.getRoles();
+this.getSapNumber();
 }
 
+getSapNumber(){
+  this.sapnumService.getALSapNum().subscribe(
+   (res) => {
+     this.sapnumbers=res;
+     console.log(this.sapnumbers)
+   },
+   (error) => {
+     
+     console.error("Error occurred during fetching data:", error);
+   }
+ );
+ }
 
 getUsers(){
   this.loading2 = true; // Set loading to true before fetching data
@@ -161,8 +177,17 @@ getRoles() {
 
 showDialog(mode: 'add' | 'view' | 'update'|'changepassword', user?: any): void {
   this.mode = mode;
-  this.locationed = user ? { ...user } : {};
+  this.locationed = user ? { ...user } : new User();
+  console.log('Selected User:', this.locationed); // Log the selected user
+
+  // Ensure the sapNumb is set correctly
+  if (this.locationed.sapNumb) {
+    console.log('SAP Number:', this.locationed.sapNumb); // Verify the sapNumb
+  }
+
   this.visible = true;
+  // Trigger change detection to update the view
+  this.changeDetectorRef.detectChanges();
 }
 
 

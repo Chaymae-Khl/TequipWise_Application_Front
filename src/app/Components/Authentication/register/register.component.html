@@ -191,6 +191,16 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <div>
+          <mat-form-field class="custom-select">
+            <mat-label>Select Sap number</mat-label>
+            <mat-select name="SapNumberId" formControlName="SapNumberId">
+              <mat-option disabled>Select Sap number</mat-option>
+              <mat-option *ngFor="let sap of sapnumbers" [value]="sap.sApID">{{ sap.sapNum}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div class="input-group">
           <mat-form-field class="custom-select">
             <mat-label>Select Department</mat-label>

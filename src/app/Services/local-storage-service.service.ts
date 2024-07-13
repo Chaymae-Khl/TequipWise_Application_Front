@@ -1,8 +1,10 @@
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,9 @@ import { Observable, of } from 'rxjs';
 export class LocalStorageServiceService {
 
   private jwtHelper: JwtHelperService;
+  apiUrl = environment.apiUrl;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,private http: HttpClient) { 
     this.jwtHelper = new JwtHelperService();
   }
 
@@ -33,7 +36,9 @@ export class LocalStorageServiceService {
       localStorage.removeItem(key);
     }
   }
-
+  refreshToken(): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/Auth/refresh-token`, {});
+  }
   async getToken(): Promise<string | null> {
     return this.getItem('token');
   }

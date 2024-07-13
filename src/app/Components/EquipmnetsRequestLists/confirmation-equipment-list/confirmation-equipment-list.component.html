@@ -1,1 +1,121 @@
-<p>confirmation-equipment-list works!</p>
+<app-nav-bar></app-nav-bar>
+<div class="col text-center">
+    <h1 class="mt-5">Your Assets Requests List</h1>
+</div>
+<div class="container-fluid"> 
+    <div class="mb-3">
+       <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter" optionLabel="label" optionValue="value"
+           placeholder="Filter by Approval Status" (onChange)="filterRequests()"></p-dropdown>
+   </div>
+   
+<p-table [value]="equipmentRequests" dataKey="equipmentRequestId" [tableStyle]="{ 'min-width': '60rem' }" [expandedRowKeys]="expandedRows"   [rows]="10"  [paginator]="true"  [rowsPerPageOptions]="[5, 10, 20]">
+   
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 5rem"></th>
+            <th pSortableColumn="equipmentRequestId"># <p-sortIcon field="equipmentRequestId" /></th>
+            <th pSortableColumn="nmaeOfUser">By <p-sortIcon field="nmaeOfUser" /></th>
+            <th pSortableColumn="requestDate">Request Date <p-sortIcon field="requestDate" /></th>
+            <th pSortableColumn="totalPrice">Total Price <p-sortIcon field="totalPrice" /></th>
+            <th pSortableColumn="requestStatus">Status <p-sortIcon field="requestStatus" /></th>
+            <th pSortableColumn="actions">Actions <p-sortIcon field="actions" /></th>
+
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-request let-expanded="expanded">
+        <tr>
+            <td>
+                <p-button type="button" pRipple [pRowToggler]="request" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+            </td>
+            <td>{{ request.equipmentRequestId }}</td>
+            <td>{{ request.nmaeOfUser }}</td>
+            <td>{{ request.requestDate | date:'dd/MM/yyyy hh:mm' }}</td>
+            <td>{{ request.totalPrice  }}</td>
+            <td><p-tag [value]="request.requestStatus ? 'Approved' : 'Pending'" [severity]="request.requestStatus ? 'success' : 'warning'" /></td>
+            <td> <p-button icon="pi pi-arrow-up-right" label="Details" severity="warning"
+                [outlined]="true"></p-button></td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-request>
+        <tr>
+            <td colspan="5">
+                <div class="p-3">
+                    <p-table [value]="request.equipmentSubRequests" dataKey="subEquipmentRequestId">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th  style="background-color: #ea85005f;" pSortableColumn="equipementName">Equipment Name <p-sortIcon field="equipementName" /></th>
+                                <th  style="background-color: #ea85005f;" pSortableColumn="qtEquipment">Quantity <p-sortIcon field="qtEquipment" /></th>
+                                <th style="background-color: #ea85005f;" pSortableColumn="pu">PU <p-sortIcon field="pu" /></th>
+                                <th style="background-color: #ea85005f;" pSortableColumn="DepartementManager">Departement Manager <p-sortIcon field="DepartementManager" /></th>
+                                <th style="background-color: #ea85005f;" pSortableColumn="ItApprover">It Approver <p-sortIcon field="ItApprover" /></th>
+                                <th style="background-color: #ea85005f;" pSortableColumn="pu">Finance Approver <p-sortIcon field="pu" /></th>
+                                <th style="background-color: #ea85005f;" pSortableColumn="subRequestStatus">Status <p-sortIcon field="subRequestStatus" /></th>
+                                <th style="background-color: #ea85005f;" pSortableColumn="actions">Actions <p-sortIcon field="actions" /></th>
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-subRequest>
+                            <tr>
+                                <td>{{ subRequest.equipementName }}</td>
+                                <td>{{ subRequest.qtEquipment }}</td>
+                                <td>{{ subRequest.pu }}</td>
+                                <td>{{ subRequest.departmangconfirmStatus }}</td>
+                                <td>{{ subRequest.iTconfirmSatuts}}</td>
+                                <td>{{ subRequest.financeconfirmSatuts }}</td>
+                                <td><p-tag [value]="subRequest.subRequestStatus ? 'Approved' : 'Pending'" [severity]="subRequest.subRequestStatus ? 'success' : 'warning'" /></td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6">There are no sub-requests for this request.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- <p-dialog header="Request Details" [modal]="true" [(visible)]="visible" >
+    
+
+<p-panel header="Request {{ selectedRequest?.equipmentRequestId }}">
+<div class="form-row">
+    <div class="form-group">
+        <p><strong>By:</strong> {{ selectedRequest?.nmaeOfUser }}</p>
+    </div>
+    <div class="form-group">
+        <p><strong>Request Date:</strong> {{ selectedRequest?.requestDate| date:'dd/MM/yyyy hh:mm' }}</p>
+    </div>
+    <div class="form-group">
+        <p><strong>Status:</strong> {{ selectedRequest?.requestStatus }}</p>
+    </div>
+</div>
+
+<p-divider type="dashed"></p-divider>
+
+<p-table 
+    [value]="selectedRequest?.equipmentSubRequests" 
+    styleClass="p-datatable-gridlines" 
+    [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="background-color: rgba(33, 33, 97, 0.505);color: white;">Assets</th>
+                <th style="background-color: rgba(33, 33, 97, 0.505);color: white;">Quantity</th>
+                <th style="background-color: rgba(33, 33, 97, 0.505);color: white;">PU</th>
+                <th style="background-color: rgba(33, 33, 97, 0.505);color: white;">Quantity</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-asset>
+            <tr>
+                <td>{{ asset.equipementName }}</td>
+                <td>{{ asset.qtEquipment }}</td>
+                <td>{{ asset.pu}}</td>
+               
+            </tr>
+        </ng-template>
+</p-table>
+</p-panel>  
+   
+</p-dialog> -->

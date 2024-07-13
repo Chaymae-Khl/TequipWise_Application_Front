@@ -87,6 +87,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InplaceModule } from 'primeng/inplace';
 import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
 import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
+import { EquipmentRequestDetailsComponent } from './Components/EquipmnetsRequestLists/equipment-request-details/equipment-request-details.component';
+import { TokenInterceptorService } from './interceptors/token-interceptor.service';
 
 
 @NgModule({
@@ -123,6 +125,7 @@ import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsReque
     RequestFilterPipe,
     UserEquipmentListComponent,
     ConfirmationEquipmentListComponent,
+    EquipmentRequestDetailsComponent,
   
    
   
@@ -191,7 +194,9 @@ import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsReque
     provideAnimationsAsync(),
     MessageService,
     AuthGuard,
-
+   { provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptorService,
+    multi: true}
     
   ],
   bootstrap: [AppComponent]

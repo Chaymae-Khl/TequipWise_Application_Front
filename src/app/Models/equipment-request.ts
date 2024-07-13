@@ -18,7 +18,7 @@ export class EquipmentRequest {
     pR_Status?:           boolean;
     pR_Not_ConfirmCause?: string;
     userId?:              string;
-    nameOfUser?:          string;
+    nmaeOfUser?:          string;
     equipmentSubRequests: SubRequest[]= [];
 
 

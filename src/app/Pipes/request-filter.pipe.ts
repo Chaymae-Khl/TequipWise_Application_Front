@@ -14,7 +14,7 @@ export class RequestFilterPipe implements PipeTransform {
     const term = searchTerm.toLowerCase().trim();
 
     return requests.filter(request =>
-      request.nameOfUser?.toLowerCase().includes(term)
+      request.nmaeOfUser?.toLowerCase().includes(term)
     );
   }
 

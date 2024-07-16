@@ -87,7 +87,6 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InplaceModule } from 'primeng/inplace';
 import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
 import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
-import { EquipmentRequestDetailsComponent } from './Components/EquipmnetsRequestLists/equipment-request-details/equipment-request-details.component';
 import { TokenInterceptorService } from './interceptors/token-interceptor.service';
 
 
@@ -125,7 +124,6 @@ import { TokenInterceptorService } from './interceptors/token-interceptor.servic
     RequestFilterPipe,
     UserEquipmentListComponent,
     ConfirmationEquipmentListComponent,
-    EquipmentRequestDetailsComponent,
   
    
   

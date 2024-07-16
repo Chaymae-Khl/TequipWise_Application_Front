@@ -16,6 +16,8 @@ export class UserEquipmentListComponent {
   expandedRows = {};
   equipmentRequests: any;
   selectedRequest?:any;
+  selectedSubRequest?:any;
+  loading: boolean = true;
   selectedFilter: any = null; // Initialize to null for "All" by default
   filteredRequestList: any; // Variable to hold filtered list
   filterOptions: SelectItem[] = [
@@ -25,75 +27,67 @@ export class UserEquipmentListComponent {
   ];
   visible: boolean = false;
   timelineEvents: any[] = [];
-
+  mode: 'request' | 'subrequest' = 'request';
   constructor(private equipementService: EquipementRequestServiceService,private sharedService: SharedService, private router: Router) {
 
   }
   ngOnInit() {
     this.getReuestList();
   }
-  showDialog(req:any) {
-    this.selectedRequest = req;
-   console.log(this.selectedRequest);
+  showDialog(mode: 'request' | 'subrequest',req:any) {
+    this.mode = mode;
 
+    this.selectedRequest = req;
+    
+    console.log(req);
     this.visible = true;
-    // this.timelineEvents = [
-    //   { title: 'Request Created', date: equip.requestDate, by: equip.nameOfUser , ForWho: equip.isNewhire, Equipment: equip.equipmentName,Comments:equip.comment,Quantity:equip.numberEquipment },
-    //   { title: 'Manager approval', date: equip.departmangconfirmedAt, by: equip.deptMangApproverName, RejectionCause: equip.departmang_Not_confirmCause, status: equip.departmangconfirmStatus },
-    //   { title: 'IT approval', date: equip.iTconfirmedAt, by: equip.itApproverName, RejectionCause: equip.iT_Not_confirmCause, status: equip.iTconfirmSatuts, supplierOffer: equip.supplierOffer },
-    //   { title: 'Finance approval', date: equip.financeconfirmedAt, by: equip.controllerApproverName, RejectionCause: equip.finance_Not_confirmCause, status: equip.financeconfirmSatuts },
-    //   { title: 'PR & PO approval', statusPr: equip.pR_Status, Ponum: equip.poNum, PrNum: equip.prNum, RejectionCause: equip.pR_Not_ConfirmCause },
-    //   { title: 'Request approval', date: equip.iTconfirmedAt, statusreq: equip.requestStatus }
-    // ];
-//     const requestApprovalEvent = this.timelineEvents.find(event => event.hasOwnProperty('statusreq'));
-// if (requestApprovalEvent) {
-//   this.requeststatus = requestApprovalEvent.statusreq;
-//   console.log('Extracted statusreq:', this.requeststatus);
-//   // You can now use statusreq as needed in your component
-// }
+    this.timelineEvents = [
+      { title: 'Request Created',ForWho: req.isNewhire, Equipment: this.selectedRequest.equipementName,Comments:req.comment,Quantity:req.qtEquipment },
+      { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.deptMangApproverName, RejectionCause: req.departmang_Not_confirmCause, status: req.departmangconfirmStatus },
+      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.iT_Not_confirmCause, status: req.iTconfirmSatuts, supplierOffer: req.supplierOffer },
+      { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, status: req.financeconfirmSatuts },
+      { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: req.subRequestStatus}
+    ];
+
 }
 
-// getStatusText(event:any): string {
-//   if (event.status === true) {
-//       return 'Approved';
-//   } else if (event.status === false) {
-//       return 'Not Approved';
-//   } else if (event.supplierOffer !== null) {
-//       return 'Offer';
-//   } else if (event.financeconfirmSatuts === null) {
-//       return 'Waiting for Finance Approval';
-//   } else if (event.poNum === null) {
-//       return 'Waiting for PR';
-//   } else {
-//       return 'Open';
-//   }
-// }
+getStatusText(event:any): string {
+  if (event.status === true) {
+      return 'Approved';
+  } else if (event.status === false) {
+      return 'Not Approved';
+  } else if (event.supplierOffer !== null) {
+      return 'Offer';
+  } else if (event.financeconfirmSatuts === null) {
+      return 'Waiting for Finance Approval';
+  } else if (event.poNum === null) {
+      return 'Waiting for PR';
+  } else {
+      return 'Open';
+  }
+}
 
-// getStatusPRText(event:any): string {
-//   if (event.statusPr === true) {
-//       return 'Approved';
-//   } else if (event.statusPr === false) {
-//       return 'Rejected';
-//   } else {
-//       return 'Open';
-//   }
-// }
+
   getReuestList() {
-    // this.loading2 = true; // Set loading to true before fetching data
+    this.loading = true; // Set loading to true before fetching data
     this.equipementService.GetAuthRequestList().subscribe(
       (data) => {
         this.equipmentRequests = data;
-        // this.loading2 = false; // Set loading to false after data is fetched
+        this.loading = false; // Set loading to false after data is fetched
         // this.filteredRequestList = data; // Initialize filtered list with original list
         console.log(this.equipmentRequests);
       },
       (error) => {
-        // this.loading2 = true; // Ensure loading is turned off even in case of error
+        this.loading = true; // Ensure loading is turned off even in case of error
       }
     );
   }
-  
-
+  getPRStatus(prStatus: boolean | null): string {
+    if (prStatus === true) return 'Approved';
+    if (prStatus === false) return 'Rejected';
+    
+    return 'Open';
+  }
   // Method to determine the overall status of the main request
   getRequestStatus(request: EquipmentRequest): string {
     if (!request || !request.equipmentSubRequests) {
@@ -106,7 +100,7 @@ export class UserEquipmentListComponent {
     const anyApproved = allSubRequests.some(subRequest => subRequest.subRequestStatus === true);
     const anyRejected = allSubRequests.some(subRequest => subRequest.subRequestStatus === false);
     const allRejected = allSubRequests.every(subRequest => subRequest.subRequestStatus === false);
-
+    
     const allStatusesNull = allSubRequests.every(subRequest =>
         subRequest.departmangconfirmStatus === null &&
         subRequest.iTconfirmSatuts === null &&

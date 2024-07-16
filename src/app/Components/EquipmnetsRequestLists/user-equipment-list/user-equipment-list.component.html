@@ -9,7 +9,7 @@
     </div>
 
     <p-table [value]="equipmentRequests" dataKey="equipmentRequestId" [tableStyle]="{ 'min-width': '60rem' }"
-        [expandedRowKeys]="expandedRows" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]">
+        [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]">
 
         <ng-template pTemplate="header">
             <tr>
@@ -17,7 +17,6 @@
                 <th pSortableColumn="equipmentRequestId"># <p-sortIcon field="equipmentRequestId" /></th>
                 <th pSortableColumn="nmaeOfUser">By <p-sortIcon field="nmaeOfUser" /></th>
                 <th pSortableColumn="requestDate">Request Date <p-sortIcon field="requestDate" /></th>
-                <th pSortableColumn="pR_Status">PR Status <p-sortIcon field="pR_Status" /></th>
                 <th pSortableColumn="requestStatus">Status <p-sortIcon field="requestStatus" /></th>
                 <th pSortableColumn="actions">Actions <p-sortIcon field="actions" /></th>
             </tr>
@@ -32,18 +31,18 @@
                 <td>{{ request.nmaeOfUser }}</td>
 
                 <td>{{ request.requestDate | date:'dd/MM/yyyy hh:mm' }}</td>
-                <td>{{ request.pR_Status }}</td>
+               
 
                 <td>
-                    <p-tag [rounded]="true"  [value]="getRequestStatus(request)"
+                    <p-tag [rounded]="true" [value]="getRequestStatus(request)"
                         [severity]="getRequestStatus(request) === 'Approved' ? 'success' :
                         getRequestStatus(request) === 'Open' ? 'info' :
-                        getRequestStatus(request) === 'Pending' ? 'Secondary' :
+                        getRequestStatus(request) === 'Pending' ? 'secondary' :
                         getRequestStatus(request) === 'Partly Approved' ? 'warning' :
                         getRequestStatus(request) === 'Rejected' ? 'danger' : 'info'" />
                 </td>
                 <td> <p-button icon="pi pi-arrow-up-right" label="Details" severity="warning"
-                        (onClick)="showDialog(request)" [outlined]="true"></p-button></td>
+                        (onClick)="showDialog('request',request)" [outlined]="true"></p-button></td>
             </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-request>
@@ -58,7 +57,7 @@
                                     <th style="background-color: #ea85005f;" pSortableColumn="qtEquipment">Quantity
                                         <p-sortIcon field="qtEquipment" /></th>
                                     <th style="background-color: #ea85005f;" pSortableColumn="DepartementManager">
-                                        Departement Manager <p-sortIcon field="DepartementManager" /></th>
+                                        Department Manager <p-sortIcon field="DepartementManager" /></th>
                                     <th style="background-color: #ea85005f;" pSortableColumn="ItApprover">IT Approver
                                         <p-sortIcon field="ItApprover" /></th>
                                     <th style="background-color: #ea85005f;" pSortableColumn="pu">Finance Approver
@@ -74,65 +73,84 @@
                                 <tr>
                                     <td>{{ subRequest.equipementName }}</td>
                                     <td>{{ subRequest.qtEquipment }}</td>
+
                                     <td>
                                         <span class="status-text" [ngClass]="{
                                             'approved': subRequest.departmangconfirmStatus === true,
                                             'rejected': subRequest.departmangconfirmStatus === false,
                                             'open': subRequest.departmangconfirmStatus === null
-                                            }">
+                                          }">
                                             {{ subRequest.departmangconfirmStatus === true ? 'Approved' : subRequest.departmangconfirmStatus === false ? 'Rejected' : 'Open' }}
-                                        </span>
+                                          </span>
                                     </td>
                                     <td>
-                                        <span class="status-text" [ngClass]="{
+                                        <span class="status-text"
+                                        [ngClass]="{
                                             'approved': subRequest.iTconfirmSatuts === true,
                                             'rejected': subRequest.iTconfirmSatuts === false,
                                             'offer': request.supplierOffer != null && subRequest.iTconfirmSatuts === null,
                                             'open': subRequest.iTconfirmSatuts === null && request.supplierOffer === null && subRequest.subRequestStatus === null,
                                             'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
-                                            }">
-                                            {{ request.supplierOffer != null ? 'Offer' : subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.departmangconfirmStatus === false ? 'Closed' : 'Open' }}
-                                        </span>
+                                        }">
+                                        {{ subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.iTconfirmSatuts === false ? 'Rejected' : request.supplierOffer != null ? 'Offer' : 'Open' }}
+                                    </span>
                                     </td>
                                     <td>
                                         <span class="status-text" [ngClass]="{
                                             'approved': subRequest.financeconfirmSatuts === true,
                                             'rejected': subRequest.financeconfirmSatuts === false,
                                             'open': subRequest.financeconfirmSatuts === null,
-                                            'closed': request.supplierOffer === null && subRequest.departmangconfirmStatus === false
-                                            }">
-                                            {{ subRequest.financeconfirmSatuts === true ? 'Approved' : subRequest.financeconfirmSatuts === false ? 'Rejected' : subRequest.departmangconfirmStatus === false ? 'Closed' : 'Open' }}
-                                        </span>
+                                            'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
+                                          }">
+                                            {{ subRequest.financeconfirmSatuts === true ? 'Approved' : subRequest.financeconfirmSatuts === false ? 'Rejected' : 'Open' }}
+                                          </span>
                                     </td>
                                     <td>
                                         <span class="status-text" [ngClass]="{
-                                            'approved': subRequest.subRequestStatus === true,
-                                            'rejected': subRequest.subRequestStatus === false,
-                                            'open': subRequest.subRequestStatus === null
-                                            }">
-                                            {{ subRequest.subRequestStatus === true ? 'Approved' : subRequest.subRequestStatus === false ? 'Rejected' : 'Open' }}
-                                        </span>
+                                            'inprogress': subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && request.supplierOffer === null,
+                                            'waitingforfinance': subRequest.departmangconfirmStatus === true && request.supplierOffer != null && subRequest.financeconfirmSatuts === null,
+                                            'waitingforpr': subRequest.financeconfirmSatuts === true && request.pR_Status === null,
+                                            'approved': request.pR_Status === true,
+                                            'rejected': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false,
+                                            'closed': subRequest.departmangconfirmStatus === false,
+                                            'open': subRequest.departmangconfirmStatus === null && subRequest.iTconfirmSatuts === null && subRequest.financeconfirmSatuts === null,
+                                            'offer': request.supplierOffer != null && subRequest.iTconfirmSatuts === null
+                                          }">
+                                            {{ subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && request.supplierOffer === null ? 'In Progress' :
+                                               subRequest.departmangconfirmStatus === true && request.supplierOffer != null && subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
+                                               subRequest.financeconfirmSatuts === true && request.pR_Status === null ? 'Waiting for PR' :
+                                               request.pR_Status === true ? 'Approved' :
+                                               subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false ? 'Rejected' :
+                                               subRequest.departmangconfirmStatus === false ? 'Closed' :
+                                               request.supplierOffer != null && subRequest.iTconfirmSatuts === null ? 'Offer' :
+                                               'Open' }}
+                                          </span>
                                     </td>
                                     <td> <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
-                                            [outlined]="true"></p-button></td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="emptymessage">
-                                <tr>
-                                    <td colspan="7">There are no sub-requests for this request.</td>
+                                            (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button></td>
                                 </tr>
                             </ng-template>
                         </p-table>
                     </div>
                 </td>
-            </tr>
+            </tr>       
         </ng-template>
+     
+        
     </p-table>
+ <div *ngIf="loading" class="text-center">
+        <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
+    </div>
 
-
-    <p-dialog header="Request Details" [modal]="true" [(visible)]="visible">
-
-        <p-panel header="Request {{ selectedRequest?.equipmentRequestId }}">
+    <p-dialog header="Request Details" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" >
+        <ng-container  *ngIf="mode === 'request';else subrequest" >
+        <p-panel  header="Request {{ selectedRequest?.equipmentRequestId }}">
             <div class="form-row">
                 <div class="form-group">
                     <p><strong>By:</strong> {{ selectedRequest?.nmaeOfUser }}</p>
@@ -153,6 +171,9 @@
                 <div class="form-group">
                     <p><strong>Request Date:</strong> {{ selectedRequest?.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
                 </div>
+                <div class="form-group">
+                   <p><strong>PR Status:</strong> {{ getPRStatus(selectedRequest?.pR_Status)}}</p>
+                </div> 
                 <div class="form-group">
                     <p><strong>Status:</strong> {{ getRequestStatus(selectedRequest) }}</p>
                 </div>
@@ -193,7 +214,7 @@
                                 'open': subRequest.iTconfirmSatuts === null && selectedRequest.supplierOffer === null && subRequest.subRequestStatus === null,
                                 'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
                                 }">
-                                {{ selectedRequest.supplierOffer != null ? 'Offer' : subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.departmangconfirmStatus === false ? 'Closed' : 'Open' }}
+                                {{ subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.iTconfirmSatuts === false ? 'Rejected' : selectedRequest.supplierOffer != null ? 'Offer' : 'Open' }}
                             </span>
                         </td>
                         <td>
@@ -201,27 +222,115 @@
                                 'approved': subRequest.financeconfirmSatuts === true,
                                 'rejected': subRequest.financeconfirmSatuts === false,
                                 'open': subRequest.financeconfirmSatuts === null,
-                                'closed': selectedRequest.supplierOffer=== null && subRequest.departmangconfirmStatus === false
+                                'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
                                 }">
-                                {{ subRequest.financeconfirmSatuts === true ? 'Approved' : subRequest.financeconfirmSatuts === false ? 'Rejected' : subRequest.departmangconfirmStatus === false ? 'Closed' : 'Open' }}
+                                {{ subRequest.financeconfirmSatuts === true ? 'Approved' : subRequest.financeconfirmSatuts === false ? 'Rejected' : 'Open' }}
                             </span>
                         </td>
                         <td>
                             <span class="status-text" [ngClass]="{
-                                'approved': subRequest.subRequestStatus === true,
-                                'rejected': subRequest.subRequestStatus === false,
-                                'open': subRequest.subRequestStatus === null
-                                }">
-                                {{ subRequest.subRequestStatus === true ? 'Approved' : subRequest.subRequestStatus === false ? 'Rejected' : 'Open' }}
+                                'inprogress': subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && selectedRequest.supplierOffer === null,
+                                'waitingforfinance': subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null && subRequest.financeconfirmSatuts === null,
+                                'waitingforpr': subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null,
+                                'approved': selectedRequest.pR_Status === true,
+                                'rejected': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false,
+                                'closed': subRequest.departmangconfirmStatus === false,
+                                'open': subRequest.departmangconfirmStatus === null && subRequest.iTconfirmSatuts === null && subRequest.financeconfirmSatuts === null,
+                                'offer': selectedRequest.supplierOffer != null && subRequest.iTconfirmSatuts === null
+                            }">
+                                {{ subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && selectedRequest.supplierOffer === null ? 'In Progress' :
+                                   subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null && subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
+                                   subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null ? 'Waiting for PR' :
+                                   selectedRequest.pR_Status === true ? 'Approved' :
+                                   subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false ? 'Rejected' :
+                                   subRequest.departmangconfirmStatus === false ? 'Closed' :
+                                   selectedRequest.supplierOffer != null && subRequest.iTconfirmSatuts === null ? 'Offer' :
+                                   'Open' }}
                             </span>
                         </td>
                     </tr>
                 </ng-template>
-            </p-table>
-
-        </p-panel>
-
+            </p-table> 
        
-    </p-dialog>
-</div>
 
+        </p-panel></ng-container>
+       
+    </p-dialog>    
+    <ng-template #subrequest>
+      <div class="position-relative">
+        <img *ngIf="selectedRequest.requestStatus === true" src="/assets/Images/approved.png" width="222rem" alt="" style="position: absolute; left: 11px;">
+        <img *ngIf="selectedRequest.requestStatus === false" src="/assets/Images/rejected.png" width="222rem" alt="" style="position: absolute; left: 11px;">
+      </div>
+      <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedRequest">
+        <ng-template pTemplate="marker" let-event>
+            <ng-container *ngIf="event.title === 'Manager approval'">
+                <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
+                <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'IT approval'">
+                <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                <span *ngIf="event.status === false && !event.supplierOffer" class="pi pi-times-circle" style="color:red;"></span>
+                <span *ngIf="event.supplierOffer && event.status === null" class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                <span *ngIf="event.status === null && event.supplierOffer === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'Finance approval'">
+                <span *ngIf="event.status === true" class="pi pi-check-circle" style="color:green;"></span>
+                <span *ngIf="event.status === false" class="pi pi-times-circle" style="color:red;"></span>
+                <span *ngIf="event.status === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'PR & PO approval'">
+                <span *ngIf="event.statusPr === true" class="pi pi-check-circle" style="color:green;"></span>
+                <span *ngIf="event.statusPr === false" class="pi pi-times-circle" style="color:red;"></span>
+                <span *ngIf="event.statusPr === null" class="pi pi-hourglass" style="color:rgba(0, 51, 255, 0.777);"></span>
+            </ng-container>
+            <ng-container *ngIf="event.title === 'Request approval'">
+                <ng-container *ngIf="event.statusreq === true; else checkInProgress">
+                    <span class="pi pi-check-circle" style="color:green;"></span>
+                </ng-container>
+                <ng-template #checkInProgress>
+                    <ng-container *ngIf="event.statusreq === false; else checkInProgressFurther">
+                        <span class="pi pi-times-circle" style="color:red;"></span>
+                    </ng-container>
+                    <ng-template #checkInProgressFurther>
+                        <ng-container *ngIf="event.supplierOffer !== null; else checkFinanceApproval">
+                            <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                        </ng-container>
+                        <ng-template #checkFinanceApproval>
+                            <ng-container *ngIf="event.financeconfirmSatuts === null; else checkPRApproval">
+                                <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                            </ng-container>
+                            <ng-template #checkPRApproval>
+                                <ng-container *ngIf="event.poNum === null; else defaultNotApproved">
+                                    <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                                </ng-container>
+                                <ng-template #defaultNotApproved>
+                                    <span class="pi pi-times-circle" style="color:red;"></span>
+                                </ng-template>
+                            </ng-template>
+                        </ng-template>
+                    </ng-template>
+                </ng-template>
+            </ng-container>
+        </ng-template>
+        <ng-template pTemplate="content" let-event>
+            <div class="p-timeline-event-content">
+                <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
+                <p-divider type="dashed" />
+                <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
+                <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
+                <p *ngIf="event.Quantity"><b>Quantity:</b> {{ event.Quantity }}</p>
+                <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+                <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
+                <p *ngIf="event.status != null"><b>Status:</b> {{ getStatusText(event) }}</p>
+                <p *ngIf="event.Ponum != null"><b>PO Number:</b> {{ event.Ponum }}</p>
+                <p *ngIf="event.PrNum != null"><b>PR Number:</b> {{ event.PrNum }}</p>
+                <p *ngIf="event.statusreq != null"><b>Request Status:</b> 
+                    {{ event.statusreq ? 'Approved' : 'Rejected' }}
+                </p>
+            </div>
+        </ng-template>
+    </p-timeline>
+    </ng-template>
+</div>

@@ -23,7 +23,7 @@ export class UserEquipmentListComponent {
   filterOptions: SelectItem[] = [
     { label: 'All', value: null },
     { label: 'Approved', value: true },
-    { label: 'Open', value: true },
+    { label: 'Open', value: 'Open' },
     { label: 'Not Approved', value: false }
   ];
   visible: boolean = false;
@@ -31,6 +31,7 @@ export class UserEquipmentListComponent {
   mode: 'request' | 'subrequest' = 'request';
   Mysubrequest:any;
 
+  //its a hlper function  to get the selected request of the subrequest
    findSelectedRequest = (subEquipmentRequestId: number) => {
       // Iterate over each equipment request
       for (const req of this.equipmentRequests) {
@@ -44,15 +45,13 @@ export class UserEquipmentListComponent {
     };
 
 
-
   constructor(private equipementService: EquipementRequestServiceService,private sharedService: SharedService, private router: Router) {
-
-    
 
   }
   ngOnInit() {
     this.getReuestList();
   }
+
   showDialog(mode: 'request' | 'subrequest',req:any) {
     this.mode = mode;
 
@@ -67,7 +66,7 @@ export class UserEquipmentListComponent {
     const selectedSubEquipmentRequestId = this.selectedSubRequest.subEquipmentRequestId;
     let selectedRequestunder = this.findSelectedRequest(selectedSubEquipmentRequestId);
     this.Mysubrequest=selectedRequestunder;
-    console.log(this.Mysubrequest.supplierOffer);
+    console.log(this.Mysubrequest);
 
 
     // console.log(this.selectedRequest);
@@ -84,7 +83,7 @@ export class UserEquipmentListComponent {
 }
 
 
-
+//Status of the approvers
 getmanagerStatus():string{
   if (this.selectedSubRequest.departmangconfirmStatus === true) {
     return 'Approved';
@@ -124,7 +123,7 @@ getFinanceStatus():string{
 } 
 }
 
-
+//status of the subrequest
 getSubRequestStatusGeneral():string{
   if (this.selectedSubRequest.departmangconfirmStatus === true && this.selectedSubRequest.iTconfirmSatuts === null && this.Mysubrequest.supplierOffer === null) {
     return 'In Progress';
@@ -152,6 +151,7 @@ getSubRequestStatusGeneral():string{
       (data) => {
         this.equipmentRequests = data;
         this.loading = false; // Set loading to false after data is fetched
+        this.filteredRequestList = data;
         // this.filteredRequestList = data; // Initialize filtered list with original list
         console.log(this.equipmentRequests);
       },
@@ -160,10 +160,10 @@ getSubRequestStatusGeneral():string{
       }
     );
   }
-  getPRStatus(prStatus: boolean | null): string {
+  getPRStatus(prStatus: boolean | null,request:any): string {
     if (prStatus === true) return 'Approved';
     if (prStatus === false) return 'Rejected';
-   
+    if (prStatus === null && request?.requestStatus===false) return 'closed';
     return 'open';
   }
   // Method to determine the overall status of the main request
@@ -199,25 +199,34 @@ getSubRequestStatusGeneral():string{
         return 'Partly Approved';
     } else if (allApproved) {
         return 'Approved';
-    } else if (anyPendingApproval) {
-        return 'Pending';
     } else if (allRejected) {
         return 'Rejected';
+    } else if (anyPendingApproval && !anyRejected) {
+        return 'Pending';
     }
 
     return 'Unknown';
 }
-  filterRequests() {
-    // Filter the list based on selected filter
-    if (this.selectedFilter === null) {
+filterRequests() {
+  // Filter the list based on selected filter
+  if (this.selectedFilter === null) {
       // Show all requests
-      this.equipmentRequests = this.equipmentRequests;
-    } else {
-      // Filter based on selected approval status
-      this.equipmentRequests.filter((equip: any) =>
-        equip.requestStatus === this.selectedFilter
-      );
-    }
+      this.filteredRequestList = this.equipmentRequests;
   }
+  else if (this.selectedFilter === 'Open') {
+          this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
+            equip.supplierOffer === null &&
+            equip.pR_Status === null &&
+            equip.requestStatus === null
+          );
+        }
+  
+  else {
+      // Filter based on selected approval status
+      this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
+          equip.requestStatus === this.selectedFilter
+      );
+  }
+}
 
 }

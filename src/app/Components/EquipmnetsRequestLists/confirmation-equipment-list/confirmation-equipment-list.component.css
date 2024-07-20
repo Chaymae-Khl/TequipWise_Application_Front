@@ -1,0 +1,15 @@
+.flex-container {
+    display: flex;
+    gap: 8px;
+}
+.search-bar {
+  flex: 1; /* Take up remaining space */
+  max-width: 300px; /* Limit width to prevent stretching */
+  margin-bottom: 0; /* Adjust as needed */
+}
+
+.search-field {
+  width: 100%; /* Occupy full width within the flex container */
+}
+
+

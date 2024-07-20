@@ -88,6 +88,7 @@ import { InplaceModule } from 'primeng/inplace';
 import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
 import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
 import { TokenInterceptorService } from './interceptors/token-interceptor.service';
+import { StepperModule } from 'primeng/stepper';
 
 
 @NgModule({
@@ -183,8 +184,8 @@ import { TokenInterceptorService } from './interceptors/token-interceptor.servic
     CalendarModule,
     ProgressSpinnerModule,
     FileUploadModule,
-    InplaceModule
-  
+    InplaceModule,
+    StepperModule
 
   ],
   providers: [

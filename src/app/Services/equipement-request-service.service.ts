@@ -43,12 +43,13 @@ getRequestOfDepartement(){
   return this.httpClient.get(`${this.apiUrl}/Request/DepartmentRequests`,httpOptions);
 }
 
-updateRequest(requestToUpdate:EquipmentRequest){
+//Approval method
+Aproval(equipmentRequestId:any,subRequestId:any,Response:any){
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.put(`${this.apiUrl}/Request/UpdateEquipemntRequest`,requestToUpdate,httpOptions);
+  return this.httpClient.put(`${this.apiUrl}/Request/${equipmentRequestId}/subrequests/${subRequestId}`,Response,httpOptions);
 }
 
-uploadSupplierOffer(requestId: number, file: File): Observable<any> {
+uploadSupplierOffer(requestId: any, file: File): Observable<any> {
   const formData = new FormData();
   formData.append('requestId', requestId.toString());
   formData.append('file', file);

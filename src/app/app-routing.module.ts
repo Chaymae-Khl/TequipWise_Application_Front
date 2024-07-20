@@ -20,6 +20,7 @@ import { UserEquipmentRequestListComponent } from './Components/user-equipment-r
 import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 import { MyProfileComponent } from './Components/Authentication/my-profile/my-profile.component';
 import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
+import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -59,13 +60,8 @@ const routes: Routes = [
   { path: 'EquipementRequest', component: EquipmentRequestComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'UserEquipementRequest', component: UserEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'EquipmentList', component: UserEquipmentRequestListComponent, resolve: { isAuthenticated: AuthGuard } },
-  { path: 'RequestConfirmation', component: ConfirmationOperationsRequestListComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'RequestConfirmation', component: ConfirmationEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'MyProfile', component: MyProfileComponent, resolve: { isAuthenticated: AuthGuard } }
-
-
-
-
-
 
 ];
 

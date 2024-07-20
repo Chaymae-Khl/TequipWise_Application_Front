@@ -6,16 +6,16 @@
 <div class="container-fluid">
     <div class="mb-3">
         <p-dropdown [options]="filterOptions" [(ngModel)]="selectedFilter" optionLabel="label" optionValue="value"
-            placeholder="Filter by Approval Status" (onChange)="filterRequests()"></p-dropdown>
+        placeholder="Filter by Status" (onChange)="filterRequests()"></p-dropdown>
     </div>
 
-    <p-table [value]="equipmentRequests" dataKey="equipmentRequestId" [tableStyle]="{ 'min-width': '60rem' }"
+    <p-table [value]="filteredRequestList" dataKey="equipmentRequestId" [tableStyle]="{ 'min-width': '60rem' }"
         [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]">
 
         <ng-template pTemplate="header">
             <tr>
-                <th style="width: 5rem"></th>
-                <th style="background-color: #769ef55f;" pSortableColumn="equipmentRequestId"># <p-sortIcon field="equipmentRequestId" /></th>
+                <th style="width: 5rem;background-color: #769ef55f;"></th>
+                <th style="background-color: #769ef55f;" pSortableColumn="equipmentRequestId"># Request Number <p-sortIcon field="equipmentRequestId" /></th>
                 <th style="background-color: #769ef55f;" pSortableColumn="nmaeOfUser">By <p-sortIcon field="nmaeOfUser" /></th>
                 <th style="background-color: #769ef55f;" pSortableColumn="requestDate">Request Date <p-sortIcon field="requestDate" /></th>
                 <th style="background-color: #769ef55f;" pSortableColumn="requestStatus">Status <p-sortIcon field="requestStatus" /></th>
@@ -93,12 +93,12 @@
                                             'open': subRequest.iTconfirmSatuts === null && request.supplierOffer === null && subRequest.subRequestStatus === null,
                                             'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
                                         }">
-                                        {{ subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.iTconfirmSatuts === false ? 'Rejected' : request.supplierOffer != null ? 'Offer': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false?'colsed': 'Open' }}
+                                        {{ subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.iTconfirmSatuts === false ? 'Rejected' : request.supplierOffer != null && subRequest.departmangconfirmStatus === true ? 'Offer': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false?'colsed': 'Open' }}
                                     </span>
                                     </td>
                                     <td>
                                         <span class="status-text" [ngClass]="{
-                                            'approved': subRequest.financeconfirmSatuts === true,
+                                            'approved': subRequest.financeconfirmSatuts === true, 
                                             'rejected': subRequest.financeconfirmSatuts === false,
                                             'open': subRequest.financeconfirmSatuts === null,
                                             'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
@@ -173,7 +173,7 @@
                     <p>  <i class="pi pi-calendar"style="color: #EA8300"></i>  <strong>  Request Date:</strong> {{ selectedRequest?.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
                 </div>
                 <div class="form-group">
-                   <p> <i class="pi pi-inbox"style="color: #EA8300"></i> <strong>  PR Status:</strong> {{ getPRStatus(selectedRequest?.pR_Status)}}
+                   <p> <i class="pi pi-inbox"style="color: #EA8300"></i> <strong>  PR Status:</strong> {{ getPRStatus(selectedRequest?.pR_Status,selectedRequest)}}
                 
                 </p>
                 </div> 

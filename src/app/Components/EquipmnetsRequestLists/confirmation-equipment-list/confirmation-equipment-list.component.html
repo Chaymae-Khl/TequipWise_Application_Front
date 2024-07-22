@@ -173,7 +173,7 @@
                         subRequest.departmangconfirmStatus === true && request.supplierOffer != null &&
                         subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
                         subRequest.financeconfirmSatuts === true && request.pR_Status === null ? 'Waiting for PR' :
-                        request.pR_Status === true ? 'Approved' :
+                        subRequest.subRequestStatus=== true ? 'Approved' :
                         subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false ||
                         subRequest.financeconfirmSatuts === false ? 'Rejected' :
 

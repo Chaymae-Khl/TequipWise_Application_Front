@@ -303,17 +303,17 @@ getSubRequestStatusGeneral():string{
 
     if (allStatusesNull) {
         return 'Open';
-    } else if (anyApproved && anyRejected) {
+    } else if (anyApproved && anyRejected ) {
         return 'Partly Approved';
     } else if (allApproved) {
         return 'Approved';
     } else if (allRejected) {
         return 'Rejected';
-    } else if (anyPendingApproval && !anyRejected) {
+    } else if (anyPendingApproval ) {
         return 'Pending';
     }
 
-    return 'Unknown';
+    return 'Partly Rejected';
 }
 filterRequests() {
   // Filter the list based on selected filter

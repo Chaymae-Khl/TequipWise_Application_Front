@@ -48,14 +48,14 @@ Aproval(equipmentRequestId:any,subRequestId:any,Response:any){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.put(`${this.apiUrl}/Request/${equipmentRequestId}/subrequests/${subRequestId}`,Response,httpOptions);
 }
-
-uploadSupplierOffer(requestId: any, file: File): Observable<any> {
+uploadSupplierOffer(requestId: any, updatedRequest: any, file: File): Observable<any> {
   const formData = new FormData();
-  formData.append('requestId', requestId.toString());
+  formData.append('equipmentRequestId', requestId.toString());
   formData.append('file', file);
+  formData.append('updatedRequestJson', JSON.stringify(updatedRequest));  // Convert the updatedRequest to a JSON string
 
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.post(`${this.apiUrl}/Request/UploadSupplierOffer`, formData, httpOptions);
+  return this.httpClient.put(`${this.apiUrl}/Request/ItOfferAndPrice/${requestId}`, formData, httpOptions);
 }
 
 }

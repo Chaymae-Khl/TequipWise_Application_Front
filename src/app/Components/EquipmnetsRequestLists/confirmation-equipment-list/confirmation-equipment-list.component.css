@@ -13,3 +13,8 @@
 }
 
 
+.total-price-container {
+  text-align: right;
+}
+.total-price-container span {
+color: green;}

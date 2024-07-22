@@ -25,6 +25,7 @@ export class ConfirmationEquipmentListComponent {
   ManagerAproveFields:ManagerApproval=new ManagerApproval();
   loading: boolean = true;
   loading2:boolean=false;
+  loading3:boolean=false;
   selectedFilter: any = null; // Initialize to null for "All" by default
   filteredRequestList: any; // Variable to hold filtered list
   searchTerm: string = '';
@@ -34,7 +35,7 @@ export class ConfirmationEquipmentListComponent {
   showDragAndDropArea: boolean = true; // Flag to show/hide drag and drop area
   apiUrl = environment.globalUrl;
   pdfSrc: SafeResourceUrl | undefined|null; ; // Store the URL for the PDF
-
+  pdfVisible: boolean = false;
   filterOptions: SelectItem[] = [
     { label: 'All', value: null },
     { label: 'Open', value: 'Open' },
@@ -170,16 +171,25 @@ export class ConfirmationEquipmentListComponent {
     console.log( this.selectedSubRequest );
   }
 
+  else if(mode=== 'Offer'){
+    this.selectedRequest = req;
+    this.selectedSubRequest={};
+    console.log( this.selectedRequest );
+
+  }
+
     this.visible = true;
     this.timelineEvents = [
-      { title: 'Request Created',ForWho: req.isNewhire, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment },
+      { title: 'Request Created',ForWho: req.isNewhire, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment,PU:req.pu },
       { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: req.departmangconfirmStatus },
       { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.iT_Not_confirmCause, statusIT: req.iTconfirmSatuts, supplierOffer:  this.Mysubrequest?.supplierOffer },
       { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts },
       { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: req.subRequestStatus}
     ];
 }
-
+togglePdfVisibility(): void {
+  this.pdfVisible = !this.pdfVisible;
+}
 
 //Status of the approvers
 getmanagerStatus():string{
@@ -333,7 +343,7 @@ filterRequests() {
       (response) => {
         this.getReuestList();
         this.visible = false;
-        this.loading = false;
+        this.loading2 = false;
         this.messageService.add({
           severity: 'success',
           summary: 'Success Message',
@@ -378,15 +388,17 @@ onRemoveFile() {
 }
 
 // Method to confirm and upload supplier offer
-confirmUpload(): void {
+confirmUploadAndITData(){
+  this.loading3 = true;
   if (this.uploadedFile) {
     const requestId = this.selectedRequest.equipmentRequestId; // Replace with actual request ID
 
-    this.equipementService.uploadSupplierOffer(requestId, this.uploadedFile).subscribe(
+    this.equipementService.uploadSupplierOffer(requestId,this.selectedRequest, this.uploadedFile).subscribe(
       (response) => {
         this.uploadedFileName = this.uploadedFile?.name || null;
-        this.visible = false;
-        this.getReuestList();
+        this.loading2 = false;
+         this.getReuestList(); 
+      this.visible = false;
         this.messageService.add({
           severity: 'success',
           summary: 'File Uploaded',
@@ -396,6 +408,7 @@ confirmUpload(): void {
         // Additional logic after successful upload if needed
       },
       (error) => {
+        this.loading2 = false;
         console.error('Error uploading file', error);
         this.messageService.add({
           severity: 'error',

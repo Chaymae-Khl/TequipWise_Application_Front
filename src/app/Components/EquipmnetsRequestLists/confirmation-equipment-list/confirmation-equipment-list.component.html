@@ -36,13 +36,17 @@
             <tr>
                 <th style="width: 5rem;background-color: #769ef55f;"></th>
                 <th style="background-color: #769ef55f;" pSortableColumn="equipmentRequestId"># Request Number
-                    <p-sortIcon field="equipmentRequestId" /></th>
+                    <p-sortIcon field="equipmentRequestId" />
+                </th>
                 <th style="background-color: #769ef55f;" pSortableColumn="nmaeOfUser">By <p-sortIcon
                         field="nmaeOfUser" /></th>
                 <th style="background-color: #769ef55f;" pSortableColumn="requestDate">Request Date <p-sortIcon
                         field="requestDate" /></th>
                 <th style="background-color: #769ef55f;" pSortableColumn="requestStatus">Status <p-sortIcon
                         field="requestStatus" /></th>
+                <th style="background-color: #769ef55f;" pSortableColumn="totalPrice">Total Price <p-sortIcon
+                        field="totalPrice" /></th>
+
                 <th style="background-color: #769ef55f;" pSortableColumn="actions">Actions <p-sortIcon
                         field="actions" /></th>
             </tr>
@@ -66,20 +70,22 @@
                         getRequestStatus(request) === 'Partly Approved' ? 'warning' :
                         getRequestStatus(request) === 'Rejected' ? 'danger' : 'info'" />
                 </td>
-                <td> 
+                <td>{{ request.totalPrice }} MAD</td>
+
+                <td>
                     <div class="flex-container">
                         <div *ngIf="request.supplierOffer===null">
-                        <p-button *ngIf="IsItApprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
-                            (click)="showDialog('Offer',request )" severity="Success"></p-button>
+                            <p-button *ngIf="IsItApprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
+                                (click)="showDialog('Offer',request )" severity="Success"></p-button>
+                        </div>
+                        <p-button icon="pi pi-arrow-up-right" label="Details" severity="warning"
+                            (onClick)="showDialog('request',request)" [outlined]="true"></p-button>
                     </div>
-                     <p-button icon="pi pi-arrow-up-right" label="Details" severity="warning"
-                        (onClick)="showDialog('request',request)" [outlined]="true"></p-button>
-                    </div>
-                    </td>
+                </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-request>
-            <tr >
+            <tr>
                 <td colspan="7">
                     <div class="p-3">
                         <p-table [value]="request.equipmentSubRequests" dataKey="subEquipmentRequestId">
@@ -90,13 +96,16 @@
                 <th style="background-color: #ea85005f;" pSortableColumn="qtEquipment">Quantity
                     <p-sortIcon field="qtEquipment" />
                 </th>
+                <th style="background-color: #ea85005f;" pSortableColumn="pu">Unit price
+                    <p-sortIcon field="pu" />
+                </th>
                 <th style="background-color: #ea85005f;" pSortableColumn="DepartementManager">
                     Department Manager <p-sortIcon field="DepartementManager" /></th>
                 <th style="background-color: #ea85005f;" pSortableColumn="ItApprover">IT Approver
                     <p-sortIcon field="ItApprover" />
                 </th>
-                <th style="background-color: #ea85005f;" pSortableColumn="pu">Finance Approver
-                    <p-sortIcon field="pu" />
+                <th style="background-color: #ea85005f;" pSortableColumn="Controller">Finance Approver
+                    <p-sortIcon field="Controller" />
                 </th>
                 <th style="background-color: #ea85005f;" pSortableColumn="subRequestStatus">Status
                     <p-sortIcon field="subRequestStatus" />
@@ -111,7 +120,7 @@
             <tr>
                 <td>{{ subRequest.equipementName }}</td>
                 <td>{{ subRequest.qtEquipment }}</td>
-
+                <td>{{ subRequest.pu }} MAD</td>
                 <td>
                     <span class="status-text" [ngClass]="{
                                             'approved': subRequest.departmangconfirmStatus === true,
@@ -172,16 +181,16 @@
                         'Open' }}
                     </span>
                 </td>
-                <td> 
+                <td>
 
                     <div class="flex-container">
                         <div *ngIf="subRequest.departmangconfirmStatus == null">
                             <p-button *ngIf="IsManger" icon="pi pi-check" [outlined]="true" label="Approve"
                                 (click)="showDialog('approve', subRequest)" severity="Success"></p-button>
-                        </div> 
-                       
+                        </div>
+
                         <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
-                        (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button>
+                            (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button>
                     </div>
                 </td>
             </tr>
@@ -201,102 +210,124 @@
     <p>Fetching data...</p>
 </div>
 
-<p-dialog header="{{mode === 'approve' ? 'Request Approval' :  mode === 'request' ? 'Request Details' : 'Request Details' }}" [modal]="true" [(visible)]="visible" [style]="{width: '70vw',height:'40vw'}">
-   
-<div *ngIf="mode === 'request'">
-    <ng-container>
-        <p-panel header="Request {{ selectedRequest.equipmentRequestId }}">
-            <div class="form-row">
-                <div class="form-group">
-                    <p> <i class="pi pi-user" style="color: #EA8300"></i> <strong> By:</strong> {{
-                        selectedRequest.nmaeOfUser }}</p>
-                </div>
-                <div class="form-group">
-                    <p> <i class="pi pi-caret-right" style="color: #EA8300"></i><strong> For:</strong>
-                        <ng-container *ngIf="selectedRequest?.newHireName">
-                            <i>{{ selectedRequest.newHireName }}</i>
-                        </ng-container>
-                        <ng-container *ngIf="selectedRequest?.isNewhire === true && !selectedRequest?.newHireName">
-                            <i> For New hire</i>
-                        </ng-container>
-                        <ng-container *ngIf="!selectedRequest?.isNewhire">
-                            <i> For me</i>
-                        </ng-container>
-                    </p>
-                </div>
-                <div class="form-group">
-                    <p> <i class="pi pi-calendar" style="color: #EA8300"></i> <strong> Request Date:</strong> {{
-                        selectedRequest.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
-                </div>
-                <div class="form-group">
-                    <p> <i class="pi pi-inbox" style="color: #EA8300"></i> <strong> PR Status:</strong> {{
-                        getPRStatus(selectedRequest.pR_Status,selectedRequest)}}
+<p-dialog
+    header="{{mode === 'approve' ? 'Request Approval':  mode === 'Offer' ? 'Supplier Offer & Assets Price' :  mode === 'request' ? 'Request Details' : 'Request Details' }}"
+    [modal]="true" [(visible)]="visible" [style]="{width: '70vw',height:'40vw'}">
 
-                    </p>
-                </div>
-                <div class="form-group">
-                    <p> <i class="pi pi-inbox" style="color: #EA8300"></i><strong> Status:</strong> {{
-                        getRequestStatus(selectedRequest) }}</p>
-                </div>
-            </div>
+    <div *ngIf="mode === 'request'">
+        <ng-container>
+            <p-panel header="Request {{ selectedRequest.equipmentRequestId }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <p> <i class="pi pi-user" style="color: #EA8300"></i> <strong> By:</strong> {{
+                            selectedRequest.nmaeOfUser }}</p>
+                    </div>
+                    <div class="form-group">
+                        <p> <i class="pi pi-caret-right" style="color: #EA8300"></i><strong> For:</strong>
+                            <ng-container *ngIf="selectedRequest?.newHireName">
+                                <i>{{ selectedRequest.newHireName }}</i>
+                            </ng-container>
+                            <ng-container *ngIf="selectedRequest?.isNewhire === true && !selectedRequest?.newHireName">
+                                <i> For New hire</i>
+                            </ng-container>
+                            <ng-container *ngIf="!selectedRequest?.isNewhire">
+                                <i> For me</i>
+                            </ng-container>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p> <i class="pi pi-calendar" style="color: #EA8300"></i> <strong> Request Date:</strong> {{
+                            selectedRequest.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
+                    </div>
+                    <div class="form-group">
+                        <p> <i class="pi pi-inbox" style="color: #EA8300"></i> <strong> PR Status:</strong> {{
+                            getPRStatus(selectedRequest.pR_Status,selectedRequest)}}
 
-            <p-divider type="dashed"></p-divider>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <p> <i class="pi pi-inbox" style="color: #EA8300"></i><strong> Status:</strong> {{
+                            getRequestStatus(selectedRequest) }}</p>
+                    </div>
+                    <div class="form-group">
+                        <p-divider></p-divider>
+                        <div class="col justify-content-end">
+                        <p-inplace *ngIf="selectedRequest.supplierOffer!=null" closable="closable" >
+                            <ng-template pTemplate="display">
+                                <div class="inline-flex align-items-center">
+                                    <span class="pi pi-file-pdf" style="vertical-align: middle"></span>
+                                    <span class="ml-2">View Supplier Offer</span>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="content">
+                                <iframe [src]="loadPdf(selectedRequest.supplierOffer)" width="100%" height="600px"></iframe>
+                            </ng-template>
+                        </p-inplace>
+                    </div>
+                </div>
+                </div>
+                <p-divider type="dashed"></p-divider>
 
-            <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
-                [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Equipment Name</th>
-                        <th>Quantity</th>
-                        <th>Department Manager</th>
-                        <th>IT Approver</th>
-                        <th>Finance Approver</th>
-                        <th>Status</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-subRequest>
-                    <tr>
-                        <td>{{ subRequest.equipementName }}</td>
-                        <td>{{ subRequest.qtEquipment }}</td>
-                        <td>
-                            <span class="status-text" [ngClass]="{
+                <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
+                    [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Equipment Name</th>
+                            <th>Quantity</th>
+
+                            <th>Department Manager</th>
+                            <th>IT Approver</th>
+                            <th>Finance Approver</th>
+                            <th>Status</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-subRequest>
+                        <tr>
+                            <td>{{ subRequest.equipementName }}</td>
+                            <td>{{ subRequest.qtEquipment }}</td>
+                            <td>
+                                <span class="status-text" [ngClass]="{
                                 'approved': subRequest.departmangconfirmStatus === true,
                                 'rejected': subRequest.departmangconfirmStatus === false,
                                 'open': subRequest.departmangconfirmStatus === null
                                 }">
-                                {{ subRequest.departmangconfirmStatus === true ? 'Approved' :
-                                subRequest.departmangconfirmStatus === false ? 'Rejected' : 'Open' }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="status-text" [ngClass]="{
+                                    {{ subRequest.departmangconfirmStatus === true ? 'Approved' :
+                                    subRequest.departmangconfirmStatus === false ? 'Rejected' : 'Open' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-text" [ngClass]="{
                                 'approved': subRequest.iTconfirmSatuts === true,
                                 'rejected': subRequest.iTconfirmSatuts === false,
                                 'offer': selectedRequest.supplierOffer != null && subRequest.iTconfirmSatuts === null,
                                 'open': subRequest.iTconfirmSatuts === null && selectedRequest.supplierOffer === null && subRequest.subRequestStatus === null,
                                 'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
                                 }">
-                                {{ subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.iTconfirmSatuts ===
-                                false ? 'Rejected' : selectedRequest.supplierOffer != null ? 'Offer'
-                                :subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
-                                ?'Closed': 'Open' }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="status-text" [ngClass]="{
+                                    {{ subRequest.iTconfirmSatuts === true ? 'Approved' : subRequest.iTconfirmSatuts ===
+                                    false ? 'Rejected' : selectedRequest.supplierOffer != null ? 'Offer'
+                                    :subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts ===
+                                    false
+                                    ?'Closed': 'Open' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-text" [ngClass]="{
                                 'approved': subRequest.financeconfirmSatuts === true,
                                 'rejected': subRequest.financeconfirmSatuts === false,
                                 'open': subRequest.financeconfirmSatuts === null,
                                 'closed': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
                                 }">
-                                {{ subRequest.financeconfirmSatuts === true ? 'Approved' :
-                                subRequest.financeconfirmSatuts === false ?
-                                'Rejected':subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts
-                                === false ?'Closed' : 'Open' }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="status-text" [ngClass]="{
+                                    {{ subRequest.financeconfirmSatuts === true ? 'Approved' :
+                                    subRequest.financeconfirmSatuts === false ?
+                                    'Rejected':subRequest.departmangconfirmStatus === false ||
+                                    subRequest.iTconfirmSatuts
+                                    === false ?'Closed' : 'Open' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-text" [ngClass]="{
                                 'inprogress': subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && selectedRequest.supplierOffer === null,
                                 'waitingforfinance': subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null && subRequest.financeconfirmSatuts === null,
                                 'waitingforpr': subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null,
@@ -306,229 +337,241 @@
                                 'open': subRequest.departmangconfirmStatus === null && subRequest.iTconfirmSatuts === null && subRequest.financeconfirmSatuts === null,
                                 'offer': selectedRequest.supplierOffer != null && subRequest.iTconfirmSatuts === null
                             }">
-                                {{ subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null &&
-                                selectedRequest.supplierOffer === null ? 'In Progress' :
-                                subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null &&
-                                subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
-                                subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null ?
-                                'Waiting for PR' :
-                                selectedRequest.pR_Status === true ? 'Approved' :
-                                subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false ||
-                                subRequest.financeconfirmSatuts === false ? 'Rejected' :
+                                    {{ subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts ===
+                                    null &&
+                                    selectedRequest.supplierOffer === null ? 'In Progress' :
+                                    subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null
+                                    &&
+                                    subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
+                                    subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null ?
+                                    'Waiting for PR' :
+                                    selectedRequest.pR_Status === true ? 'Approved' :
+                                    subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
+                                    ||
+                                    subRequest.financeconfirmSatuts === false ? 'Rejected' :
 
-                                selectedRequest.supplierOffer != null && subRequest.iTconfirmSatuts === null ? 'Offer' :
-                                'Open' }}
-                            </span>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
+                                    selectedRequest.supplierOffer != null && subRequest.iTconfirmSatuts === null ?
+                                    'Offer' :
+                                    'Open' }}
+                                </span>
+                            </td>
+                            <td>{{ subRequest.pu }} MAD</td>
+                            <td>{{ subRequest.totale }} MAD</td>
 
+                        </tr>
 
-        </p-panel>
-    </ng-container>
-</div>
+                    </ng-template>
+                </p-table>
+                <p-divider type="dashed" />
 
-<div *ngIf="mode === 'subrequest'">
-    <div class="position-relative"> 
-        <img *ngIf="selectedSubRequest?.subRequestStatus === true" src="/assets/Images/approved.png" width="222rem"
-            alt="" style="position: absolute; left: 11px;">
-        <img *ngIf="selectedSubRequest?.subRequestStatus === false" src="/assets/Images/rejected.png" width="222rem"
-            alt="" style="position: absolute; left: 11px;">
+                <div class="total-price-container">
+                    <h1>
+                        <span>Total Price:</span> {{selectedRequest.totalPrice}}   MAD
+                    </h1>
+                </div>
+            </p-panel>
+        </ng-container>
     </div>
-    <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedSubRequest">
-        <ng-template pTemplate="marker" let-event>
-            <ng-container *ngIf="event.title === 'Manager approval'">
-                <span *ngIf="event.statusManag === true" class="pi pi-check-circle" style="color:green;"></span>
-                <span *ngIf="event.statusManag === false" class="pi pi-times-circle" style="color:red;"></span>
-                <span *ngIf="event.statusManag === null" class="pi pi-hourglass"
-                    style="color:rgba(0, 51, 255, 0.777);"></span>
-            </ng-container>
-            <ng-container *ngIf="event.title === 'IT approval'">
-                <span *ngIf="selectedSubRequest.iTconfirmSatuts === true" class="pi pi-check-circle"
-                    style="color:green;"></span>
-                <span *ngIf="event.statusIT === false && !Mysubrequest.supplierOffer" class="pi pi-times-circle"
-                    style="color:red;"></span>
-                <span *ngIf="Mysubrequest.supplierOffer && event.statusIT === null" class="pi pi-info-circle"
-                    style="color:rgb(64, 161, 175);"></span>
-                <span *ngIf="event.statusIT === null && Mysubrequest.supplierOffer === null" class="pi pi-hourglass"
-                    style="color:rgba(0, 51, 255, 0.777);"></span>
-            </ng-container>
-            <ng-container *ngIf="event.title === 'Finance approval'">
-                <span *ngIf="event.statusFina === true" class="pi pi-check-circle" style="color:green;"></span>
-                <span *ngIf="event.statusFina === false" class="pi pi-times-circle" style="color:red;"></span>
-                <span *ngIf="event.statusFina === null" class="pi pi-hourglass"
-                    style="color:rgba(0, 51, 255, 0.777);"></span>
-            </ng-container>
 
-            <ng-container *ngIf="event.title === 'Asset approval'">
-                <ng-container *ngIf="event.statusreq===true && Mysubrequest.pR_Status === true ; else checkInProgress">
-                    <span class="pi pi-check-circle" style="color:green;"></span>
+    <div *ngIf="mode === 'subrequest'">
+        <div class="position-relative">
+            <img *ngIf="selectedSubRequest?.subRequestStatus === true" src="/assets/Images/approved.png" width="222rem"
+                alt="" style="position: absolute; left: 11px;">
+            <img *ngIf="selectedSubRequest?.subRequestStatus === false" src="/assets/Images/rejected.png" width="222rem"
+                alt="" style="position: absolute; left: 11px;">
+        </div>
+        <p-timeline [value]="timelineEvents" align="alternate" *ngIf="selectedSubRequest">
+            <ng-template pTemplate="marker" let-event>
+                <ng-container *ngIf="event.title === 'Manager approval'">
+                    <span *ngIf="event.statusManag === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="event.statusManag === false" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="event.statusManag === null" class="pi pi-hourglass"
+                        style="color:rgba(0, 51, 255, 0.777);"></span>
                 </ng-container>
-                <ng-template #checkInProgress>
+                <ng-container *ngIf="event.title === 'IT approval'">
+                    <span *ngIf="selectedSubRequest.iTconfirmSatuts === true" class="pi pi-check-circle"
+                        style="color:green;"></span>
+                    <span *ngIf="event.statusIT === false && !Mysubrequest.supplierOffer" class="pi pi-times-circle"
+                        style="color:red;"></span>
+                    <span *ngIf="Mysubrequest.supplierOffer && event.statusIT === null" class="pi pi-info-circle"
+                        style="color:rgb(64, 161, 175);"></span>
+                    <span *ngIf="event.statusIT === null && Mysubrequest.supplierOffer === null" class="pi pi-hourglass"
+                        style="color:rgba(0, 51, 255, 0.777);"></span>
+                </ng-container>
+                <ng-container *ngIf="event.title === 'Finance approval'">
+                    <span *ngIf="event.statusFina === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="event.statusFina === false" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="event.statusFina === null" class="pi pi-hourglass"
+                        style="color:rgba(0, 51, 255, 0.777);"></span>
+                </ng-container>
+
+                <ng-container *ngIf="event.title === 'Asset approval'">
                     <ng-container
-                        *ngIf="event.departmangconfirmStatus === false || event.iTconfirmSatuts === false || event.financeconfirmSatuts === false || event.statusreq===false; else checkInProgressFurther">
-                        <span class="pi pi-times-circle" style="color:red;"></span>
+                        *ngIf="event.statusreq===true && Mysubrequest.pR_Status === true ; else checkInProgress">
+                        <span class="pi pi-check-circle" style="color:green;"></span>
                     </ng-container>
-                    <ng-template #checkInProgressFurther>
-                        <ng-container *ngIf="Mysubrequest.supplierOffer !== null; else checkFinanceApproval">
-                            <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                    <ng-template #checkInProgress>
+                        <ng-container
+                            *ngIf="event.departmangconfirmStatus === false || event.iTconfirmSatuts === false || event.financeconfirmSatuts === false || event.statusreq===false; else checkInProgressFurther">
+                            <span class="pi pi-times-circle" style="color:red;"></span>
                         </ng-container>
-                        <ng-template #checkFinanceApproval>
-                            <ng-container *ngIf="event.financeconfirmSatuts === null; else checkPRApproval">
+                        <ng-template #checkInProgressFurther>
+                            <ng-container *ngIf="Mysubrequest.supplierOffer !== null; else checkFinanceApproval">
                                 <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
                             </ng-container>
-                            <ng-template #checkPRApproval>
-                                <ng-container *ngIf="event.poNum === null; else defaultNotApproved">
+                            <ng-template #checkFinanceApproval>
+                                <ng-container *ngIf="event.financeconfirmSatuts === null; else checkPRApproval">
                                     <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
                                 </ng-container>
-                                <ng-template #defaultNotApproved>
-                                    <span class="pi pi-hourglass" style="color:rgb(0, 47, 255);"></span>
+                                <ng-template #checkPRApproval>
+                                    <ng-container *ngIf="event.poNum === null; else defaultNotApproved">
+                                        <span class="pi pi-info-circle" style="color:rgb(64, 161, 175);"></span>
+                                    </ng-container>
+                                    <ng-template #defaultNotApproved>
+                                        <span class="pi pi-hourglass" style="color:rgb(0, 47, 255);"></span>
+                                    </ng-template>
                                 </ng-template>
                             </ng-template>
                         </ng-template>
                     </ng-template>
-                </ng-template>
-            </ng-container>
-        </ng-template>
-        <ng-template pTemplate="content" let-event>
-            <div class="p-timeline-event-content">
-                <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
-                <p-divider type="dashed" />
-                <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
-                <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
-                <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
-                <p *ngIf="event.Quantity"><b>Quantity:</b> {{ event.Quantity }}</p>
-                <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
-                <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
-                <p *ngIf="event.statusIT === null || event.statusIT !=null"><b>Status:</b> {{ getItStatus() }}</p>
-                <p *ngIf="event.statusFina === null || event.statusFina !=null"><b>Status:</b> {{ getFinanceStatus() }}</p>
-                
-                <p *ngIf="event.statusManag === null || event.statusManag !=null"><b>Status:</b> {{ getmanagerStatus()}}</p>
-                    
+                </ng-container>
+            </ng-template>
+            <ng-template pTemplate="content" let-event>
+                <div class="p-timeline-event-content">
+                    <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
+                    <p-divider type="dashed" />
+                    <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                    <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
+                    <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
+                    <p *ngIf="event.Quantity"><b>Quantity:</b> {{ event.Quantity }}</p>
+                    <p *ngIf="event.PU"><b>Unit Price:</b> {{ event.PU }}</p>
 
-                <!-- general request -->
-                <p *ngIf="event.statusreq === null || event.statusreq != null"><b>Request Status:</b>
-                    {{ getSubRequestStatusGeneral() }}
-                </p>
-            </div>
-        </ng-template>
-    </p-timeline>
-</div>
+                    <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+                    <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
+                    <p *ngIf="event.statusIT === null || event.statusIT !=null"><b>Status:</b> {{ getItStatus() }}</p>
+                    <p *ngIf="event.statusFina === null || event.statusFina !=null"><b>Status:</b> {{ getFinanceStatus()
+                        }}</p>
 
-<div *ngIf="mode === 'approve'">
-    <div class="w-100">
-        <p-divider type="dashed"></p-divider>
-        <form (ngSubmit)="ManagerApprve()" class="position-relative">
-            <h2>Select your response:</h2>
-            <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
-                name="departmangconfirmStatus"
-                [(ngModel)]="selectedSubRequest.departmangconfirmStatus"></p-selectButton>
-            <h2 *ngIf="ManagerAproveFields.Status === false">Your Rejection cause:</h2>
-            <textarea rows="5" cols="30" pInputTextarea name="departmang_Not_confirmCause"
-                *ngIf="ManagerAproveFields.Status === false"
-                [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause"></textarea>
-            <div class="position-absolute end-0 bottom-0">
-                <p-button type="submit" [outlined]="true" [disabled]="loading">
-                    <ng-container *ngIf="!loading2; else loadingTemplate">
-                        Confirm
-                    </ng-container>
-                    <ng-template #loadingTemplate>
-                        <i class="pi pi-spinner pi-spin"></i> Loading...
-                    </ng-template>
-                </p-button>
-            </div>
-        </form>
+                    <p *ngIf="event.statusManag === null || event.statusManag !=null"><b>Status:</b> {{
+                        getmanagerStatus()}}</p>
+
+
+                    <!-- general request -->
+                    <p *ngIf="event.statusreq === null || event.statusreq != null"><b>Request Status:</b>
+                        {{ getSubRequestStatusGeneral() }}
+                    </p>
+                </div>
+            </ng-template>
+        </p-timeline>
     </div>
-</div>
-<div *ngIf="mode === 'Offer'">
-  
 
-    <p-stepper>
-        <p-stepperPanel header="Header I">
-            <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
-                <div class="flex flex-column h-12rem">
-                        <p-fileUpload name="myfile[]" [multiple]="false" accept="application/pdf" maxFileSize="1000000"
-                        (onSelect)="onFileUpload($event)" (onRemove)="onRemoveFile()">
-                        <ng-template pTemplate="header">
-                            <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
-                                <div class="flex gap-2">
-                                    <p-button icon="pi pi-file-import" [rounded]="true" [outlined]="true"
-                                        (click)="fileInput.click()"></p-button>
-                                    <input type="file" #fileInput style="display:none;" (change)="onFileInputChange($event)">
-                
-                                    <!-- Button to cancel -->
-                                    <p-button icon="pi pi-times" [rounded]="true" [outlined]="true" severity="danger"
-                                        [disabled]="!uploadedFile" (click)="onRemoveFile()"></p-button>
-                                </div>
-                
-                                <!-- Confirm button -->
-                                <p-button label="Confirm" (click)="confirmUpload()" class="p-button-success"></p-button>
-                            </div>
+    <div *ngIf="mode === 'approve'">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+            <form (ngSubmit)="ManagerApprve()" class="position-relative">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="departmangconfirmStatus"
+                    [(ngModel)]="selectedSubRequest.departmangconfirmStatus"></p-selectButton>
+                <h2 *ngIf="ManagerAproveFields.Status === false">Your Rejection cause:</h2>
+                <textarea rows="5" cols="30" pInputTextarea name="departmang_Not_confirmCause"
+                    *ngIf="ManagerAproveFields.Status === false"
+                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause"></textarea>
+                <div class="position-absolute end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
                         </ng-template>
-                
-                        <ng-template pTemplate="content">
-                            <div *ngIf="uploadedFile" class="p-d-flex p-ai-center">
-                                <!-- Display PDF content -->
-                                 <iframe [src]="pdfSrc" width="100%" height="600px"></iframe>
-                            </div>
-                        </ng-template>
-                
-                        <ng-template pTemplate="empty">
-                            <div class="flex align-items-center justify-content-center flex-column"
-                                *ngIf="!uploadedFile && showDragAndDropArea">
-                                <i class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
-                                <p class="mt-4 mb-0">Drag and drop a PDF file to upload.</p>
-                            </div>
-                        </ng-template>
-                    </p-fileUpload>
+                    </p-button>
                 </div>
-                <div class="flex pt-4 justify-content-end">
-                    <p-button 
-                        label="Next" 
-                        icon="pi pi-arrow-right" 
-                        iconPos="right" 
-                        (onClick)="nextCallback.emit()" />
-                </div>
-            </ng-template>
-        </p-stepperPanel>
-        <p-stepperPanel header="Header II">
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
-                <div class="flex flex-column h-12rem">
-                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                        Content II
+            </form>
+        </div>
+    </div>
+    <div *ngIf="mode === 'Offer'">
+        <form (ngSubmit)="confirmUploadAndITData()">
+            <p-stepper>
+                <p-stepperPanel header="Supplier Offer">
+                    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                        <div class="flex flex-column h-12rem">
+                            <div class="border-2 border-dashed surface-border border-round surface-ground  justify-content-center align-items-center">
+
+                            <p-fileUpload name="myfile[]" [multiple]="false" accept="application/pdf" maxFileSize="1000000"
+                                (onSelect)="onFileUpload($event)" (onRemove)="onRemoveFile()">
+                                <ng-template pTemplate="header">
+                                    <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
+                                        <div class="flex gap-2">
+                                            <p-button icon="pi pi-file-import" [rounded]="true" [outlined]="true"
+                                                (click)="fileInput.click()"></p-button>
+                                            <input type="file" #fileInput style="display:none;" [(ngModel)]="selectedRequest.supplierOffer"
+                                                (change)="onFileInputChange($event)" name="supplierOffer">
+                                            <p-button icon="pi pi-times" [rounded]="true" [outlined]="true"
+                                                severity="danger" [disabled]="!uploadedFile"
+                                                (click)="onRemoveFile()"></p-button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="content">
+                                    <div *ngIf="uploadedFile" class="p-d-flex p-ai-center">
+                                        <iframe [src]="pdfSrc" width="100%" height="600px"></iframe>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="empty">
+                                    <div class="flex align-items-center justify-content-center flex-column"
+                                        *ngIf="!uploadedFile && showDragAndDropArea">
+                                        <i class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
+                                        <p class="mt-4 mb-0">Drag and drop a PDF file to upload.</p>
+                                    </div>
+                                </ng-template>
+                            </p-fileUpload>
+                        </div>
+                        <div class="flex pt-4 justify-content-end">
+                            <p-button label="Next" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="nextCallback.emit()" />
+                        </div>
                     </div>
-                </div>
-                <div class="flex pt-4 justify-content-between">
-                    <p-button 
-                        label="Back" 
-                        icon="pi pi-arrow-left" 
-                        (onClick)="prevCallback.emit()" />
-                    <p-button 
-                        label="Next" 
-                        icon="pi pi-arrow-right" 
-                        iconPos="right" 
-                        (onClick)="nextCallback.emit()" />
-                </div>
-            </ng-template>
-        </p-stepperPanel>
-        <p-stepperPanel header="Header III">
-            <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
-                <div class="flex flex-column h-12rem">
-                    <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                        Content III
-                    </div>
-                </div>
-                <div class="flex pt-4 justify-content-start">
-                    <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
-                </div>
-            </ng-template>
-        </p-stepperPanel>
-    </p-stepper>
-
-
-
-<p-toast />
-</div>
-</p-dialog>
-</div>
+                    </ng-template>
+                </p-stepperPanel>
+                <p-stepperPanel header="Price">
+                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
+                        let-index="index">
+                        <div class="flex flex-column h-12rem">
+                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
+                                    [tableStyle]="{ 'min-width': '50rem' }">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Asset</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-asset let-i="rowIndex">
+                                        <tr>
+                                            <td>{{ asset.equipementName }}</td>
+                                            <td>{{ asset.qtEquipment }}</td>
+                                            <td><input type="text" pInputText name="pu" [(ngModel)]="selectedRequest.equipmentSubRequests[i].pu" /></td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                        <div class="flex pt-4 justify-content-between">
+                            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                            <p-button type="submit" severity="warning"  [disabled]="loading3">
+                                <ng-container *ngIf="!loading3; else loadingTemplate">
+                                    Confirm
+                                </ng-container>
+                                <ng-template #loadingTemplate>
+                                    <i class="pi pi-spinner pi-spin"></i> Loading...
+                                </ng-template>
+                            </p-button>
+                        </div>
+                    </ng-template>
+                </p-stepperPanel>
+            </p-stepper>
+        </form>
+        <p-toast />
+    </div>

@@ -109,6 +109,25 @@ export class LocalStorageServiceService {
     const isItApprover = roles.includes('It Approver');    
     return of(isItApprover);
   }
+  IsController(Token: any): Observable<boolean> {
+    if (!Token) {
+      return of(false); // Return false (not authenticated)
+    }
+  
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(Token);
+  
+    let roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Convert roles to an array if it's not already one
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+  
+    // Check if 'DeptManager' role exists in the roles array
+    const IsController = roles.includes('Controller');    
+    return of(IsController);
+  }
 
 
 }

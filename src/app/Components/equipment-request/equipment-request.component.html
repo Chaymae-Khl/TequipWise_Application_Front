@@ -1,10 +1,9 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="row">
-  <div class="col-6">
-    <div class="col-md-6 offset-md-2">
-      <div class="col-6">
-        <!-- Aligning content to the right -->
+  <div class="col-12">
+    <div class="form-container">
+      <div class="align-right">
         <p-button
           label="View My Requests"
           icon="pi pi-list"
@@ -34,32 +33,29 @@
         </div>
         <div *ngFor="let subRequest of request.equipmentSubRequests; let i = index" class="sub-request">
           <p-divider align="left" type="solid">
-            <b> 
-              <p-button icon="pi pi-times" [rounded]="true" [text]="true" label="Asset {{i+1}}" (click)="removeSubRequest(i)" severity="warning " />
+            <b>
+              <p-button icon="pi pi-times" [rounded]="true" [text]="true" label="Asset {{i+1}}" (click)="removeSubRequest(i)" severity="warning" />
             </b>
-            </p-divider>
+          </p-divider>
           <div class="d-flex align-items-center">
             <div class="mr-2">
-             
-              <label> 
+              <label>
                 <p-dropdown
-                [options]="equipemnts"
-                [(ngModel)]="subRequest.equipmentId"
-                optionLabel="equipName"
-                optionValue="equipementSN"
-                [filter]="true"
-                filterBy="equipName"
-                [showClear]="true"
-                placeholder="Select the asset you want"
-                name="equipmentId{{i}}"
-                required
-                [ngClass]="{'ng-invalid': requestForm.submitted && !subRequest.equipmentId}"
-            ></p-dropdown>
+                  [options]="equipemnts"
+                  [(ngModel)]="subRequest.equipmentId"
+                  optionLabel="equipName"
+                  optionValue="equipementSN"
+                  [filter]="true"
+                  filterBy="equipName"
+                  [showClear]="true"
+                  placeholder="Select the asset you want"
+                  name="equipmentId{{i}}"
+                  required
+                  [ngClass]="{'ng-invalid': requestForm.submitted && !subRequest.equipmentId}"
+                ></p-dropdown>
               </label>
             </div>
             <div class="mr-2">
-             
-
               <label>
                 <p-inputNumber
                   mode="decimal"
@@ -69,25 +65,20 @@
                   [min]="1"
                   [max]="50"
                   required
-                
                 ></p-inputNumber>
               </label>
             </div>
-          </div> 
+          </div>
           <br>
           <mat-form-field class="w-100">
             <mat-label>Why do you want this asset?</mat-label>
             <textarea matInput [(ngModel)]="subRequest.comment" name="comment{{i}}" required></textarea>
           </mat-form-field>
-         
         </div>
-        <p-button label="Add new Asset"  (click)="addSubRequest()" [text]="true" severity="secondary" />
+        <p-button label="Add new Asset" (click)="addSubRequest()" [text]="true" severity="secondary"></p-button>
 
         <p-divider></p-divider>
-        <button
-          class="submit btn btn-primary"
-          [disabled]="loading || requestForm.invalid"
-        >
+        <button class="submit btn btn-primary" [disabled]="loading || requestForm.invalid">
           <span *ngIf="loading">
             <i class="pi pi-spin pi-spinner"></i>
             Sending...
@@ -100,4 +91,7 @@
     </div>
   </div>
   <p-toast position="bottom-right" key="br"></p-toast>
+</div>
+<div *ngFor="let notification of notifications">
+  {{ notification }}
 </div>

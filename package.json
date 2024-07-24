@@ -24,6 +24,7 @@
     "@angular/router": "^17.2.0",
     "@angular/ssr": "^17.2.3",
     "@auth0/angular-jwt": "^5.2.0",
+    "@microsoft/signalr": "^8.0.7",
     "apexcharts": "^3.49.2",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",

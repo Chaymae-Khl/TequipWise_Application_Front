@@ -93,8 +93,8 @@
                         <p-accordion [activeIndex]="0">
                             <p-accordionTab header="Location & Plant & Department">
                                 <div class="form-row row">
-                                    <div class="form-group col-md-4">
-                                        <label for="locationName" class="mb-2">Location</label> <br>
+                                    <div class="form-group col-md-3">
+                                        <label for="locationName" class="mb-2">Location</label><br>
                                         <p-dropdown [options]="locations" [(ngModel)]="user.locationName"
                                             name="locationName" optionLabel="locationName" optionValue="locationName"
                                             (onChange)="onLocationChange($event)" [showClear]="true" [filter]="true"
@@ -102,7 +102,7 @@
                                             class="custom-dropdown">
                                         </p-dropdown>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-3">
                                         <label for="plant_name" class="mb-2">Plant</label><br>
                                         <p-dropdown [options]="plantsOfSelectedLocation" [(ngModel)]="user.plant_name"
                                             name="plant_name" optionLabel="plant_name" optionValue="plant_name"
@@ -110,7 +110,21 @@
                                             placeholder="Select Plant">
                                         </p-dropdown>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-3">
+                                        <label for="sapNumb" class="mb-2">Sap Number</label><br>
+                                        <p-dropdown 
+                                          [options]="sapnumbers" 
+                                          [(ngModel)]="user.sapNumb" 
+                                          name="sapNumb"
+                                          optionLabel="sapNum" 
+                                          optionValue="sapNum" 
+                                          [showClear]="true" 
+                                          [filter]="true"
+                                          filterBy="sapNum" 
+                                          placeholder="Select SAP Number">
+                                        </p-dropdown>
+                                    </div>
+                                    <div class="form-group col-md-3">
                                         <label for="departmentName" class="mb-2">Department</label><br>
                                         <p-dropdown [options]="departmentsOfSelectedPlant"
                                             [(ngModel)]="user.departmentName" name="departmentName"

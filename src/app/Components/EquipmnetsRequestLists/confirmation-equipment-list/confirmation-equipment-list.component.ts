@@ -42,11 +42,13 @@ export class ConfirmationEquipmentListComponent {
     { label: 'You Approved', value: true },
     { label: 'You Rejected', value: false }
   ];
+  approvedEquipmentSubRequests: any[] = [];
   visible: boolean = false;
   timelineEvents: any[] = [];
-  mode: 'request' | 'subrequest'|'Offer'|'approve' = 'approve';
+  mode: 'request' | 'subrequest'|'Offer'|'approve' | 'approveContoller' = 'approve';
   IsManger!: boolean;
-   IsItApprover!: boolean;
+  IsController!: boolean;
+  IsItApprover!: boolean;
   Mysubrequest:any;
   stateOptions: any[] = [
     { label: 'Approve', value: true },
@@ -70,6 +72,12 @@ export class ConfirmationEquipmentListComponent {
     }
     console.log('Filtered list:', this.filteredRequestList);
   }
+  filterApprovedEquipment() {
+    if (this.selectedRequest && this.selectedRequest.equipmentSubRequests) {
+      this.approvedEquipmentSubRequests = this.selectedRequest.equipmentSubRequests.filter(
+        (request: any) => request.deptmangstatus === true
+      );
+    }}
   clearDate() {
     this.date1 = null;
     this.filterRequestsByDate();
@@ -99,6 +107,15 @@ export class ConfirmationEquipmentListComponent {
             (isItApprover: boolean) => {
               this.IsItApprover = isItApprover;
               console.log('Manager status:', isItApprover);
+            },
+            (error: any) => {
+              console.error('Error fetching manager status:', error);
+            }
+          );
+          this.localStorageService.IsController(token).subscribe(
+            (iscontroller: boolean) => {
+              this.IsController = iscontroller;
+              console.log('Manager status:', iscontroller);
             },
             (error: any) => {
               console.error('Error fetching manager status:', error);
@@ -134,7 +151,7 @@ export class ConfirmationEquipmentListComponent {
   ngOnInit() {
     this.getReuestList();
     this.checkRoles();
-
+    this.filterApprovedEquipment();
   }
   //its a hlper function  to get the selected request of the subrequest
   findSelectedRequest = (subEquipmentRequestId: number) => {
@@ -148,7 +165,7 @@ export class ConfirmationEquipmentListComponent {
     }
     return null; // Return null if not found
   };
-  showDialog(mode: 'request' | 'subrequest' |'approve'|'Offer',req:any) {
+  showDialog(mode: 'request' | 'subrequest' |'approve'|'Offer'|'approveContoller',req:any) {
     this.mode = mode;
    
   if (mode === 'request') {
@@ -167,15 +184,18 @@ export class ConfirmationEquipmentListComponent {
     this.selectedSubRequest = req;
     const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
     this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
-    console.log( this.Mainrequest );
-    console.log( this.selectedSubRequest );
-  }
 
+  }
+  else if (mode === 'approveContoller') {
+    this.selectedSubRequest = req;
+    const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
+    this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
+ 
+  }
   else if(mode=== 'Offer'){
     this.selectedRequest = req;
     this.selectedSubRequest={};
-    console.log( this.selectedRequest );
-
+  
   }
 
     this.visible = true;
@@ -347,7 +367,7 @@ filterRequests() {
         this.messageService.add({
           severity: 'success',
           summary: 'Success Message',
-          detail: this.ManagerAproveFields.Status? 'The request has been approved' : 'The request has been rejected',
+          detail: 'Your response saved succeffuly',
           key: 'br',
           life: 10000
         });
@@ -396,7 +416,7 @@ confirmUploadAndITData(){
     this.equipementService.uploadSupplierOffer(requestId,this.selectedRequest, this.uploadedFile).subscribe(
       (response) => {
         this.uploadedFileName = this.uploadedFile?.name || null;
-        this.loading2 = false;
+        this.loading3 = false;
          this.getReuestList(); 
       this.visible = false;
         this.messageService.add({
@@ -408,7 +428,7 @@ confirmUploadAndITData(){
         // Additional logic after successful upload if needed
       },
       (error) => {
-        this.loading2 = false;
+        this.loading3 = false;
         console.error('Error uploading file', error);
         this.messageService.add({
           severity: 'error',

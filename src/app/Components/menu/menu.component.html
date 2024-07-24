@@ -15,7 +15,7 @@
             <p class="desc">Dashboard</p>
             <span class="backdrop"></span>
           </div>
-          <div *ngIf="IsManger || IsItApprover" class="menu-item">
+          <div *ngIf="IsManger || IsItApprover ||IsController" class="menu-item">
             <button class="button">
               <a routerLink="/RequestConfirmation"><img width="80px" src="assets/Images/Quene.png" alt=""></a>
             </button>
@@ -58,3 +58,4 @@
     </div>
     <p-divider></p-divider>
   </p-dialog>
+

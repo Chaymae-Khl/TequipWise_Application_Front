@@ -76,7 +76,7 @@ export class UserEquipmentListComponent {
     this.timelineEvents = [
       { title: 'Request Created',ForWho: req.isNewhire, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment },
       { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: req.departmangconfirmStatus },
-      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.iT_Not_confirmCause, statusIT: req.iTconfirmSatuts, supplierOffer:  this.Mysubrequest.supplierOffer },
+      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.iT_Not_confirmCause, statusIT: req.iTconfirmSatuts, supplierOffer:  this.Mysubrequest?.supplierOffer },
       { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts },
       { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: req.subRequestStatus}
     ];
@@ -194,18 +194,18 @@ getSubRequestStatusGeneral():string{
     );
 
     if (allStatusesNull) {
-        return 'Open';
-    } else if (anyApproved && anyRejected) {
-        return 'Partly Approved';
-    } else if (allApproved) {
-        return 'Approved';
-    } else if (allRejected) {
-        return 'Rejected';
-    } else if (anyPendingApproval && !anyRejected) {
-        return 'Pending';
-    }
+      return 'Open';
+  } else if (anyApproved && anyRejected ) {
+      return 'Partly Approved';
+  } else if (allApproved) {
+      return 'Approved';
+  } else if (allRejected) {
+      return 'Rejected';
+  } else if (anyPendingApproval ) {
+      return 'Pending';
+  }
 
-    return 'Unknown';
+  return 'Partly Rejected';
 }
 filterRequests() {
   // Filter the list based on selected filter

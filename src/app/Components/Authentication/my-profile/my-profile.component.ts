@@ -3,6 +3,7 @@ import { AuthServiceService } from '../../../Services/auth-service.service';
 import { User } from '../../../Models/user';
 import { OpenDataServiceService } from '../../../Services/open-data-service.service';
 import { MessageService } from 'primeng/api';
+import { SapNumberServiceService } from '../../../Services/sap-number-service.service';
 
 @Component({
   selector: 'app-my-profile',
@@ -23,14 +24,29 @@ export class MyProfileComponent {
   newPassword: any;
   confirmPassword: any;
   passwordMismatch: boolean = false;
-  constructor(private authservice: AuthServiceService, private openDataService: OpenDataServiceService,private messageService: MessageService) { }
+  sapnumbers:any;
+  constructor(private authservice: AuthServiceService, private openDataService: OpenDataServiceService,private messageService: MessageService,private sapnumService:SapNumberServiceService) { }
 
   ngOnInit(): void {
     this.getUsers();
     this.getAuthUseer();
     this.getLocations();
-   
+    this.getSapNumber();
+
   }
+
+  getSapNumber(){
+    this.sapnumService.getALSapNum().subscribe(
+     (res) => {
+       this.sapnumbers=res;
+       console.log(this.sapnumbers)
+     },
+     (error) => {
+       
+       console.error("Error occurred during fetching data:", error);
+     }
+   );
+   }
   getAuthUseer() {
     this.authservice.getAuthuser().subscribe(
       (data) => {
@@ -52,6 +68,7 @@ export class MyProfileComponent {
     this.user.approverActive = authenticated.approverActive;
     this.user.locationName = authenticated.locationName;
     this.user.plant_name = authenticated.plant_name;
+    this.user.sapNumb=authenticated.sapNumb
     this.user.roles = authenticated.roles;
     this.user.DeptId = authenticated.department.deptId;
     this.user.departmentName = authenticated.departmentName;

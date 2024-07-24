@@ -16,8 +16,6 @@ import { TokenExpiredComponent } from './Components/token-expired/token-expired.
 import { MenuComponent } from './Components/menu/menu.component';
 import { EquipmentManagComponent } from './Components/Admin/equipment-manag/equipment-manag.component';
 import { EquipmentRequestComponent } from './Components/equipment-request/equipment-request.component';
-import { UserEquipmentRequestListComponent } from './Components/user-equipment-request-list/user-equipment-request-list.component';
-import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 import { MyProfileComponent } from './Components/Authentication/my-profile/my-profile.component';
 import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
 import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
@@ -59,7 +57,6 @@ const routes: Routes = [
   { path: 'Menu', component: MenuComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'EquipementRequest', component: EquipmentRequestComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'UserEquipementRequest', component: UserEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
-  { path: 'EquipmentList', component: UserEquipmentRequestListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'RequestConfirmation', component: ConfirmationEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'MyProfile', component: MyProfileComponent, resolve: { isAuthenticated: AuthGuard } }
 

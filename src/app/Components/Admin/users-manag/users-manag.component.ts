@@ -18,8 +18,6 @@ export class UsersManagComponent implements OnInit{
   userId:any;
   showModal = false;
   searchTerm: string = '';
-
-
   locations: any;
   selectedLocation: any; // Store only the location of the selected plant
   plantsOfSelectedLocation: any[] = [];

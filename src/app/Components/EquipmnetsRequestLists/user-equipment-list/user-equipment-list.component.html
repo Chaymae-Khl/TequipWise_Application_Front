@@ -53,8 +53,7 @@
                         <p-table [value]="request.equipmentSubRequests" dataKey="subEquipmentRequestId">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th style="background-color: #ea85005f;" pSortableColumn="equipementName">Equipment
-                                        Name <p-sortIcon field="equipementName" /></th>
+                                    <th style="background-color: #ea85005f;" pSortableColumn="equipementName">Asset <p-sortIcon field="equipementName" /></th>
                                     <th style="background-color: #ea85005f;" pSortableColumn="qtEquipment">Quantity
                                         <p-sortIcon field="qtEquipment" /></th>
                                     <th style="background-color: #ea85005f;" pSortableColumn="DepartementManager">
@@ -108,24 +107,27 @@
                                     </td>
                                     <td>
                                         <span class="status-text" [ngClass]="{
-                                            'inprogress': subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && request.supplierOffer === null,
-                                            'waitingforfinance': subRequest.departmangconfirmStatus === true && request.supplierOffer != null && subRequest.financeconfirmSatuts === null,
-                                            'waitingforpr': subRequest.financeconfirmSatuts === true && request.pR_Status === null,
-                                            'approved': request.pR_Status === true,
-                                            'rejected': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false,
-                                            'closed': subRequest.departmangconfirmStatus === false,
-                                            'open': subRequest.departmangconfirmStatus === null && subRequest.iTconfirmSatuts === null && subRequest.financeconfirmSatuts === null,
-                                            'offer': request.supplierOffer != null && subRequest.iTconfirmSatuts === null
-                                          }">
-                                            {{ subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && request.supplierOffer === null ? 'In Progress' :
-                                               subRequest.departmangconfirmStatus === true && request.supplierOffer != null && subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
-                                               subRequest.financeconfirmSatuts === true && request.pR_Status === null ? 'Waiting for PR' :
-                                               request.pR_Status === true ? 'Approved' :
-                                               subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false ? 'Rejected' :
-                                               
-                                               request.supplierOffer != null && subRequest.iTconfirmSatuts === null ? 'Offer' :
-                                               'Open' }}
-                                          </span>
+                                                                'inprogress': subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && request.supplierOffer === null,
+                                                                'waitingforfinance': subRequest.departmangconfirmStatus === true && request.supplierOffer != null && subRequest.financeconfirmSatuts === null,
+                                                                'waitingforpr': subRequest.financeconfirmSatuts === true && request.pR_Status === null,
+                                                                'approved': request.pR_Status === true,
+                                                                'rejected': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false,
+                                                                'closed': subRequest.departmangconfirmStatus === false,
+                                                                'open': subRequest.departmangconfirmStatus === null && subRequest.iTconfirmSatuts === null && subRequest.financeconfirmSatuts === null,
+                                                                'offer': request.supplierOffer != null && subRequest.iTconfirmSatuts === null
+                                                              }">
+                                            {{ subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null &&
+                                            request.supplierOffer === null ? 'In Progress' :
+                                            subRequest.departmangconfirmStatus === true && request.supplierOffer != null &&
+                                            subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
+                                            subRequest.financeconfirmSatuts === true && request.pR_Status === null ? 'Waiting for PR' :
+                                            subRequest.subRequestStatus=== true ? 'Approved' :
+                                            subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false ||
+                                            subRequest.financeconfirmSatuts === false ? 'Rejected' :
+                    
+                                            request.supplierOffer != null && subRequest.iTconfirmSatuts === null ? 'Offer' :
+                                            'Open' }}
+                                        </span>
                                     </td>
                                     <td> <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
                                             (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button></td>
@@ -170,6 +172,10 @@
                     </p>
                 </div>
                 <div class="form-group">
+                    <p>  <i class="pi pi-hashtag"style="color: #EA8300"></i>  <strong>  Sap Number:</strong> {{ selectedRequest?.sapNumOfUser
+                    }}</p>
+                </div>
+                <div class="form-group">
                     <p>  <i class="pi pi-calendar"style="color: #EA8300"></i>  <strong>  Request Date:</strong> {{ selectedRequest?.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
                 </div>
                 <div class="form-group">
@@ -188,7 +194,7 @@
                 [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Equipment Name</th>
+                        <th>Asset</th>
                         <th>Quantity</th>
                         <th>Department Manager</th>
                         <th>IT Approver</th>

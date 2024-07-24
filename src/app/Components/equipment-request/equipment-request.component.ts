@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EquipementServiceService } from '../../Services/equipement-service.service';
 import { EquipementRequestServiceService } from '../../Services/equipement-request-service.service';
 import { EquipmentRequest } from '../../Models/equipment-request';
@@ -6,26 +6,34 @@ import { error } from 'console';
 import { MessageService } from 'primeng/api';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SubRequest } from '../../Models/sub-request';
+import { NotificationServiceService } from '../../Services/notification-service.service';
 @Component({
   selector: 'app-equipment-request',
   templateUrl: './equipment-request.component.html',
   styleUrl: './equipment-request.component.css'
 })
-export class EquipmentRequestComponent {
+export class EquipmentRequestComponent implements OnInit{
   equipemnts: any;
   request: EquipmentRequest = new EquipmentRequest();
   loading: boolean = false;
+  notifications: string[] = [];
+
 
   constructor(
     private messageService: MessageService,
     private equipementService: EquipementServiceService,
-    private requestService: EquipementRequestServiceService
+    private requestService: EquipementRequestServiceService,
+    private notificationService: NotificationServiceService
   ) {
     this.request.equipmentSubRequests = [new SubRequest()];
   }
-
   ngOnInit() {
     this.getEquipmentNames();
+    this.notificationService.startConnection();
+    this.notificationService.getNotifications().subscribe(message => {
+      console.log('Notification received in component: ', message);
+      this.notifications.push(message);
+    });
   }
 
   getEquipmentNames() {

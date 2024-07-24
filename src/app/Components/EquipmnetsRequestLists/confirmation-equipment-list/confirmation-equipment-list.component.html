@@ -4,6 +4,7 @@
 </div>
 <p-divider></p-divider>
 <div class="container-fluid">
+   
     <p-toast></p-toast>
     <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Filter Dropdown -->
@@ -91,8 +92,7 @@
                         <p-table [value]="request.equipmentSubRequests" dataKey="subEquipmentRequestId">
                             <ng-template pTemplate="header">
             <tr>
-                <th style="background-color: #ea85005f;" pSortableColumn="equipementName">Equipment
-                    Name <p-sortIcon field="equipementName" /></th>
+                <th style="background-color: #ea85005f;" pSortableColumn="equipementName">Asset <p-sortIcon field="equipementName" /></th>
                 <th style="background-color: #ea85005f;" pSortableColumn="qtEquipment">Quantity
                     <p-sortIcon field="qtEquipment" />
                 </th>
@@ -185,10 +185,13 @@
 
                     <div class="flex-container">
                         <div *ngIf="subRequest.departmangconfirmStatus == null">
-                            <p-button *ngIf="IsManger" icon="pi pi-check" [outlined]="true" label="Approve"
+                            <p-button *ngIf="IsManger" icon="pi pi-reply" [outlined]="true" label="Approve"
                                 (click)="showDialog('approve', subRequest)" severity="Success"></p-button>
                         </div>
-
+                        <div *ngIf="subRequest.financeconfirmSatuts == null">
+                            <p-button *ngIf="IsController"   icon="pi pi-reply" [outlined]="true" label="Approve"
+                                (click)="showDialog('approveContoller', subRequest)" severity="Success"></p-button>
+                        </div>
                         <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
                             (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button>
                     </div>
@@ -211,8 +214,8 @@
 </div>
 
 <p-dialog
-    header="{{mode === 'approve' ? 'Request Approval':  mode === 'Offer' ? 'Supplier Offer & Assets Price' :  mode === 'request' ? 'Request Details' : 'Request Details' }}"
-    [modal]="true" [(visible)]="visible" [style]="{width: '70vw',height:'40vw'}">
+    header="{{mode === 'approve' ? 'Request Approval':  mode === 'Offer' ? 'Supplier Offer & Assets Price' :  mode === 'request' ? 'Request Details':  mode === 'approveContoller' ? 'Finance Approval' : 'Request Approval' }}"
+    [modal]="true" [(visible)]="visible" [style]="{width: '50vw',height:'35vw'}">
 
     <div *ngIf="mode === 'request'">
         <ng-container>
@@ -234,6 +237,10 @@
                                 <i> For me</i>
                             </ng-container>
                         </p>
+                    </div>
+                    <div class="form-group">
+                        <p>  <i class="pi pi-hashtag"style="color: #EA8300"></i>  <strong>  Sap Number:</strong> {{ selectedRequest.sapNumOfUser
+                        }}</p>
                     </div>
                     <div class="form-group">
                         <p> <i class="pi pi-calendar" style="color: #EA8300"></i> <strong> Request Date:</strong> {{
@@ -272,9 +279,8 @@
                     [tableStyle]="{ 'min-width': '50rem' }">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Equipment Name</th>
+                            <th>Asset</th>
                             <th>Quantity</th>
-
                             <th>Department Manager</th>
                             <th>IT Approver</th>
                             <th>Finance Approver</th>
@@ -447,7 +453,7 @@
                     <p *ngIf="event.PU"><b>Unit Price:</b> {{ event.PU }}</p>
 
                     <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
-                    <p *ngIf="event.RejectionCause"><b>Rejection Cause:</b> {{ event.RejectionCause }}</p>
+                    <p *ngIf="event.RejectionCause"><b>Cause:</b> {{ event.RejectionCause }}</p>
                     <p *ngIf="event.statusIT === null || event.statusIT !=null"><b>Status:</b> {{ getItStatus() }}</p>
                     <p *ngIf="event.statusFina === null || event.statusFina !=null"><b>Status:</b> {{ getFinanceStatus()
                         }}</p>
@@ -468,17 +474,31 @@
     <div *ngIf="mode === 'approve'">
         <div class="w-100">
             <p-divider type="dashed"></p-divider>
-            <form (ngSubmit)="ManagerApprve()" class="position-relative">
+           
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
                 <h2>Select your response:</h2>
                 <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
                     name="departmangconfirmStatus"
-                    [(ngModel)]="selectedSubRequest.departmangconfirmStatus"></p-selectButton>
-                <h2 *ngIf="ManagerAproveFields.Status === false">Your Rejection cause:</h2>
-                <textarea rows="5" cols="30" pInputTextarea name="departmang_Not_confirmCause"
-                    *ngIf="ManagerAproveFields.Status === false"
-                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause"></textarea>
-                <div class="position-absolute end-0 bottom-0">
-                    <p-button type="submit" [outlined]="true" [disabled]="loading2">
+                    [(ngModel)]="selectedSubRequest.departmangconfirmStatus"
+                    required>
+                </p-selectButton>
+                <div *ngIf="form.submitted && !selectedSubRequest.departmangconfirmStatus" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+                <h2>Enter the cause:</h2>
+                <textarea rows="10" cols="70" pInputTextarea
+                    name="departmang_Not_confirmCause"
+                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause"
+                    required
+                    #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
                         <ng-container *ngIf="!loading2; else loadingTemplate">
                             Confirm
                         </ng-container>
@@ -488,59 +508,113 @@
                     </p-button>
                 </div>
             </form>
+ 
+
+        </div>
+    </div>
+    <div *ngIf="mode === 'approveContoller'">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+           
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="financeconfirmSatuts"
+                    [(ngModel)]="selectedSubRequest.financeconfirmSatuts"
+                    required>
+                </p-selectButton>
+                <br>
+                
+                <div *ngIf="form.submitted && !selectedSubRequest.financeconfirmSatuts" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+                <h2>Enter the cause:</h2>
+                <textarea rows="10" cols="90" pInputTextarea
+                    name="finance_Not_confirmCause"
+                    [(ngModel)]="selectedSubRequest.finance_Not_confirmCause"
+                    required
+                    #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+ 
+
         </div>
     </div>
     <div *ngIf="mode === 'Offer'">
-        <form (ngSubmit)="confirmUploadAndITData()">
+        <form (ngSubmit)="confirmUploadAndITData()" #Offerform="ngForm">
             <p-stepper>
                 <p-stepperPanel header="Supplier Offer">
                     <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
                         <div class="flex flex-column h-12rem">
-                            <div class="border-2 border-dashed surface-border border-round surface-ground  justify-content-center align-items-center">
-
-                            <p-fileUpload name="myfile[]" [multiple]="false" accept="application/pdf" maxFileSize="1000000"
-                                (onSelect)="onFileUpload($event)" (onRemove)="onRemoveFile()">
-                                <ng-template pTemplate="header">
-                                    <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
-                                        <div class="flex gap-2">
-                                            <p-button icon="pi pi-file-import" [rounded]="true" [outlined]="true"
-                                                (click)="fileInput.click()"></p-button>
-                                            <input type="file" #fileInput style="display:none;" [(ngModel)]="selectedRequest.supplierOffer"
-                                                (change)="onFileInputChange($event)" name="supplierOffer">
-                                            <p-button icon="pi pi-times" [rounded]="true" [outlined]="true"
-                                                severity="danger" [disabled]="!uploadedFile"
-                                                (click)="onRemoveFile()"></p-button>
+                            <div class="border-2 border-dashed surface-border border-round surface-ground justify-content-center align-items-center">
+        
+                                <p-fileUpload 
+                                    name="supplierOffer" 
+                                    [multiple]="false" 
+                                    accept="application/pdf" 
+                                    maxFileSize="1000000"
+                                    (onSelect)="onFileUpload($event)" 
+                                    (onRemove)="onRemoveFile()"
+                                   >
+                                    <ng-template pTemplate="header">
+                                        <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
+                                            <div class="flex gap-2">
+                                                <p-button icon="pi pi-file-import" [rounded]="true" [outlined]="true"
+                                                    (click)="fileInput.click()"></p-button>
+                                                <input type="file" #fileInput style="display:none;" 
+                                                    (change)="onFileInputChange($event)" 
+                                                    name="supplierOffer">
+                                                <p-button icon="pi pi-times" [rounded]="true" [outlined]="true"
+                                                    severity="danger" [disabled]="!uploadedFile"
+                                                    (click)="onRemoveFile()"></p-button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </ng-template>
-                                <ng-template pTemplate="content">
-                                    <div *ngIf="uploadedFile" class="p-d-flex p-ai-center">
-                                        <iframe [src]="pdfSrc" width="100%" height="600px"></iframe>
-                                    </div>
-                                </ng-template>
-                                <ng-template pTemplate="empty">
-                                    <div class="flex align-items-center justify-content-center flex-column"
-                                        *ngIf="!uploadedFile && showDragAndDropArea">
-                                        <i class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
-                                        <p class="mt-4 mb-0">Drag and drop a PDF file to upload.</p>
-                                    </div>
-                                </ng-template>
-                            </p-fileUpload>
+                                    </ng-template>
+                                    <ng-template pTemplate="content">
+                                        <div *ngIf="uploadedFile" class="p-d-flex p-ai-center">
+                                            <iframe [src]="pdfSrc" width="100%" height="600px"></iframe>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="empty">
+                                        <div class="flex align-items-center justify-content-center flex-column"
+                                            *ngIf="!uploadedFile && showDragAndDropArea">
+                                            <i class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
+                                            <p class="mt-4 mb-0">Drag and drop a PDF file to upload.</p>
+                                        </div>
+                                    </ng-template>
+                                </p-fileUpload>
+                                <div *ngIf="!uploadedFile && Offerform.submitted" class="error-message">
+                                    File upload is required.
+                                </div>
+                            </div>
+                            <div class="flex pt-4 justify-content-end">
+                                <p-button label="Next" icon="pi pi-arrow-right" iconPos="right"
+                                    (onClick)="nextCallback.emit()" />
+                            </div>
                         </div>
-                        <div class="flex pt-4 justify-content-end">
-                            <p-button label="Next" icon="pi pi-arrow-right" iconPos="right"
-                                (onClick)="nextCallback.emit()" />
-                        </div>
-                    </div>
                     </ng-template>
                 </p-stepperPanel>
                 <p-stepperPanel header="Price">
-                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
-                        let-index="index">
+                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
                         <div class="flex flex-column h-12rem">
                             <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
                                 <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
-                                    [tableStyle]="{ 'min-width': '50rem' }">
+                                    >
                                     <ng-template pTemplate="header">
                                         <tr>
                                             <th>Asset</th>
@@ -552,26 +626,34 @@
                                         <tr>
                                             <td>{{ asset.equipementName }}</td>
                                             <td>{{ asset.qtEquipment }}</td>
-                                            <td><input type="text" pInputText name="pu" [(ngModel)]="selectedRequest.equipmentSubRequests[i].pu" /></td>
+                                            <td>
+                                                <input type="text" pInputText name="pu" 
+                                                    [(ngModel)]="selectedRequest.equipmentSubRequests[i].pu" 
+                                                    #pu="ngModel"
+                                                    required />
+                                                <div *ngIf="pu.touched && pu.invalid" class="error-message">
+                                                    Unit Price is required.
+                                                </div>
+                                            </td>
                                         </tr>
                                     </ng-template>
                                 </p-table>
                             </div>
-                        </div>
-                        <div class="flex pt-4 justify-content-between">
-                            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
-                            <p-button type="submit" severity="warning"  [disabled]="loading3">
-                                <ng-container *ngIf="!loading3; else loadingTemplate">
-                                    Confirm
-                                </ng-container>
-                                <ng-template #loadingTemplate>
-                                    <i class="pi pi-spinner pi-spin"></i> Loading...
-                                </ng-template>
-                            </p-button>
+                            <div class="flex pt-4 justify-content-between">
+                                <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                                <p-button type="submit" [outlined]="true" [disabled]="loading3 || Offerform.invalid">
+                                    <ng-container *ngIf="!loading3; else loadingTemplate">
+                                        Confirm
+                                    </ng-container>
+                                    <ng-template #loadingTemplate>
+                                        <i class="pi pi-spinner pi-spin"></i> Loading...
+                                    </ng-template>
+                                </p-button>
+                            </div>
                         </div>
                     </ng-template>
                 </p-stepperPanel>
             </p-stepper>
         </form>
-        <p-toast />
+        
     </div>

@@ -18,3 +18,7 @@
 }
 .total-price-container span {
 color: green;}
+.error-message {
+  color: red;
+  font-size: 0.9em;
+}

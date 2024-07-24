@@ -72,8 +72,6 @@ import { EquipmentRequestComponent } from './Components/equipment-request/equipm
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { UserEquipmentRequestListComponent } from './Components/user-equipment-request-list/user-equipment-request-list.component';
-import { ConfirmationOperationsRequestListComponent } from './Components/confirmation-operations-request-list/confirmation-operations-request-list.component';
 import { TimelineModule } from 'primeng/timeline';
 import { MyProfileComponent } from './Components/Authentication/my-profile/my-profile.component';
 import { NgxApexchartsModule } from 'ngx-apexcharts';
@@ -89,6 +87,7 @@ import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/
 import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
 import { TokenInterceptorService } from './interceptors/token-interceptor.service';
 import { StepperModule } from 'primeng/stepper';
+import { NotificationServiceService } from './Services/notification-service.service';
 
 
 @NgModule({
@@ -119,8 +118,6 @@ import { StepperModule } from 'primeng/stepper';
     EquipmentManagComponent,
     EquipmentFilterPipe,
     EquipmentRequestComponent,
-    UserEquipmentRequestListComponent,
-    ConfirmationOperationsRequestListComponent,
     MyProfileComponent,
     RequestFilterPipe,
     UserEquipmentListComponent,
@@ -193,6 +190,7 @@ import { StepperModule } from 'primeng/stepper';
     provideAnimationsAsync(),
     MessageService,
     AuthGuard,
+    NotificationServiceService,
    { provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptorService,
     multi: true}

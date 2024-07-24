@@ -242,7 +242,7 @@ this.sapnumService.DeleteSapNum(id).subscribe(
 
   },
   error=>{
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Sap number delete failed, there is some relations depends on this Locations', life: 10000 });
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Sap number delete failed, there is some relations depends on this SAP number', life: 10000 });
 
   }
 );

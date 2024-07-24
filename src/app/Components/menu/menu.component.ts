@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageServiceService } from '../../Services/local-storage-service.service';
+import { NotificationServiceService } from '../../Services/notification-service.service';
 
 @Component({
   selector: 'app-menu',
@@ -12,8 +13,8 @@ export class MenuComponent {
   IsAdmin!:boolean;
   IsManger!:boolean;
   IsItApprover!:boolean;
+  IsController!:boolean;
   visible: boolean = false;
-
   constructor(private route: ActivatedRoute,private localStorageService:LocalStorageServiceService) {
     // Access the resolved data
     this.isAuthenticated = this.route.snapshot.data['isAuthenticated'];
@@ -21,6 +22,7 @@ export class MenuComponent {
   }
   ngOnInit(): void {
     this.checkRoles();
+   
   }
 
   async checkRoles() {
@@ -56,7 +58,15 @@ export class MenuComponent {
           console.error('Error fetching manager status:', error);
         }
       );
-
+      this.localStorageService.IsController(token).subscribe(
+        (iscontroller: boolean) => {
+          this.IsController = iscontroller;
+          console.log('Manager status:', iscontroller);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
       
     } else {
       //console.error('No token found');

@@ -48,6 +48,11 @@ Aproval(equipmentRequestId:any,subRequestId:any,Response:any){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.put(`${this.apiUrl}/Request/${equipmentRequestId}/subrequests/${subRequestId}`,Response,httpOptions);
 }
+
+
+
+
+
 uploadSupplierOffer(requestId: any, updatedRequest: any, file: File): Observable<any> {
   const formData = new FormData();
   formData.append('equipmentRequestId', requestId.toString());

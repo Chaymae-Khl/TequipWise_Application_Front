@@ -98,7 +98,7 @@ export class MyProfileComponent {
     if (selectedLocation) {
       // Update the plants and departments based on the selected location.
       this.plantsOfSelectedLocation = selectedLocation.plants;
-      this.departmentsOfSelectedPlant = selectedLocation.departments;
+      this.departmentsOfSelectedPlant = selectedLocation.departments.filter((dept: any) => dept.status); // Filter departments with status=true
     } else {
       // If no location is selected, clear the plants and departments.
       this.plantsOfSelectedLocation = [];

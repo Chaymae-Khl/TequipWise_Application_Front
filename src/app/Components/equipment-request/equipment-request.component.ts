@@ -66,6 +66,7 @@ export class EquipmentRequestComponent implements OnInit{
           life: 10000
         });
         this.resetForm();
+        
         this.loading = false;
       },
       (error) => {

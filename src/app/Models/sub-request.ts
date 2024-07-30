@@ -7,6 +7,9 @@ export class SubRequest {
     deptManagId?:                 string;
     itId?:                        string;
     controllerid?:                string;
+    gl?: string;
+    cc?: string;
+    order?: string;
     subRequestStatus?:            boolean;
     qtEquipment?:                 number;
     departmangconfirmedAt?:       Date;
@@ -20,6 +23,10 @@ export class SubRequest {
     iT_Not_confirmCause?:         string;
     requestId?:                   number;
     equipmentId?:                 number;
+    poNum?: string;
+    prNum?: string;
+    pR_Status?: boolean;
+    pR_Not_ConfirmCause?: string;
 }
 
 

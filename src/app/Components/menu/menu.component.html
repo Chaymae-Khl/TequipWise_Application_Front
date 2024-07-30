@@ -9,31 +9,39 @@
       <div class="row align-items-center inner-container">
         <div class="col d-flex justify-content-center align-items-center" id="col2">
           <div *ngIf="IsAdmin" class="menu-item">
-            <button class="button">
-              <a routerLink="/admin"><img class="dashicon" src="assets/Images/dashboard.png" alt=""></a>
-            </button>
+             <a routerLink="/admin"><button class="button">
+             <img class="dashicon" src="assets/Images/dashboard.png" alt="">
+            </button></a>
             <p class="desc">Dashboard</p>
             <span class="backdrop"></span>
           </div>
           <div *ngIf="IsManger || IsItApprover ||IsController" class="menu-item">
-            <button class="button">
-              <a routerLink="/RequestConfirmation"><img width="80px" src="assets/Images/Quene.png" alt=""></a>
-            </button>
+             <a routerLink="/RequestConfirmation"><button class="button">
+             <img width="80px" src="assets/Images/Quene.png" alt="">
+            </button></a>
             <p class="desc">Approval Queue</p>
             <span class="backdrop"></span>
           </div>
           <div class="menu-item">
-            <button class="button">
-              <a routerLink="/UserEquipementRequest"><img class="dashicon" src="assets/Images/AllRequests.png" alt=""></a>
-            </button>
+            <a routerLink="/UserEquipementRequest"><button class="button">
+              <img class="dashicon" src="assets/Images/AllRequests.png" alt="">
+            </button></a>
             <p class="desc">My Requests</p>
             <span class="backdrop"></span>
           </div>
+          
           <div class="menu-item">
             <button (click)="showDialog()" class="button">
               <a><img src="assets/Images/request.png" alt="" class="request-img"></a>
             </button>
             <p class="desc">Submit a request</p>
+            <span class="backdrop"></span>
+          </div>
+          <div class="menu-item">
+            <a routerLink="/UserEquipementRequest"><button class="button">
+              <i class="pi pi-user" style="font-size: 2.5rem"></i>
+            </button></a>
+            <p class="desc">My IT Assets</p>
             <span class="backdrop"></span>
           </div>
         </div>

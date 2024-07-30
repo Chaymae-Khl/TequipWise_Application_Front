@@ -26,6 +26,7 @@ export class ConfirmationEquipmentListComponent {
   loading: boolean = true;
   loading2:boolean=false;
   loading3:boolean=false;
+  loading4:boolean=false;
   selectedFilter: any = null; // Initialize to null for "All" by default
   filteredRequestList: any; // Variable to hold filtered list
   searchTerm: string = '';
@@ -44,11 +45,15 @@ export class ConfirmationEquipmentListComponent {
   ];
   approvedEquipmentSubRequests: any[] = [];
   visible: boolean = false;
+  visible2: boolean = false;
   timelineEvents: any[] = [];
-  mode: 'request' | 'subrequest'|'Offer'|'approve' | 'approveContoller' = 'approve';
+  mode: 'request' | 'subrequest'|'Offer'|'approve' | 'approveContoller'|'PR&PO' = 'approve';
+  mode2: 'approve' | 'approveContoller'|'PR&PO' = 'approve';
+
   IsManger!: boolean;
   IsController!: boolean;
   IsItApprover!: boolean;
+  IsAdmin!:boolean;
   Mysubrequest:any;
   stateOptions: any[] = [
     { label: 'Approve', value: true },
@@ -59,7 +64,9 @@ export class ConfirmationEquipmentListComponent {
       private sanitizer: DomSanitizer) {
 
   }
-  //its a hlper function  to get the selected request of the subrequest
+
+  //helpers method
+  //its a helper function  to get the selected request of the subrequest
  
   filterRequestsByDate() {
     console.log('Date selected:', this.date1);
@@ -121,7 +128,25 @@ export class ConfirmationEquipmentListComponent {
               console.error('Error fetching manager status:', error);
             }
           );
+          this.localStorageService.IsAdmin(token).subscribe(
+            (isAdmin: boolean) => {
+              this.IsAdmin = isAdmin;
+              console.log('Admin status:', isAdmin);
+            },
+            (error: any) => {
+              console.error('Error fetching admin status:', error);
+            }
+          );
         }
+      }
+
+
+      isAllSubRequestsRejected(request: any): boolean {
+        return request.equipmentSubRequests.every((subRequest: any) => subRequest.financeconfirmSatuts === false);
+      }
+
+      get approvedSubRequests() {
+        return this.selectedRequest.equipmentSubRequests.filter(subRequest => subRequest.departmangconfirmStatus===true);
       }
   // filterRequests() {
   //   if (this.selectedFilter === null) {
@@ -165,7 +190,7 @@ export class ConfirmationEquipmentListComponent {
     }
     return null; // Return null if not found
   };
-  showDialog(mode: 'request' | 'subrequest' |'approve'|'Offer'|'approveContoller',req:any) {
+  showDialog(mode: 'request' | 'subrequest' |'Offer',req:any) {
     this.mode = mode;
    
   if (mode === 'request') {
@@ -177,35 +202,49 @@ export class ConfirmationEquipmentListComponent {
     this.selectedSubRequest = req;
     const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId; 
     this.Mysubrequest = this.findSelectedRequest(selectedSubEquipmentRequestId);
-   // console.log( this.Mysubrequest );
+   console.log( this.selectedSubRequest );
   } 
-  
-  else if (mode === 'approve') {
-    this.selectedSubRequest = req;
-    const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
-    this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
-
-  }
-  else if (mode === 'approveContoller') {
-    this.selectedSubRequest = req;
-    const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
-    this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
  
-  }
   else if(mode=== 'Offer'){
     this.selectedRequest = req;
     this.selectedSubRequest={};
+  }   
+
+ 
   
-  }
 
     this.visible = true;
     this.timelineEvents = [
       { title: 'Request Created',ForWho: req.isNewhire, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment,PU:req.pu },
       { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: req.departmangconfirmStatus },
-      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.iT_Not_confirmCause, statusIT: req.iTconfirmSatuts, supplierOffer:  this.Mysubrequest?.supplierOffer },
-      { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts },
-      { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: req.subRequestStatus}
+      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.pR_Not_ConfirmCause, statusIT: req.iTconfirmSatuts, supplierOffer:  this.Mysubrequest?.supplierOffer,PrStatus:this.getPRStatus(req.pR_Status,req),prnum:req.prNum,ponum:req.poNum },
+      { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts,cc:req.cc,gl:req.gl,order:req.order },
+      { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: req.subRequestStatus,statusPr:req.pR_Status,Ponum:req.poNum
+      }
     ];
+}
+
+showDialog2(mode2: 'approve'|'approveContoller'|'PR&PO',req:any) {
+  this.mode2 = mode2;
+  this.visible2 = true;
+
+if (mode2 === 'approve') {
+  this.selectedSubRequest = req;
+  const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
+  this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
+}
+else if (mode2 === 'approveContoller') {
+  this.selectedSubRequest = req;
+  const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
+  this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
+}
+   
+else if (mode2 === 'PR&PO') {
+  this.selectedSubRequest = req;
+  const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
+  this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
+  console.log( this.Mainrequest)
+}
 }
 togglePdfVisibility(): void {
   this.pdfVisible = !this.pdfVisible;
@@ -222,19 +261,18 @@ getmanagerStatus():string{
     return 'Open';
 }
 }
-getItStatus():string{
+getItStatus(): string {
   if (this.selectedSubRequest.iTconfirmSatuts === true) {
-    return 'Approved';
-} else if (this.selectedSubRequest.iTconfirmSatuts === false) {
-    return 'Rejected';
-} else if (this.Mysubrequest.supplierOffer != null) {
-  return 'Offer';
-} else if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false) {
-  return 'Closed';
-} 
- else {
-    return 'Open';
-}
+      return 'Approved';
+  } else if (this.selectedSubRequest.iTconfirmSatuts === false) {
+      return 'Rejected';
+  } else if (this.selectedSubRequest.departmangconfirmStatus === false) {
+      return 'Closed';
+  } else if (this.Mysubrequest.supplierOffer != null) {
+      return 'Offer';
+  } else {
+      return 'Open';
+  }
 }
 
 getFinanceStatus():string{
@@ -252,22 +290,24 @@ getFinanceStatus():string{
 }
 
 //status of the subrequest
-getSubRequestStatusGeneral():string{
-  if (this.selectedSubRequest.departmangconfirmStatus === true && this.selectedSubRequest.iTconfirmSatuts === null && this.Mysubrequest.supplierOffer === null) {
-    return 'In Progress';
-} else if ( this.selectedSubRequest.departmangconfirmStatus === true && this.Mysubrequest.supplierOffer != null && this.selectedSubRequest.financeconfirmSatuts === null) {
-    return 'Waiting for Finance Approval';
-
-} else if (  this.Mysubrequest.pR_Status === true && this.selectedSubRequest.subRequestStatus===true) {
-  return 'Approved';
-}  else if (  this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false || this.selectedSubRequest.financeconfirmSatuts === false ) {
-  return 'Rejected';
-} else if (  this.Mysubrequest.supplierOffer != null &&  this.selectedSubRequest.iTconfirmSatuts === null ) {
-  return 'Offer';
-} 
- else {
-    return 'Open';
-} 
+getSubRequestStatusGeneral(): string {
+  if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false || this.selectedSubRequest.financeconfirmSatuts === false) {
+      return 'Rejected';
+  } else if (this.selectedSubRequest.departmangconfirmStatus === true && this.selectedSubRequest.iTconfirmSatuts === null && this.Mysubrequest.supplierOffer === null) {
+      return 'In Progress';
+  } else if (this.selectedSubRequest.departmangconfirmStatus === true && this.Mysubrequest.supplierOffer != null && this.selectedSubRequest.financeconfirmSatuts === null) {
+      return 'Waiting for Finance Approval';
+  } else if (this.selectedSubRequest.financeconfirmSatuts === true && this.selectedSubRequest.pR_Status === null) {
+      return 'Waiting for PR';
+  } else if (this.selectedSubRequest.pR_Status === true && this.selectedSubRequest.poNum === null) {
+      return 'Waiting for PO';
+  } else if (this.selectedSubRequest.pR_Status === true && this.selectedSubRequest.subRequestStatus === true) {
+      return 'Approved';
+  } else if (this.Mysubrequest.supplierOffer != null && this.selectedSubRequest.iTconfirmSatuts === null) {
+      return 'Offer';
+  } else {
+      return 'Open';
+  }
 }
                                   
                                                                
@@ -356,19 +396,20 @@ filterRequests() {
       );
   }
 }
+
+//It's for the the dept manager and the finanace approval status Approve/reject
   ManagerApprve() {
     console.log(this.selectedSubRequest)
     this.loading2 = true;
     this.equipementService.Aproval(this.Mainrequest.equipmentRequestId,this.selectedSubRequest.subEquipmentRequestId,this.selectedSubRequest).subscribe(
       (response) => {
         this.getReuestList();
-        this.visible = false;
+        this.visible2 = false;
         this.loading2 = false;
         this.messageService.add({
           severity: 'success',
           summary: 'Success Message',
           detail: 'Your response saved succeffuly',
-          key: 'br',
           life: 10000
         });
       },
@@ -379,12 +420,15 @@ filterRequests() {
           severity: 'error',
           summary: 'Error Message',
           detail: 'We faced a problem while saving status',
-          key: 'br',
           life: 10000
         });
       }
     );
   }
+
+//for the the infos Entred by the finace and the it(CC,Gl,Order)
+
+
 //file upload
 onFileInputChange(event: any): void {
   const file = event?.target?.files?.[0];
@@ -440,6 +484,7 @@ confirmUploadAndITData(){
     );
   }
 }
+
 loadPdfContent(file: File): void {
   const reader = new FileReader();
   reader.onload = () => {

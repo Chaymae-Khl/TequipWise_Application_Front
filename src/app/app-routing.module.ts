@@ -47,6 +47,10 @@ const routes: Routes = [
         path: 'equipements', component: EquipmentManagComponent,
       },
       {
+        path: 'Requests', component:  ConfirmationEquipmentListComponent, 
+          
+      },
+      {
         path: 'dashboard', component: DashboardComponent,
       }
     ], resolve: { isAuthenticated: AuthGuard }

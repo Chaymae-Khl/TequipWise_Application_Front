@@ -78,7 +78,7 @@ export class RegisterComponent  {
 
     if (selectedLocation) {
       this.plantsOfSelectedLocation = selectedLocation.plants;
-      this.departmentsOfSelectedPlant = selectedLocation.departments;
+      this.departmentsOfSelectedPlant = selectedLocation.departments.filter((dept: any) => dept.status); // Filter departments with status=true
       this.registerForm.get('plantId')?.enable();
       this.registerForm.get('DeptId')?.enable();
       this.registerForm.get('SapNumberId')?.enable();

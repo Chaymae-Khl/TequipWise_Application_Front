@@ -1,11 +1,13 @@
-<app-nav-bar></app-nav-bar>
+<!-- i used this componenet for admin so the nav bar should not appear in the dashboard -->
+<app-nav-bar *ngIf="!IsAdmin" ></app-nav-bar>
+<p-toast />
 <div class="col text-center">
     <h1 class="mt-5"><i class="pi pi-bars" style="font-size: 1rem"></i> Approval Queue List</h1>
 </div>
 <p-divider></p-divider>
 <div class="container-fluid">
-   
-    <p-toast></p-toast>
+
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Filter Dropdown -->
         <div>
@@ -71,7 +73,7 @@
                         getRequestStatus(request) === 'Partly Approved' ? 'warning' :
                         getRequestStatus(request) === 'Rejected' ? 'danger' : 'info'" />
                 </td>
-                <td>{{ request.totalPrice }} MAD</td>
+                <td>{{ request.totalPrice }} {{request.currency}}</td>
 
                 <td>
                     <div class="flex-container">
@@ -79,6 +81,8 @@
                             <p-button *ngIf="IsItApprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
                                 (click)="showDialog('Offer',request )" severity="Success"></p-button>
                         </div>
+                       
+
                         <p-button icon="pi pi-arrow-up-right" label="Details" severity="warning"
                             (onClick)="showDialog('request',request)" [outlined]="true"></p-button>
                     </div>
@@ -92,7 +96,8 @@
                         <p-table [value]="request.equipmentSubRequests" dataKey="subEquipmentRequestId">
                             <ng-template pTemplate="header">
             <tr>
-                <th style="background-color: #ea85005f;" pSortableColumn="equipementName">Asset <p-sortIcon field="equipementName" /></th>
+                <th style="background-color: #ea85005f;" pSortableColumn="equipementName">Asset <p-sortIcon
+                        field="equipementName" /></th>
                 <th style="background-color: #ea85005f;" pSortableColumn="qtEquipment">Quantity
                     <p-sortIcon field="qtEquipment" />
                 </th>
@@ -120,7 +125,7 @@
             <tr>
                 <td>{{ subRequest.equipementName }}</td>
                 <td>{{ subRequest.qtEquipment }}</td>
-                <td>{{ subRequest.pu }} MAD</td>
+                <td>{{ subRequest.pu }} {{request.currency}}</td>
                 <td>
                     <span class="status-text" [ngClass]="{
                                             'approved': subRequest.departmangconfirmStatus === true,
@@ -172,8 +177,9 @@
                         request.supplierOffer === null ? 'In Progress' :
                         subRequest.departmangconfirmStatus === true && request.supplierOffer != null &&
                         subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
-                        subRequest.financeconfirmSatuts === true && request.pR_Status === null ? 'Waiting for PR' :
+                        subRequest.financeconfirmSatuts === true && subRequest.pR_Status === null ? 'Waiting for PR' :
                         subRequest.subRequestStatus=== true ? 'Approved' :
+                        subRequest.pR_Status=== true && subRequest.poNum===null ? 'Waiting for PO' :
                         subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false ||
                         subRequest.financeconfirmSatuts === false ? 'Rejected' :
 
@@ -184,17 +190,26 @@
                 <td>
 
                     <div class="flex-container">
-                        <div *ngIf="subRequest.departmangconfirmStatus == null">
+                        <!-- <div *ngIf="subRequest.departmangconfirmStatus == null">
                             <p-button *ngIf="IsManger" icon="pi pi-reply" [outlined]="true" label="Approve"
                                 (click)="showDialog('approve', subRequest)" severity="Success"></p-button>
                         </div>
-                        <div *ngIf="subRequest.financeconfirmSatuts == null">
-                            <p-button *ngIf="IsController"   icon="pi pi-reply" [outlined]="true" label="Approve"
+                        <div *ngIf="subRequest.financeconfirmSatuts == null && subRequest.departmangconfirmStatus===true">
+                            <p-button *ngIf="IsController" icon="pi pi-reply" [outlined]="true" label="Approve"
                                 (click)="showDialog('approveContoller', subRequest)" severity="Success"></p-button>
                         </div>
+                        <div *ngIf="subRequest.financeconfirmSatuts===true && subRequest.poNum===null" >
+                            <p-button *ngIf="IsItApprover" 
+                                      label="PR/PO" 
+                                      icon="pi pi-inbox" 
+                                      [outlined]="true"
+                                      (click)="showDialog('PR&PO', subRequest)" 
+                                      severity="Success"></p-button>
+                        </div>   -->
                         <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
                             (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button>
                     </div>
+                  
                 </td>
             </tr>
         </ng-template>
@@ -214,8 +229,8 @@
 </div>
 
 <p-dialog
-    header="{{mode === 'approve' ? 'Request Approval':  mode === 'Offer' ? 'Supplier Offer & Assets Price' :  mode === 'request' ? 'Request Details':  mode === 'approveContoller' ? 'Finance Approval' : 'Request Approval' }}"
-    [modal]="true" [(visible)]="visible" [style]="{width: '50vw',height:'35vw'}">
+    header="{{ mode === 'request' ? 'Request Details'  : 'Request Assets Details' }}"
+    [modal]="true" [(visible)]="visible" [style]="{width: '70vw',height:'35vw'}">
 
     <div *ngIf="mode === 'request'">
         <ng-container>
@@ -239,19 +254,18 @@
                         </p>
                     </div>
                     <div class="form-group">
-                        <p>  <i class="pi pi-hashtag"style="color: #EA8300"></i>  <strong>  Sap Number:</strong> {{ selectedRequest.sapNumOfUser
-                        }}</p>
+                        <p> <i class="pi pi-hashtag" style="color: #EA8300"></i> <strong> Sap Number:</strong> {{
+                            selectedRequest.sapNumOfUser
+                            }}</p>
                     </div>
+                   
+
+
                     <div class="form-group">
                         <p> <i class="pi pi-calendar" style="color: #EA8300"></i> <strong> Request Date:</strong> {{
                             selectedRequest.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
                     </div>
-                    <div class="form-group">
-                        <p> <i class="pi pi-inbox" style="color: #EA8300"></i> <strong> PR Status:</strong> {{
-                            getPRStatus(selectedRequest.pR_Status,selectedRequest)}}
-
-                        </p>
-                    </div>
+                   
                     <div class="form-group">
                         <p> <i class="pi pi-inbox" style="color: #EA8300"></i><strong> Status:</strong> {{
                             getRequestStatus(selectedRequest) }}</p>
@@ -259,19 +273,19 @@
                     <div class="form-group">
                         <p-divider></p-divider>
                         <div class="col justify-content-end">
-                        <p-inplace *ngIf="selectedRequest.supplierOffer!=null" closable="closable" >
-                            <ng-template pTemplate="display">
-                                <div class="inline-flex align-items-center">
-                                    <span class="pi pi-file-pdf" style="vertical-align: middle"></span>
-                                    <span class="ml-2">View Supplier Offer</span>
-                                </div>
-                            </ng-template>
-                            <ng-template pTemplate="content">
-                                <iframe [src]="loadPdf(selectedRequest.supplierOffer)" width="100%" height="600px"></iframe>
-                            </ng-template>
-                        </p-inplace>
+                            <p-inplace *ngIf="selectedRequest.supplierOffer != null" closable="closable" class="custom-inplace">
+                                <ng-template pTemplate="display">
+                                    <div class="inline-flex align-items-center">
+                                        <span class="pi pi-file-pdf custom-icon" style="vertical-align: middle;"></span>
+                                        <span class="ml-2 custom-text">View Supplier Offer</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="content">
+                                    <iframe [src]="loadPdf(selectedRequest.supplierOffer)" width="100%" height="600px" class="custom-iframe"></iframe>
+                                </ng-template>
+                            </p-inplace>
+                        </div>
                     </div>
-                </div>
                 </div>
                 <p-divider type="dashed"></p-divider>
 
@@ -287,6 +301,7 @@
                             <th>Status</th>
                             <th>Unit Price</th>
                             <th>Total</th>
+                            <th>Actions</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-subRequest>
@@ -336,8 +351,8 @@
                                 <span class="status-text" [ngClass]="{
                                 'inprogress': subRequest.departmangconfirmStatus === true && subRequest.iTconfirmSatuts === null && selectedRequest.supplierOffer === null,
                                 'waitingforfinance': subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null && subRequest.financeconfirmSatuts === null,
-                                'waitingforpr': subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null,
-                                'approved': selectedRequest.pR_Status === true,
+                                'waitingforpr': subRequest.financeconfirmSatuts === true && subRequest.pR_Status === null,
+                                'approved': subRequest.pR_Status === true,
                                 'rejected': subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false || subRequest.financeconfirmSatuts === false,
                                 'closed': subRequest.departmangconfirmStatus === false,
                                 'open': subRequest.departmangconfirmStatus === null && subRequest.iTconfirmSatuts === null && subRequest.financeconfirmSatuts === null,
@@ -349,9 +364,10 @@
                                     subRequest.departmangconfirmStatus === true && selectedRequest.supplierOffer != null
                                     &&
                                     subRequest.financeconfirmSatuts === null ? 'Waiting for Finance Approval' :
-                                    subRequest.financeconfirmSatuts === true && selectedRequest.pR_Status === null ?
-                                    'Waiting for PR' :
-                                    selectedRequest.pR_Status === true ? 'Approved' :
+                                    subRequest.financeconfirmSatuts === true && subRequest.pR_Status === null ?
+                                    'Waiting for PR':
+                                    subRequest.pR_Status=== true && subRequest.poNum===null ? 'Waiting for PO'  :
+                                    subRequest.pR_Status === true ? 'Approved' :
                                     subRequest.departmangconfirmStatus === false || subRequest.iTconfirmSatuts === false
                                     ||
                                     subRequest.financeconfirmSatuts === false ? 'Rejected' :
@@ -361,9 +377,31 @@
                                     'Open' }}
                                 </span>
                             </td>
-                            <td>{{ subRequest.pu }} MAD</td>
-                            <td>{{ subRequest.totale }} MAD</td>
+                            <td>{{ subRequest.pu }} {{selectedRequest.currency}}</td>
+                            <td>{{ subRequest.totale }} {{selectedRequest.currency}}</td>
+                            <td>
 
+                                <div class="flex-container">
+                                    <div *ngIf="subRequest.departmangconfirmStatus == null">
+                                        <p-button *ngIf="IsManger" icon="pi pi-reply" [outlined]="true" label="Approve"
+                                            (click)="showDialog2('approve', subRequest)" severity="Success"></p-button>
+                                    </div>
+                                    <div *ngIf="subRequest.financeconfirmSatuts == null && subRequest.departmangconfirmStatus===true">
+                                        <p-button *ngIf="IsController" icon="pi pi-reply" [outlined]="true" label="Approve"
+                                            (click)="showDialog2('approveContoller', subRequest)" severity="Success"></p-button>
+                                    </div>
+                                    <div *ngIf="subRequest.financeconfirmSatuts===true && subRequest.poNum===null" >
+                                        <p-button *ngIf="IsItApprover" 
+                                                  label="PR/PO" 
+                                                  icon="pi pi-inbox" 
+                                                  [outlined]="true"
+                                                  (click)="showDialog2('PR&PO', subRequest)" 
+                                                  severity="Success"></p-button>
+                                    </div>  
+                                  
+                                </div>
+                              
+                            </td>
                         </tr>
 
                     </ng-template>
@@ -372,7 +410,7 @@
 
                 <div class="total-price-container">
                     <h1>
-                        <span>Total Price:</span> {{selectedRequest.totalPrice}}   MAD
+                        <span>Total Price:</span> {{selectedRequest.totalPrice}} {{selectedRequest.currency}}
                     </h1>
                 </div>
             </p-panel>
@@ -395,13 +433,11 @@
                         style="color:rgba(0, 51, 255, 0.777);"></span>
                 </ng-container>
                 <ng-container *ngIf="event.title === 'IT approval'">
-                    <span *ngIf="selectedSubRequest.iTconfirmSatuts === true" class="pi pi-check-circle"
-                        style="color:green;"></span>
-                    <span *ngIf="event.statusIT === false && !Mysubrequest.supplierOffer" class="pi pi-times-circle"
-                        style="color:red;"></span>
-                    <span *ngIf="Mysubrequest.supplierOffer && event.statusIT === null" class="pi pi-info-circle"
+                    <span *ngIf="selectedSubRequest.iTconfirmSatuts === true" class="pi pi-check-circle" style="color:green;"></span>
+                    <span *ngIf="selectedSubRequest.iTconfirmSatuts === false" class="pi pi-times-circle" style="color:red;"></span>
+                    <span *ngIf="Mysubrequest.supplierOffer && selectedSubRequest.iTconfirmSatuts === null" class="pi pi-info-circle"
                         style="color:rgb(64, 161, 175);"></span>
-                    <span *ngIf="event.statusIT === null && Mysubrequest.supplierOffer === null" class="pi pi-hourglass"
+                    <span *ngIf="selectedSubRequest.iTconfirmSatuts === null && !Mysubrequest.supplierOffer" class="pi pi-hourglass"
                         style="color:rgba(0, 51, 255, 0.777);"></span>
                 </ng-container>
                 <ng-container *ngIf="event.title === 'Finance approval'">
@@ -410,15 +446,12 @@
                     <span *ngIf="event.statusFina === null" class="pi pi-hourglass"
                         style="color:rgba(0, 51, 255, 0.777);"></span>
                 </ng-container>
-
                 <ng-container *ngIf="event.title === 'Asset approval'">
-                    <ng-container
-                        *ngIf="event.statusreq===true && Mysubrequest.pR_Status === true ; else checkInProgress">
+                    <ng-container *ngIf="event.statusreq === true ; else checkInProgress">
                         <span class="pi pi-check-circle" style="color:green;"></span>
                     </ng-container>
                     <ng-template #checkInProgress>
-                        <ng-container
-                            *ngIf="event.departmangconfirmStatus === false || event.iTconfirmSatuts === false || event.financeconfirmSatuts === false || event.statusreq===false; else checkInProgressFurther">
+                        <ng-container *ngIf="event.departmangconfirmStatus === false || event.iTconfirmSatuts === false || event.financeconfirmSatuts === false || event.statusreq === false; else checkInProgressFurther">
                             <span class="pi pi-times-circle" style="color:red;"></span>
                         </ng-container>
                         <ng-template #checkInProgressFurther>
@@ -451,7 +484,12 @@
                     <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
                     <p *ngIf="event.Quantity"><b>Quantity:</b> {{ event.Quantity }}</p>
                     <p *ngIf="event.PU"><b>Unit Price:</b> {{ event.PU }}</p>
-
+                    <p *ngIf="event.PrStatus"><b>PR Status:</b> {{ event.PrStatus }}</p>
+                    <p *ngIf="event.cc"><b>CC:</b> {{ event.cc }}</p>
+                    <p *ngIf="event.gl"><b>GL:</b> {{ event.gl }}</p>
+                    <p *ngIf="event.order"><b>Order:</b> {{ event.prnum }}</p>
+                    <p *ngIf="event.prnum"><b>PR number:</b> {{ event.prnum }}</p>
+                    <p *ngIf="event.ponum"><b>PO number:</b> {{ event.ponum }}</p>
                     <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
                     <p *ngIf="event.RejectionCause"><b>Cause:</b> {{ event.RejectionCause }}</p>
                     <p *ngIf="event.statusIT === null || event.statusIT !=null"><b>Status:</b> {{ getItStatus() }}</p>
@@ -460,7 +498,6 @@
 
                     <p *ngIf="event.statusManag === null || event.statusManag !=null"><b>Status:</b> {{
                         getmanagerStatus()}}</p>
-
 
                     <!-- general request -->
                     <p *ngIf="event.statusreq === null || event.statusreq != null"><b>Request Status:</b>
@@ -471,114 +508,26 @@
         </p-timeline>
     </div>
 
-    <div *ngIf="mode === 'approve'">
-        <div class="w-100">
-            <p-divider type="dashed"></p-divider>
-           
-            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
-                <h2>Select your response:</h2>
-                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
-                    name="departmangconfirmStatus"
-                    [(ngModel)]="selectedSubRequest.departmangconfirmStatus"
-                    required>
-                </p-selectButton>
-                <div *ngIf="form.submitted && !selectedSubRequest.departmangconfirmStatus" class="error-message">
-                    Response is required.
-                </div>
-                <br>
-                <h2>Enter the cause:</h2>
-                <textarea rows="10" cols="70" pInputTextarea
-                    name="departmang_Not_confirmCause"
-                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause"
-                    required
-                    #cause="ngModel">
-                </textarea>
-                <div *ngIf="cause.touched && cause.invalid" class="error-message">
-                    Cause is required.
-                </div>
-                <br>
-                <div class="position-relative end-0 bottom-0">
-                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
-                        <ng-container *ngIf="!loading2; else loadingTemplate">
-                            Confirm
-                        </ng-container>
-                        <ng-template #loadingTemplate>
-                            <i class="pi pi-spinner pi-spin"></i> Loading...
-                        </ng-template>
-                    </p-button>
-                </div>
-            </form>
- 
 
-        </div>
-    </div>
-    <div *ngIf="mode === 'approveContoller'">
-        <div class="w-100">
-            <p-divider type="dashed"></p-divider>
-           
-            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
-                <h2>Select your response:</h2>
-                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
-                    name="financeconfirmSatuts"
-                    [(ngModel)]="selectedSubRequest.financeconfirmSatuts"
-                    required>
-                </p-selectButton>
-                <br>
-                
-                <div *ngIf="form.submitted && !selectedSubRequest.financeconfirmSatuts" class="error-message">
-                    Response is required.
-                </div>
-                <br>
-                <h2>Enter the cause:</h2>
-                <textarea rows="10" cols="90" pInputTextarea
-                    name="finance_Not_confirmCause"
-                    [(ngModel)]="selectedSubRequest.finance_Not_confirmCause"
-                    required
-                    #cause="ngModel">
-                </textarea>
-                <div *ngIf="cause.touched && cause.invalid" class="error-message">
-                    Cause is required.
-                </div>
-                <br>
-                <div class="position-relative end-0 bottom-0">
-                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
-                        <ng-container *ngIf="!loading2; else loadingTemplate">
-                            Confirm
-                        </ng-container>
-                        <ng-template #loadingTemplate>
-                            <i class="pi pi-spinner pi-spin"></i> Loading...
-                        </ng-template>
-                    </p-button>
-                </div>
-            </form>
- 
-
-        </div>
-    </div>
     <div *ngIf="mode === 'Offer'">
         <form (ngSubmit)="confirmUploadAndITData()" #Offerform="ngForm">
             <p-stepper>
                 <p-stepperPanel header="Supplier Offer">
                     <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
                         <div class="flex flex-column h-12rem">
-                            <div class="border-2 border-dashed surface-border border-round surface-ground justify-content-center align-items-center">
-        
-                                <p-fileUpload 
-                                    name="supplierOffer" 
-                                    [multiple]="false" 
-                                    accept="application/pdf" 
-                                    maxFileSize="1000000"
-                                    (onSelect)="onFileUpload($event)" 
-                                    (onRemove)="onRemoveFile()"
-                                   >
+                            <div
+                                class="border-2 border-dashed surface-border border-round surface-ground justify-content-center align-items-center">
+
+                                <p-fileUpload name="supplierOffer" [multiple]="false" accept="application/pdf"
+                                    maxFileSize="1000000" (onSelect)="onFileUpload($event)" (onRemove)="onRemoveFile()">
                                     <ng-template pTemplate="header">
-                                        <div class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
+                                        <div
+                                            class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2">
                                             <div class="flex gap-2">
                                                 <p-button icon="pi pi-file-import" [rounded]="true" [outlined]="true"
                                                     (click)="fileInput.click()"></p-button>
-                                                <input type="file" #fileInput style="display:none;" 
-                                                    (change)="onFileInputChange($event)" 
-                                                    name="supplierOffer">
+                                                <input type="file" #fileInput style="display:none;"
+                                                    (change)="onFileInputChange($event)" name="supplierOffer">
                                                 <p-button icon="pi pi-times" [rounded]="true" [outlined]="true"
                                                     severity="danger" [disabled]="!uploadedFile"
                                                     (click)="onRemoveFile()"></p-button>
@@ -593,7 +542,8 @@
                                     <ng-template pTemplate="empty">
                                         <div class="flex align-items-center justify-content-center flex-column"
                                             *ngIf="!uploadedFile && showDragAndDropArea">
-                                            <i class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
+                                            <i
+                                                class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"></i>
                                             <p class="mt-4 mb-0">Drag and drop a PDF file to upload.</p>
                                         </div>
                                     </ng-template>
@@ -610,11 +560,53 @@
                     </ng-template>
                 </p-stepperPanel>
                 <p-stepperPanel header="Price">
-                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
+                        let-index="index">
+                        <p-divider></p-divider>
+                        <h2> Select the Currency</h2>
                         <div class="flex flex-column h-12rem">
-                            <div class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
-                                <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
-                                    >
+                            <div class=" flex justify-content-center">
+                                <div class="flex flex-wrap gap-3">
+                                    <div class="flex align-items-center">
+                                        <p-radioButton 
+                                            name="currency" 
+                                            value="MAD" 
+                                            [(ngModel)]="selectedRequest.currency"
+                                            inputId="ingredient2" />
+                                        <label for="ingredient2" class="ml-2">
+                                            MAD
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex align-items-center">
+                                        <p-radioButton 
+                                            name="currency" 
+                                            value="€" 
+                                            [(ngModel)]="selectedRequest.currency"
+                                            inputId="ingredient3" />
+                                        <label for="ingredient3" class="ml-2">
+                                            €
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex align-items-center">
+                                        <p-radioButton 
+                                            name="currency" 
+                                            value="$" 
+                                            [(ngModel)]="selectedRequest.currency" 
+                                            inputId="ingredient4" />
+                                        <label for="ingredient4" class="ml-2">
+                                             $ 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                     
+                            <p-divider></p-divider>
+                            
+                              <div  class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">
+                                <p-table [value]="approvedSubRequests"
+                                    styleClass="p-datatable-gridlines">
                                     <ng-template pTemplate="header">
                                         <tr>
                                             <th>Asset</th>
@@ -627,10 +619,9 @@
                                             <td>{{ asset.equipementName }}</td>
                                             <td>{{ asset.qtEquipment }}</td>
                                             <td>
-                                                <input type="text" pInputText name="pu" 
-                                                    [(ngModel)]="selectedRequest.equipmentSubRequests[i].pu" 
-                                                    #pu="ngModel"
-                                                    required />
+                                                <input type="text" pInputText name="pu"
+                                                    [(ngModel)]="selectedRequest.equipmentSubRequests[i].pu"
+                                                    #pu="ngModel" required />
                                                 <div *ngIf="pu.touched && pu.invalid" class="error-message">
                                                     Unit Price is required.
                                                 </div>
@@ -655,5 +646,159 @@
                 </p-stepperPanel>
             </p-stepper>
         </form>
-        
+
     </div>
+   
+</p-dialog>
+<p-dialog header="{{mode === 'approve' ? 'Manager Approval':  mode === 'Offer' ? 'Supplier Offer & Assets Price' :    mode === 'approveContoller' ? 'Finance Approval'  : 'Finance Approval' }}"
+[modal]="true" [(visible)]="visible2">
+   
+    <div *ngIf="mode2 === 'approve'">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="departmangconfirmStatus" [(ngModel)]="selectedSubRequest.departmangconfirmStatus" required>
+                </p-selectButton>
+                <div *ngIf="form.submitted && !selectedSubRequest.departmangconfirmStatus" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+                <h2>Enter the cause:</h2>
+                <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
+                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <div *ngIf="mode2 === 'approveContoller'">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="financeconfirmSatuts" [(ngModel)]="selectedSubRequest.financeconfirmSatuts" required>
+                </p-selectButton>
+                <br>
+                <div class="container" *ngIf="selectedSubRequest.financeconfirmSatuts===true">
+                <p-divider align="left" type="solid"> <b>GL & CC & Order</b>
+                </p-divider>
+             
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <input pInputText id="GL" aria-describedby="gl-help" name="gl" placeholder="GL"
+                                [(ngModel)]="selectedSubRequest.gl" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <input pInputText id="CC" aria-describedby="CC-help" name="cc" placeholder="CC"
+                                [(ngModel)]="selectedSubRequest.cc" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <input pInputText id="order" aria-describedby="order-help" placeholder="Order" name="order"
+                                [(ngModel)]="selectedSubRequest.order" class="form-control" />
+                        
+                    </div>
+                </div>
+                </div>
+                <p-divider type="solid"> </p-divider>
+
+                <div *ngIf="form.submitted && !selectedSubRequest.financeconfirmSatuts" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+                <h2>Enter the cause:</h2>
+                <textarea rows="6" cols="50" pInputTextarea name="finance_Not_confirmCause"
+                    [(ngModel)]="selectedSubRequest.finance_Not_confirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-2 bottom-2">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <div *ngIf="mode2 === 'PR&PO'">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value" name="pR_Status"
+                    [(ngModel)]="selectedSubRequest.pR_Status" required>
+                </p-selectButton>
+                <div *ngIf="form.submitted && !selectedSubRequest.pR_Status" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+
+                <div *ngIf="selectedSubRequest.pR_Status===true">
+                    <p-divider align="left" type="solid"> <b>PR & PO</b>
+                    </p-divider>
+                    <div class="row">
+                        <div class="col-4">
+                            <input type="text" pInputText [(ngModel)]="selectedSubRequest.prNum" name="prNum"
+                                placeholder="PR number" class="form-control" />
+                        </div>
+                        <div class="col-4">
+                            <input type="text" pInputText [(ngModel)]="selectedSubRequest.poNum" name="poNum"
+                                placeholder="PO number" class="form-control" />
+                        </div>
+                    </div>
+                    <p-divider type="dashed" />
+                    <br>
+                </div>
+                <h2>Enter the cause:</h2>
+                <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
+                    [(ngModel)]="selectedSubRequest.pR_Not_ConfirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
+                        <ng-container *ngIf="!loading4; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</p-dialog>

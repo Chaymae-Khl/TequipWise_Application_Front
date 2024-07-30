@@ -9,18 +9,14 @@ export class EquipmentRequest {
     requestStatus?: boolean;
     isNewhire?: boolean;
     newHireName?: string;
-    gl?: string;
-    cc?: string;
-    order?: string;
+   
     supplierOffer?: string;
-    poNum?: string;
-    prNum?: string;
-    pR_Status?: boolean;
-    pR_Not_ConfirmCause?: string;
+   
     userId?: string;
     nmaeOfUser?: string;
     equipmentSubRequests: SubRequest[] = [];
     sapNumOfUser?: string;
+    currency:any;                         
 
 
 }

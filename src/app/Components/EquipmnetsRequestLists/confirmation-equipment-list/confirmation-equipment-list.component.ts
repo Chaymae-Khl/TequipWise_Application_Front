@@ -7,6 +7,7 @@ import { LocalStorageServiceService } from '../../../Services/local-storage-serv
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SubRequest } from '../../../Models/sub-request';
 import { environment } from '../../../../environments/environment';
+import { EquipementServiceService } from '../../../Services/equipement-service.service';
 class ManagerApproval {
   Status?:boolean
    NotConfirmCause?:string;
@@ -19,6 +20,7 @@ class ManagerApproval {
 export class ConfirmationEquipmentListComponent {
   expandedRows = {};
   equipmentRequests: any;
+  supliersNames:any;
   selectedRequest: EquipmentRequest = new EquipmentRequest();
   Mainrequest:EquipmentRequest = new EquipmentRequest();
   selectedSubRequest:SubRequest = new SubRequest();
@@ -48,7 +50,7 @@ export class ConfirmationEquipmentListComponent {
   visible2: boolean = false;
   timelineEvents: any[] = [];
   mode: 'request' | 'subrequest'|'Offer'|'approve' | 'approveContoller'|'PR&PO' = 'approve';
-  mode2: 'approve' | 'approveContoller'|'PR&PO' = 'approve';
+  mode2: 'approve' | 'approveContoller'|'PR&PO'|'PO' = 'approve';
 
   IsManger!: boolean;
   IsController!: boolean;
@@ -61,10 +63,19 @@ export class ConfirmationEquipmentListComponent {
   ];
   constructor(private equipementService: EquipementRequestServiceService, private router: Router,  private localStorageService: LocalStorageServiceService,
       private messageService: MessageService,
-      private sanitizer: DomSanitizer) {
+      private sanitizer: DomSanitizer,private equipementmanService: EquipementServiceService) {
 
   }
-
+  ngOnInit() {
+    this.getReuestList();
+    this.checkRoles();
+    this.getSuppliersName();
+    console.log(this.supliersNames)
+    this.filterApprovedEquipment();
+    if (this.selectedRequest && this.selectedRequest.supplierOffer) {
+      this.pdfSrc = this.loadPdf(this.selectedRequest.supplierOffer);
+    }
+  }
   //helpers method
   //its a helper function  to get the selected request of the subrequest
  
@@ -173,11 +184,7 @@ export class ConfirmationEquipmentListComponent {
   // }
 
  
-  ngOnInit() {
-    this.getReuestList();
-    this.checkRoles();
-    this.filterApprovedEquipment();
-  }
+  
   //its a hlper function  to get the selected request of the subrequest
   findSelectedRequest = (subEquipmentRequestId: number) => {
     // Iterate over each equipment request
@@ -208,6 +215,9 @@ export class ConfirmationEquipmentListComponent {
   else if(mode=== 'Offer'){
     this.selectedRequest = req;
     this.selectedSubRequest={};
+    if (this.mode === 'Offer' && this.selectedRequest.supplierOffer) {
+      this.pdfSrc = this.loadPdf(this.selectedRequest.supplierOffer);
+    }
   }   
 
  
@@ -224,7 +234,7 @@ export class ConfirmationEquipmentListComponent {
     ];
 }
 
-showDialog2(mode2: 'approve'|'approveContoller'|'PR&PO',req:any) {
+showDialog2(mode2: 'approve'|'approveContoller'|'PR&PO'|'PO',req:any) {
   this.mode2 = mode2;
   this.visible2 = true;
 
@@ -239,7 +249,7 @@ else if (mode2 === 'approveContoller') {
   this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
 }
    
-else if (mode2 === 'PR&PO') {
+else if (mode2 === 'PR&PO'|| mode2 === 'PO') {
   this.selectedSubRequest = req;
   const selectedSubEquipmentRequestId:any = this.selectedSubRequest.subEquipmentRequestId;
   this.Mainrequest=this.findSelectedRequest(selectedSubEquipmentRequestId);
@@ -499,5 +509,16 @@ loadPdf(filePath: string): SafeResourceUrl {
   const fileUrl = `${this.apiUrl}/${filePath}`;
   return this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
 }
-
+getSuppliersName(){
+  this.equipementmanService.getsupplierName().subscribe
+    (data=>{
+  this.supliersNames=data;
+  
+    },
+    (error)=>{
+      console.log(error);
+    }
+  
+  );
+}
 }

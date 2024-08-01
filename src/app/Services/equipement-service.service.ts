@@ -52,7 +52,7 @@ getNumberOfEquipements(){
 
 getsupplierName(){
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.get(`${this.apiUrl}/Admin/SuppliersName`,httpOptions);
+  return this.httpClient.get(`${this.apiUrl}/Request/SuppliersName`,httpOptions);
 }
 
 getEquipmentName(){

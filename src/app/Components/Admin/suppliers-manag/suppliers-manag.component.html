@@ -28,7 +28,6 @@
             <th>Supplier Name</th>
             <th>Address</th>
             <th>Email</th>
-            <th><a style="color: white;" routerLink="/admin/equipements">IT Assets</a></th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -37,10 +36,7 @@
             <td>{{ supplier.suuplier_name }}</td>
             <td>{{ supplier.address }}</td>
             <td>{{ supplier.email }}</td>
-            <td><button mat-icon-button color="link" aria-label="View departments"
-                (click)="showDialog('Equipements', supplier)">
-                <i class="pi pi-desktop" style="font-size: 1.3rem"></i>
-              </button></td>
+           
             <td>
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
                 <i class="pi pi-ellipsis-v" style="color: #EA8300"></i>
@@ -123,7 +119,7 @@
 
   </div>
 
-  <div *ngIf="mode === 'Equipements'">
+  <!-- <div *ngIf="mode === 'Equipements'">
     <p-orderList [value]="selectedSupplier.equipements" [listStyle]="{ width:'20rem' }" filterBy="equipName"
       filterPlaceholder="Filter by asset name">
       <ng-template let-equipemnt pTemplate="item">
@@ -138,5 +134,5 @@
         <p-divider></p-divider>
       </ng-template>
     </p-orderList>
-  </div>
+  </div> -->
 </p-dialog>

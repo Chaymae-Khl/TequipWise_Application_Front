@@ -77,7 +77,7 @@
 
                 <td>
                     <div class="flex-container">
-                        <div *ngIf="request.supplierOffer===null">
+                        <div >
                             <p-button *ngIf="IsItApprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
                                 (click)="showDialog('Offer',request )" severity="Success"></p-button>
                         </div>
@@ -190,22 +190,7 @@
                 <td>
 
                     <div class="flex-container">
-                        <!-- <div *ngIf="subRequest.departmangconfirmStatus == null">
-                            <p-button *ngIf="IsManger" icon="pi pi-reply" [outlined]="true" label="Approve"
-                                (click)="showDialog('approve', subRequest)" severity="Success"></p-button>
-                        </div>
-                        <div *ngIf="subRequest.financeconfirmSatuts == null && subRequest.departmangconfirmStatus===true">
-                            <p-button *ngIf="IsController" icon="pi pi-reply" [outlined]="true" label="Approve"
-                                (click)="showDialog('approveContoller', subRequest)" severity="Success"></p-button>
-                        </div>
-                        <div *ngIf="subRequest.financeconfirmSatuts===true && subRequest.poNum===null" >
-                            <p-button *ngIf="IsItApprover" 
-                                      label="PR/PO" 
-                                      icon="pi pi-inbox" 
-                                      [outlined]="true"
-                                      (click)="showDialog('PR&PO', subRequest)" 
-                                      severity="Success"></p-button>
-                        </div>   -->
+                       
                         <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
                             (onClick)="showDialog('subrequest',subRequest)" [outlined]="true"></p-button>
                     </div>
@@ -382,22 +367,30 @@
                             <td>
 
                                 <div class="flex-container">
-                                    <div *ngIf="subRequest.departmangconfirmStatus == null">
+                                    <div >
                                         <p-button *ngIf="IsManger" icon="pi pi-reply" [outlined]="true" label="Approve"
                                             (click)="showDialog2('approve', subRequest)" severity="Success"></p-button>
                                     </div>
-                                    <div *ngIf="subRequest.financeconfirmSatuts == null && subRequest.departmangconfirmStatus===true">
+                                    <div >
                                         <p-button *ngIf="IsController" icon="pi pi-reply" [outlined]="true" label="Approve"
                                             (click)="showDialog2('approveContoller', subRequest)" severity="Success"></p-button>
                                     </div>
-                                    <div *ngIf="subRequest.financeconfirmSatuts===true && subRequest.poNum===null" >
+                                    <div  >
                                         <p-button *ngIf="IsItApprover" 
-                                                  label="PR/PO" 
+                                                  label="PR" 
                                                   icon="pi pi-inbox" 
                                                   [outlined]="true"
                                                   (click)="showDialog2('PR&PO', subRequest)" 
                                                   severity="Success"></p-button>
-                                    </div>  
+                                    </div>
+                                    
+                                    <div  >
+                                        <p-button *ngIf="IsItApprover" 
+                                                  label="PO" 
+                                                  icon="pi pi-inbox" 
+                                                  (click)="showDialog2('PO', subRequest)" 
+                                                  severity="warning"></p-button>
+                                    </div> 
                                   
                                 </div>
                               
@@ -650,7 +643,7 @@
     </div>
    
 </p-dialog>
-<p-dialog header="{{mode === 'approve' ? 'Manager Approval':  mode === 'Offer' ? 'Supplier Offer & Assets Price' :    mode === 'approveContoller' ? 'Finance Approval'  : 'Finance Approval' }}"
+<p-dialog header="{{mode2 === 'approve' ? 'Manager Approval' :  mode2 === 'approveContoller' ? 'Finance Approval':  mode2 === 'PO' ? 'PO Approval':mode2 === 'PR&PO' ? 'Pr Approval'  : 'Finance Approval' }}"
 [modal]="true" [(visible)]="visible2">
    
     <div *ngIf="mode2 === 'approve'">
@@ -763,17 +756,14 @@
                 <br>
 
                 <div *ngIf="selectedSubRequest.pR_Status===true">
-                    <p-divider align="left" type="solid"> <b>PR & PO</b>
+                    <p-divider align="left" type="solid"> <b> PR</b>
                     </p-divider>
                     <div class="row">
                         <div class="col-4">
                             <input type="text" pInputText [(ngModel)]="selectedSubRequest.prNum" name="prNum"
                                 placeholder="PR number" class="form-control" />
                         </div>
-                        <div class="col-4">
-                            <input type="text" pInputText [(ngModel)]="selectedSubRequest.poNum" name="poNum"
-                                placeholder="PO number" class="form-control" />
-                        </div>
+                       
                     </div>
                     <p-divider type="dashed" />
                     <br>
@@ -787,6 +777,46 @@
                 </div>
                 <br>
                 <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
+                        <ng-container *ngIf="!loading4; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <div *ngIf="mode2 === 'PO'">
+        <div class="w-100">
+            
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
+                <div *ngIf="selectedSubRequest.pR_Status === true">
+                    <p-divider align="left" type="solid"><b>PO</b></p-divider>
+                    <div class="row">
+                        <div class="form-group">
+                            <input type="text" pInputText [(ngModel)]="selectedSubRequest.poNum" name="poNum"
+                                placeholder="PO number" class="form-control same-size-input" />
+                        </div>
+                        <p-divider align="left" type="solid"><b>Supplier</b></p-divider>
+                        <div class="form-group mt-3">
+                            <p-dropdown [filter]="true" filterBy="supplierName" [showClear]="true"
+                              [(ngModel)]="selectedSubRequest.supplierrid"
+                              [appendTo]="'body'" name="supplierrid" [options]="supliersNames"
+                                optionValue="supplierId" optionLabel="supplierName" aria-describedby="supplierName"
+                                placeholder="Select the Supplier Name" class="same-size-dropdown">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <p-divider type="dashed"></p-divider>
+                    <br>
+                </div>
+                <br>
+                <div >
                     <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
                         <ng-container *ngIf="!loading4; else loadingTemplate">
                             Confirm

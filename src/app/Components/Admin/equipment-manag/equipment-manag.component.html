@@ -12,8 +12,8 @@
     <div class="col-4">
       <div class="search-bar">
         <mat-form-field appearance="fill" class="search-field">
-          <mat-label>Search by Serial Number</mat-label>
-          <input matInput [(ngModel)]="searchTerm" placeholder="Serial Number">
+          <mat-label>Search by Asset name</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Asset Name">
         </mat-form-field>
       </div>
     </div>
@@ -25,15 +25,14 @@
         [rowsPerPageOptions]="[5, 10, 20]">
         <ng-template pTemplate="header">
           <tr>
-            <th>Equipment Name</th>
-            <th><a style="color: white;" routerLink="/admin/suppliers">Supplier Name</a></th>
+            <th>Asset Name</th>
             <th>Actions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-equipment>
           <tr>
             <td>{{ equipment.equipName }}</td>
-            <td>{{ equipment.supplierName }}</td>
+
             <td>
               <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
                 <i class="pi pi-ellipsis-v" style="color: #EA8300"></i>
@@ -80,11 +79,7 @@
           <label for="address">Equipment Name</label>
         </p-floatLabel>
       </div>
-      <div class="group m-2"> <p-dropdown [filter]="true" filterBy="supplierName" [showClear]="true"
-          [(ngModel)]="selectedEquipment.supplierrid" [appendTo]="'body'" name="supplierrid" [options]="supliersNames"
-          optionValue="supplierId" optionLabel="supplierName" aria-describedby="supplierName"
-          placeholder="Select the Supplier Name">
-        </p-dropdown></div>
+     
     </div>
     <p-divider></p-divider>
 
@@ -98,9 +93,7 @@
   <div *ngIf="mode === 'view'">
     <p-divider></p-divider>
     <div class="row">
-      <p><strong>Equipement Serial Number:</strong> {{ selectedEquipment.equipementSN }}</p>
       <p><strong>Equipement Name:</strong> {{ selectedEquipment.equipName }}</p>
-      <p><strong>Supplier Name:</strong> {{ selectedEquipment.supplierName }}</p>
     </div>
     <p-divider></p-divider>
   </div>

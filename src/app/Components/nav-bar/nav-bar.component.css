@@ -249,12 +249,15 @@ ul {
   color: #3c3c3c;
   background-color: #ffffff;
   padding: 1rem;
+  border-radius: 14px;
+
 }
 
 .navbar .collapse .nav-item .dropdown-item:hover {
   color: #ffffff;
   background-color: #EA8300;
   padding: 1rem;
+  border-radius: 4px;
 }
 
 .navbar {

@@ -8,3 +8,6 @@
     flex: 4;
     min-width: 18rem; /* Adjust the min-width as needed */
 }
+.recent-request {
+    background-color: #fff3cd !important;
+  }

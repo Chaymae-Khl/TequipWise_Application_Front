@@ -12,6 +12,7 @@ export class MenuComponent {
   isAuthenticated: boolean;
   IsAdmin!:boolean;
   IsManger!:boolean;
+  ISbackupAprover!:boolean;
   IsItApprover!:boolean;
   IsController!:boolean;
   visible: boolean = false;
@@ -53,6 +54,15 @@ export class MenuComponent {
         (isItApprover: boolean) => {
           this.IsItApprover = isItApprover;
           console.log('Manager status:', isItApprover);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+      this.localStorageService.IsBackupApprover(token).subscribe(
+        (isBackup: boolean) => {
+          this.ISbackupAprover = isBackup;
+          console.log('Manager status:', isBackup);
         },
         (error: any) => {
           console.error('Error fetching manager status:', error);

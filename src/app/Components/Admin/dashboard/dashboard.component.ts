@@ -7,45 +7,12 @@ import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexTitleSubtitle, Apex
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  data: any;
-  options: any;
 
-  ngOnInit() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-
-    this.data = {
-      labels: ['Approved', 'In Progress', 'Finance Approval', 'PR', 'Rejected'],
-      datasets: [
-        {
-          data: [300, 50, 100, 88, 33],
-          backgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--red-500'),
-            documentStyle.getPropertyValue('--purple-500')
-          ],
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--blue-400'),
-            documentStyle.getPropertyValue('--yellow-400'),
-            documentStyle.getPropertyValue('--green-400'),
-            documentStyle.getPropertyValue('--red-400'),
-            documentStyle.getPropertyValue('--purple-400')
-          ]
-        }
-      ]
-    };
-
-    this.options = {
-      cutout: '60%',
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor
-          }
-        }
-      }
-    };
-  }
+  value = [
+    { label: 'Apps', color1: '#34d399', color2: '#fbbf24', value: 25, icon: 'pi pi-table' },
+    { label: 'Messages', color1: '#fbbf24', color2: '#60a5fa', value: 15, icon: 'pi pi-inbox' },
+    { label: 'Media', color1: '#60a5fa', color2: '#c084fc', value: 20, icon: 'pi pi-image' },
+    { label: 'System', color1: '#c084fc', color2: '#c084fc', value: 10, icon: 'pi pi-cog' }
+];
+  
 }

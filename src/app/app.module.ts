@@ -88,8 +88,10 @@ import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsReque
 import { TokenInterceptorService } from './interceptors/token-interceptor.service';
 import { StepperModule } from 'primeng/stepper';
 import { NotificationServiceService } from './Services/notification-service.service';
-
-
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { MeterGroupModule } from 'primeng/metergroup';
+import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equipment-list/my-equipment-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -122,6 +124,7 @@ import { NotificationServiceService } from './Services/notification-service.serv
     RequestFilterPipe,
     UserEquipmentListComponent,
     ConfirmationEquipmentListComponent,
+    MyEquipmentListComponent,
   
    
   
@@ -182,8 +185,10 @@ import { NotificationServiceService } from './Services/notification-service.serv
     ProgressSpinnerModule,
     FileUploadModule,
     InplaceModule,
-    StepperModule
-
+    StepperModule,
+    AvatarGroupModule,
+    AvatarModule,
+    MeterGroupModule
   ],
   providers: [
     provideClientHydration(),

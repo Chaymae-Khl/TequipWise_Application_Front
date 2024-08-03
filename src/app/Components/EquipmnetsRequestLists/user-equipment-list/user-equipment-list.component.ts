@@ -76,7 +76,7 @@ export class UserEquipmentListComponent {
     this.timelineEvents = [
       { title: 'Request Created',ForWho: req.isNewhire, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment },
       { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: req.departmangconfirmStatus },
-      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.iT_Not_confirmCause, statusIT: req.iTconfirmSatuts, supplierOffer:  this.Mysubrequest?.supplierOffer },
+      { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.pR_Not_ConfirmCause, statusIT: req.iTconfirmSatuts, supplierOffer: this.Mysubrequest?.supplierOffer, PrStatus: this.getPRStatus(req.pR_Status, req), prnum: req.prNum  },
       { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts },
       { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: req.subRequestStatus}
     ];
@@ -84,63 +84,67 @@ export class UserEquipmentListComponent {
 
 
 //Status of the approvers
-getmanagerStatus():string{
+getmanagerStatus(): string {
   if (this.selectedSubRequest.departmangconfirmStatus === true) {
     return 'Approved';
-} else if (this.selectedSubRequest.departmangconfirmStatus === false) {
+  } else if (this.selectedSubRequest.departmangconfirmStatus === false) {
     return 'Rejected';
-} 
- else {
+  }
+  else {
     return 'Open';
+  }
 }
-}
-getItStatus():string{
+getItStatus(): string {
   if (this.selectedSubRequest.iTconfirmSatuts === true) {
     return 'Approved';
-} else if (this.selectedSubRequest.iTconfirmSatuts === false) {
+  } else if (this.selectedSubRequest.iTconfirmSatuts === false) {
     return 'Rejected';
-} else if (this.Mysubrequest.supplierOffer != null) {
-  return 'Offer';
-} else if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false) {
-  return 'Closed';
-} 
- else {
+  } else if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.pR_Status===false) {
+    return 'Closed';
+  } else if (this.Mysubrequest.supplierOffer != null) {
+    return 'Offer';
+  } else {
     return 'Open';
-}
+  }
 }
 
-getFinanceStatus():string{
+getFinanceStatus(): string {
   if (this.selectedSubRequest.financeconfirmSatuts === true) {
     return 'Approved';
-} else if (this.selectedSubRequest.financeconfirmSatuts === false) {
+  } else if (this.selectedSubRequest.financeconfirmSatuts === false) {
     return 'Rejected';
 
-} else if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false) {
-  return 'Closed';
-} 
- else {
+  } else if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false) {
+    return 'Closed';
+  }
+  else {
     return 'Open';
-} 
+  }
 }
+
 
 //status of the subrequest
-getSubRequestStatusGeneral():string{
-  if (this.selectedSubRequest.departmangconfirmStatus === true && this.selectedSubRequest.iTconfirmSatuts === null && this.Mysubrequest.supplierOffer === null) {
+getSubRequestStatusGeneral(): string {
+  if (this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false || this.selectedSubRequest.financeconfirmSatuts === false ||this.selectedSubRequest.pR_Status === false) {
+    return 'Rejected';
+  } else if (this.selectedSubRequest.departmangconfirmStatus === true && this.selectedSubRequest.iTconfirmSatuts === null && this.Mysubrequest.supplierOffer === null) {
     return 'In Progress';
-} else if ( this.selectedSubRequest.departmangconfirmStatus === true && this.Mysubrequest.supplierOffer != null && this.selectedSubRequest.financeconfirmSatuts === null) {
+  } else if (this.selectedSubRequest.departmangconfirmStatus === true && this.Mysubrequest.supplierOffer != null && this.selectedSubRequest.financeconfirmSatuts === null) {
     return 'Waiting for Finance Approval';
-
-} else if (  this.Mysubrequest.pR_Status === true && this.selectedSubRequest.subRequestStatus===true) {
-  return 'Approved';
-}  else if (  this.selectedSubRequest.departmangconfirmStatus === false || this.selectedSubRequest.iTconfirmSatuts === false || this.selectedSubRequest.financeconfirmSatuts === false ) {
-  return 'Rejected';
-} else if (  this.Mysubrequest.supplierOffer != null &&  this.selectedSubRequest.iTconfirmSatuts === null ) {
-  return 'Offer';
-} 
- else {
+  } else if (this.selectedSubRequest.financeconfirmSatuts === true && this.selectedSubRequest.pR_Status === null) {
+    return 'Waiting for PR';
+  } else if (this.selectedSubRequest.pR_Status === true && this.selectedSubRequest.poNum === null) {
+    return 'Waiting for PO';
+  } else if (this.selectedSubRequest.pR_Status === true && this.selectedSubRequest.subRequestStatus === true) {
+    return 'Approved';
+  } else if (this.Mysubrequest.supplierOffer != null && this.selectedSubRequest.iTconfirmSatuts === null) {
+    return 'Offer';
+  } else {
     return 'Open';
-} 
+  }
 }
+
+
                                   
                                                                
 
@@ -160,16 +164,25 @@ getSubRequestStatusGeneral():string{
       }
     );
   }
-  getPRStatus(prStatus: boolean | null,request:any): string {
+
+  isRecentRequest(requestDate: string): boolean {
+    const now = new Date();
+    const requestDateTime = new Date(requestDate);
+    const timeDifference = now.getTime() - requestDateTime.getTime();
+    const timeDifferenceInMinutes = timeDifference / (1000 * 60);
+
+    return timeDifferenceInMinutes < 7; // Checks if the request was made in the last 10 minutes
+  }
+  getPRStatus(prStatus: any | null, request: any): string {
     if (prStatus === true) return 'Approved';
     if (prStatus === false) return 'Rejected';
-    if (prStatus === null && request?.requestStatus===false) return 'closed';
+    if (prStatus === null && request?.requestStatus === false) return 'closed';
     return 'open';
   }
   // Method to determine the overall status of the main request
   getRequestStatus(request: EquipmentRequest): string {
     if (!request || !request.equipmentSubRequests) {
-        return 'Unknown';
+      return 'Unknown';
     }
 
     const allSubRequests = request.equipmentSubRequests;
@@ -178,35 +191,35 @@ getSubRequestStatusGeneral():string{
     const anyApproved = allSubRequests.some(subRequest => subRequest.subRequestStatus === true);
     const anyRejected = allSubRequests.some(subRequest => subRequest.subRequestStatus === false);
     const allRejected = allSubRequests.every(subRequest => subRequest.subRequestStatus === false);
-    
+
     const allStatusesNull = allSubRequests.every(subRequest =>
-        subRequest.departmangconfirmStatus === null &&
-        subRequest.iTconfirmSatuts === null &&
-        subRequest.financeconfirmSatuts === null &&
-        subRequest.subRequestStatus === null
+      subRequest.departmangconfirmStatus === null &&
+      subRequest.iTconfirmSatuts === null &&
+      subRequest.financeconfirmSatuts === null &&
+      subRequest.subRequestStatus === null
     );
 
     const anyPendingApproval = allSubRequests.some(subRequest =>
-        subRequest.departmangconfirmStatus === null ||
-        subRequest.iTconfirmSatuts === null ||
-        subRequest.financeconfirmSatuts === null ||
-        subRequest.subRequestStatus === null
+      subRequest.departmangconfirmStatus === null ||
+      subRequest.iTconfirmSatuts === null ||
+      subRequest.financeconfirmSatuts === null ||
+      subRequest.subRequestStatus === null
     );
 
     if (allStatusesNull) {
       return 'Open';
-  } else if (anyApproved && anyRejected ) {
+    } else if (anyApproved && anyRejected) {
       return 'Partly Approved';
-  } else if (allApproved) {
+    } else if (allApproved) {
       return 'Approved';
-  } else if (allRejected) {
+    } else if (allRejected) {
       return 'Rejected';
-  } else if (anyPendingApproval ) {
+    } else if (anyPendingApproval) {
       return 'Pending';
-  }
+    }
 
-  return 'Partly Rejected';
-}
+    return 'Partly Rejected';
+  }
 filterRequests() {
   // Filter the list based on selected filter
   if (this.selectedFilter === null) {

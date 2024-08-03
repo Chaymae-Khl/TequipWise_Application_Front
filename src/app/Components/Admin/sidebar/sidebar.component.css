@@ -1,6 +1,6 @@
 .content {
-  margin-left: 300px;
-  background: #FFFFFF;
+  margin-left: 220px;
+  background: white;
   transition: 0.5s;
 }
 
@@ -133,7 +133,7 @@ body {
 
 .navbar-vertical.navbar-expand-xs .navbar-nav .nav-link {
   padding-top: 0.675rem;
-  padding-bottom: 0.675rem;
+  padding-bottom: 1rem;
   margin: 0 1rem;
 }
 
@@ -174,11 +174,7 @@ body {
   border-radius: 0.25rem;
 }
 
-.navbar-vertical.navbar-expand-xs .navbar-nav .nav .nav-link {
-  padding-top: 0.417rem;
-  padding-bottom: 0.417rem;
-  padding-left: 15px;
-}
+
 
 .navbar-vertical.navbar-expand-xs .navbar-nav .nav .nav-link>span.sidenav-normal {
   transition: all 0.1s ease 0s;
@@ -233,11 +229,6 @@ body {
     right: 0;
   }
 
-  .navbar-vertical.navbar-expand-sm .navbar-nav .nav-link {
-    padding-top: 0.675rem;
-    padding-bottom: 0.675rem;
-    margin: 0 1rem;
-  }
 
   .navbar-vertical.navbar-expand-sm .navbar-nav .nav-link .nav-link-text,
   .navbar-vertical.navbar-expand-sm .navbar-nav .nav-link .sidenav-mini-icon,
@@ -277,11 +268,7 @@ body {
     border-radius: 0.25rem;
   }
 
-  .navbar-vertical.navbar-expand-sm .navbar-nav .nav .nav-link {
-    padding-top: 0.417rem;
-    padding-bottom: 0.417rem;
-    padding-left: 15px;
-  }
+
 
   .navbar-vertical.navbar-expand-sm .navbar-nav .nav .nav-link>span.sidenav-normal {
     transition: all 0.1s ease 0s;
@@ -333,11 +320,7 @@ body {
     right: 0;
   }
 
-  .navbar-vertical.navbar-expand-md .navbar-nav .nav-link {
-    padding-top: 0.675rem;
-    padding-bottom: 0.675rem;
-    margin: 0 1rem;
-  }
+
 
   .navbar-vertical.navbar-expand-md .navbar-nav .nav-link .nav-link-text,
   .navbar-vertical.navbar-expand-md .navbar-nav .nav-link .sidenav-mini-icon,
@@ -376,11 +359,7 @@ body {
     border-radius: 0.25rem;
   }
 
-  .navbar-vertical.navbar-expand-md .navbar-nav .nav .nav-link {
-    padding-top: 0.417rem;
-    padding-bottom: 0.417rem;
-    padding-left: 15px;
-  }
+ 
 
   .navbar-vertical.navbar-expand-md .navbar-nav .nav .nav-link>span.sidenav-normal {
     transition: all 0.1s ease 0s;
@@ -432,11 +411,7 @@ body {
     right: 0;
   }
 
-  .navbar-vertical.navbar-expand-lg .navbar-nav .nav-link {
-    padding-top: 0.675rem;
-    padding-bottom: 0.675rem;
-    margin: 0 1rem;
-  }
+
 
   .navbar-vertical.navbar-expand-lg .navbar-nav .nav-link .nav-link-text,
   .navbar-vertical.navbar-expand-lg .navbar-nav .nav-link .sidenav-mini-icon,
@@ -475,11 +450,7 @@ body {
     border-radius: 0.25rem;
   }
 
-  .navbar-vertical.navbar-expand-lg .navbar-nav .nav .nav-link {
-    padding-top: 0.417rem;
-    padding-bottom: 0.417rem;
-    padding-left: 15px;
-  }
+  
 
   .navbar-vertical.navbar-expand-lg .navbar-nav .nav .nav-link>span.sidenav-normal {
     transition: all 0.1s ease 0s;
@@ -531,12 +502,7 @@ body {
     right: 0;
   }
 
-  .navbar-vertical.navbar-expand-xl .navbar-nav .nav-link {
-    padding-top: 0.675rem;
-    padding-bottom: 0.675rem;
-    margin: 0 1rem;
-  }
-
+ 
   .navbar-vertical.navbar-expand-xl .navbar-nav .nav-link .nav-link-text,
   .navbar-vertical.navbar-expand-xl .navbar-nav .nav-link .sidenav-mini-icon,
   .navbar-vertical.navbar-expand-xl .navbar-nav .nav-link .sidenav-normal,
@@ -574,11 +540,7 @@ body {
     border-radius: 0.25rem;
   }
 
-  .navbar-vertical.navbar-expand-xl .navbar-nav .nav .nav-link {
-    padding-top: 0.417rem;
-    padding-bottom: 0.417rem;
-    padding-left: 15px;
-  }
+ 
 
   .navbar-vertical.navbar-expand-xl .navbar-nav .nav .nav-link>span.sidenav-normal {
     transition: all 0.1s ease 0s;
@@ -630,11 +592,7 @@ body {
     right: 0;
   }
 
-  .navbar-vertical.navbar-expand-xxl .navbar-nav .nav-link {
-    padding-top: 0.675rem;
-    padding-bottom: 0.675rem;
-    margin: 0 1rem;
-  }
+  
 
   .navbar-vertical.navbar-expand-xxl .navbar-nav .nav-link .nav-link-text,
   .navbar-vertical.navbar-expand-xxl .navbar-nav .nav-link .sidenav-mini-icon,
@@ -852,7 +810,34 @@ body {
 #sidenav-collapse-main {
 
   border-top: none;
-  border-right: solid #d6d1d1 2px;
   border-bottom: none;
   height: 87%;
+}
+.sidenav {
+  width: 250px; /* Default width of the sidebar */
+  transition: width 0.3s;
+}
+
+.sidenav.collapsed {
+  width: 80px; /* Width when collapsed */
+}
+
+.sidenav .navbar-nav {
+  transition: opacity 0.3s;
+}
+
+.sidenav.collapsed .navbar-nav {
+  opacity: 1; /* Keep icons visible */
+}
+
+.sidenav.collapsed .nav-link-text {
+  display: none; /* Hide text when collapsed */
+}
+
+.content {
+  transition: margin-left 0.3s;
+}
+
+.full-width {
+  margin-left: 90px; /* Adjust content margin when sidebar is collapsed */
 }

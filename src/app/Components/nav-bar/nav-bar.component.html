@@ -35,10 +35,13 @@
       <li class="nav-item" *ngIf="isLoggedIn()">
         <div class="dropdown">
           <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="rounded-circle me-lg-2 pi pi-user" style="width:20px;"></i>
+            <p-avatar 
+            icon="pi pi-user" 
+            styleClass="mr-2"
+            [style]="{ 'background-color': '#769ef55f', color: '#2a1261' }" />
             <span class="d-none d-lg-inline-flex">{{authUser.teNum}}</span>
           </a>
-          <div class="dropdown-menu dropdown-menu-end bg-light border-8 rounded-0 rounded-bottom m-0">
+          <div class="dropdown-menu dropdown-menu-end  ">
             <a routerLink="/MyProfile" class="dropdown-item"><i class="pi pi-sign-out pi-user p-2"></i>My Profile</a>
             <button (click)="logout()" class="dropdown-item"><i class="pi pi-sign-out p-2"></i>Log Out</button>
           </div>

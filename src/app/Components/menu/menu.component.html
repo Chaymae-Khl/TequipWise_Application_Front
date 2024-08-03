@@ -9,13 +9,13 @@
       <div class="row align-items-center inner-container">
         <div class="col d-flex justify-content-center align-items-center" id="col2">
           <div *ngIf="IsAdmin" class="menu-item">
-             <a routerLink="/admin"><button class="button">
+             <a routerLink="/admin/dashboard"><button class="button">
              <img class="dashicon" src="assets/Images/dashboard.png" alt="">
             </button></a>
             <p class="desc">Dashboard</p>
             <span class="backdrop"></span>
           </div>
-          <div *ngIf="IsManger || IsItApprover ||IsController" class="menu-item">
+          <div *ngIf="IsManger || IsItApprover ||IsController||ISbackupAprover" class="menu-item">
              <a routerLink="/RequestConfirmation"><button class="button">
              <img width="80px" src="assets/Images/Quene.png" alt="">
             </button></a>
@@ -32,16 +32,16 @@
           
           <div class="menu-item">
             <button (click)="showDialog()" class="button">
-              <a><img src="assets/Images/request.png" alt="" class="request-img"></a>
+              <a><img src="assets/Images/submit.png" alt="" class="request-img"></a>
             </button>
             <p class="desc">Submit a request</p>
             <span class="backdrop"></span>
           </div>
           <div class="menu-item">
-            <a routerLink="/UserEquipementRequest"><button class="button">
-              <i class="pi pi-user" style="font-size: 2.5rem"></i>
+            <a routerLink="/EquipmentLists"><button class="button">
+              <img src="assets/Images/MyEquipments.png" alt="" class="request-img">
             </button></a>
-            <p class="desc">My IT Assets</p>
+            <p class="desc">My Equipments</p>
             <span class="backdrop"></span>
           </div>
         </div>

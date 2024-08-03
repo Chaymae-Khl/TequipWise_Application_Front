@@ -6,23 +6,11 @@ import { AfterViewInit, Component, ElementRef, OnInit, Renderer2 } from '@angula
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent  {
-  // constructor(private elRef: ElementRef, private renderer: Renderer2) {}
+  isSidebarCollapsed = false;
 
-  // ngAfterViewInit() {
-  //   const sidebarToggler = this.elRef.nativeElement.querySelector('.sidebar-toggler');
-  //   this.renderer.listen(sidebarToggler, 'click', (event) => {
-  //     const sidebar = this.elRef.nativeElement.querySelector('.sidebar');
-  //     const content = this.elRef.nativeElement.querySelector('.content');
-  //     if (sidebar.classList.contains('open')) {
-  //       this.renderer.removeClass(sidebar, 'open');
-  //       this.renderer.removeClass(content, 'open');
-  //     } else {
-  //       this.renderer.addClass(sidebar, 'open');
-  //       this.renderer.addClass(content, 'open');
-  //     }
-  //     event.preventDefault();
-  //   });
-  // }
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+  }
 
  
 }

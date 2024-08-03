@@ -30,6 +30,8 @@ export class SubRequest {
     prNum?: string;
     pR_Status?: boolean;
     pR_Not_ConfirmCause?: string;
+    assetReceiveByEMployeAt?:any;
+    receptionStatus?:boolean;
 }
 
 

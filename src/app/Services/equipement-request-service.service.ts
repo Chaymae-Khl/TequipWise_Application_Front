@@ -34,6 +34,10 @@ GetAuthRequestList(){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.get(`${this.apiUrl}/Request/GetUserRequests`,httpOptions);
 }
+GetAssetsList(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Request/user-assets`,httpOptions);
+}
 NumberOfRequest(){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.get(`${this.apiUrl}/Request/GetUserRequestCount`,httpOptions);
@@ -54,6 +58,8 @@ Aproval(equipmentRequestId:any,subRequestId:any,Response:any){
 
 
 uploadSupplierOffer(requestId: any, updatedRequest: any, file: File): Observable<any> {
+  console.log(file)
+
   const formData = new FormData();
   formData.append('equipmentRequestId', requestId.toString());
   formData.append('file', file);

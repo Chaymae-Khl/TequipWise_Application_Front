@@ -1,0 +1,57 @@
+<app-nav-bar></app-nav-bar>
+<h1 class="title1">My Equipment Lists</h1>
+<p-divider type="dotted" />
+<div class="container">
+    <div class="card">
+        <h1 class="title1">It Assets List</h1>
+        <p-table
+        [value]="AssetsList"
+            [paginator]="true"
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]"
+        >
+            <ng-template pTemplate="header">
+                <tr >
+                    <th style="background-color: #448b5e6d;color: white;">Asset Name</th>
+                    <th style="background-color: #448b5e6d;color: white;">Quantity</th>
+                    <th style="background-color: #448b5e6d;color: white;">Assignment Date</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-asset>
+                <tr>
+                    <td>{{ asset.equipmentName }}</td>
+                    <td>{{ asset.qtEquipment }}</td>
+                    <td>{{ asset.assetReceiveByEMployeAt | date:'dd/MM/yyyy hh:mm'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <p-divider layout="vertical" class="divider"></p-divider>
+    <div class="card">
+        <h1 class="title1">Phone List</h1>
+
+        <p-table
+            [paginator]="true"
+            [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th >Name</th>
+                    <th >Country</th>
+                    <th>Company</th>
+                    <th >Representative</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer>
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.country.name }}</td>
+                    <td>{{ customer.company }}</td>
+                    <td>{{ customer.representative.name }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+

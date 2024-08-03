@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SubRequest } from '../../Models/sub-request';
 import { NotificationServiceService } from '../../Services/notification-service.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-equipment-request',
   templateUrl: './equipment-request.component.html',
@@ -23,7 +24,9 @@ export class EquipmentRequestComponent implements OnInit{
     private messageService: MessageService,
     private equipementService: EquipementServiceService,
     private requestService: EquipementRequestServiceService,
-    private notificationService: NotificationServiceService
+    private notificationService: NotificationServiceService,
+    private router: Router,
+
   ) {
     this.request.equipmentSubRequests = [new SubRequest()];
   }
@@ -59,6 +62,7 @@ export class EquipmentRequestComponent implements OnInit{
     this.loading = true;
     this.requestService.PassRequest(this.request).subscribe(
       (response: any) => {
+        this.router.navigate(['/UserEquipementRequest']);
         this.messageService.add({
           severity: 'success',
           summary: 'Success Message',

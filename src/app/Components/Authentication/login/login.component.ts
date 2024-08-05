@@ -18,6 +18,7 @@ export class LoginComponent {
   email: any;
   isPasswordVisible: boolean = false;
   loadingPasswordEmail: boolean = false; // Loading flag for password email operation
+  loading:any;
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
@@ -36,6 +37,7 @@ export class LoginComponent {
   //login function
 
   onSubmit(form: NgForm) {
+    this.loading = true;
     const loginData = {
       username: form.value.username,
       password: form.value.password
@@ -43,32 +45,19 @@ export class LoginComponent {
     this.authService.login(loginData).subscribe(
       (response: any) => {
         const localStorage = document.defaultView?.localStorage;
+        this.loading = false;
         // Handle successful login response
         if (localStorage){
           this.localstorgeService.setItem('token', response.token);
         console.log(response.token);
-        // const expirationDate = new Date(new Date().getTime() + response.expiresIn * 1000); // Adjust the expiresIn value accordingly
-        //   this.localstorgeService.setItem('tokenExpiration', expirationDate.toISOString());
+       
         }
         this.router.navigate(['/Menu']);
-        //     const token=response.token;
-        //     const helper = new JwtHelperService();
-
-        //     const decodedToken = helper.decodeToken(token);
-        //     console.log(decodedToken);
-        //     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-        //     console.log('User role:', role);
-
-        //  if(role==="Admin"){
-        //   this.router.navigate(['/Menu']);
-        //  } 
-        //  else{
-        //   console.log("your are not admin.");
-        //  }
-
+        
 
       },
       error => {
+        this.loading = false;
         // Handle error
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Te identifier or Password Incorrect', life: 10000 });
         console.error('Login error:', error);

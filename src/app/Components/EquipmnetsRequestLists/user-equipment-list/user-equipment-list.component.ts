@@ -22,9 +22,11 @@ export class UserEquipmentListComponent {
   filteredRequestList: any; // Variable to hold filtered list
   filterOptions: SelectItem[] = [
     { label: 'All', value: null },
-    { label: 'Approved', value: true },
+    { label: 'Approved', value: 'Approved' },
     { label: 'Open', value: 'Open' },
-    { label: 'Not Approved', value: false }
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Partly Approved', value: 'Partly Approved' },
+    { label: 'Rejected', value: 'Rejected' }
   ];
   visible: boolean = false;
   timelineEvents: any[] = [];
@@ -74,7 +76,7 @@ export class UserEquipmentListComponent {
     // console.log(req);
     this.visible = true;
     this.timelineEvents = [
-      { title: 'Request Created',ForWho: req.isNewhire, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment },
+      { title: 'Request Created',ForWho: req.forWho, Equipment: req.equipementName,Comments:req.comment,Quantity:req.qtEquipment },
       { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: req.departmangconfirmStatus },
       { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.pR_Not_ConfirmCause, statusIT: req.iTconfirmSatuts, supplierOffer: this.Mysubrequest?.supplierOffer, PrStatus: this.getPRStatus(req.pR_Status, req), prnum: req.prNum  },
       { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts },
@@ -220,26 +222,15 @@ getSubRequestStatusGeneral(): string {
 
     return 'Partly Rejected';
   }
-filterRequests() {
-  // Filter the list based on selected filter
-  if (this.selectedFilter === null) {
+  filterRequests() {
+    if (this.selectedFilter === null) {
       // Show all requests
       this.filteredRequestList = this.equipmentRequests;
-  }
-  else if (this.selectedFilter === 'Open') {
-          this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-            equip.supplierOffer === null &&
-            equip.pR_Status === null &&
-            equip.requestStatus === null
-          );
-        }
-  
-  else {
-      // Filter based on selected approval status
+    } else {
       this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-          equip.requestStatus === this.selectedFilter
+        this.getRequestStatus(equip) === this.selectedFilter
       );
+    }
   }
-}
 
 }

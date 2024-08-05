@@ -18,7 +18,7 @@ export class EquipmentRequestComponent implements OnInit{
   request: EquipmentRequest = new EquipmentRequest();
   loading: boolean = false;
   notifications: string[] = [];
-
+  choices: any;
 
   constructor(
     private messageService: MessageService,
@@ -37,6 +37,11 @@ export class EquipmentRequestComponent implements OnInit{
       console.log('Notification received in component: ', message);
       this.notifications.push(message);
     });
+    this.choices = [
+      { name: 'For me'},
+      { name: 'For Another Employee'},
+  
+  ];
   }
 
   getEquipmentNames() {
@@ -60,6 +65,7 @@ export class EquipmentRequestComponent implements OnInit{
 
   ValidRequest() {
     this.loading = true;
+    console.log(this.request)
     this.requestService.PassRequest(this.request).subscribe(
       (response: any) => {
         this.router.navigate(['/UserEquipementRequest']);

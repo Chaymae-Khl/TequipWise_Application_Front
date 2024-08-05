@@ -77,10 +77,7 @@
 
                 <td>
                     <div class="flex-container">
-                        <div>
-                            <p-button *ngIf="IsItApprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
-                                (click)="showDialog('Offer',request )" severity="Success"></p-button>
-                        </div>
+                        
 
 
                         <p-button icon="pi pi-arrow-up-right" label="Details" severity="warning"
@@ -232,15 +229,11 @@
                     </div>
                     <div class="form-group">
                         <p> <i class="pi pi-caret-right" style="color: #EA8300"></i><strong> For:</strong>
-                            <ng-container *ngIf="selectedRequest?.newHireName">
-                                <i>{{ selectedRequest.newHireName }}</i>
-                            </ng-container>
-                            <ng-container *ngIf="selectedRequest?.isNewhire === true && !selectedRequest?.newHireName">
-                                <i> For New hire</i>
-                            </ng-container>
-                            <ng-container *ngIf="!selectedRequest?.isNewhire">
-                                <i> For me</i>
-                            </ng-container>
+                           
+                            ({{selectedRequest.forWho  }}) 
+                            @if(selectedRequest.forWho=='For Another Employee'){
+                            {{selectedRequest.newHireName}}
+                        }
                         </p>
                     </div>
                     <div class="form-group">
@@ -248,9 +241,6 @@
                             selectedRequest.sapNumOfUser
                             }}</p>
                     </div>
-
-
-
                     <div class="form-group">
                         <p> <i class="pi pi-calendar" style="color: #EA8300"></i> <strong> Request Date:</strong> {{
                             selectedRequest.requestDate | date:'dd/MM/yyyy hh:mm' }}</p>
@@ -280,7 +270,10 @@
                     </div>
                 </div>
                 <p-divider type="dashed"></p-divider>
-
+                <div style="text-align: right;">
+                    <p-button *ngIf="IsItApprover || IsAdmin" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
+                        (click)="showDialog2('Offer',selectedRequest )" severity="Success"></p-button>
+                </div>
                 <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
                     [tableStyle]="{ 'min-width': '50rem' }">
                     <ng-template pTemplate="header">
@@ -397,6 +390,10 @@
                                     <div *ngIf="subRequest.poNum!=null">
                                         <p-button *ngIf="IsItApprover" label="Assign" icon="pi pi-user"
                                             (click)="showDialog2('Assign', subRequest)" severity="Success"></p-button>
+                                    </div>
+                                    <div >
+                                        <p-button *ngIf="IsAdmin" label="Approve" icon="pi pi-reply"
+                                            (click)="showDialog2('AdminApprove', subRequest)" severity="Success"></p-button>
                                     </div>
                                 </div>
 
@@ -515,7 +512,50 @@
     </div>
 
 
-    <div *ngIf="mode === 'Offer'">
+    
+
+</p-dialog>
+<p-dialog
+    header="{{mode2 === 'approve' ? 'Manager Approval' :  mode2 === 'approveContoller' ? 'Finance Approval':  mode2 === 'PO' ? 'PO Approval':mode2 === 'PR&PO' ? 'Pr Approval'  : 'Request Approval' }}"
+    [modal]="true" [(visible)]="visible2" [style]="{width: '57vw',height:'39vw'}">
+
+    <div *ngIf="mode2 === 'approve'">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
+                <h2>Select your response:</h2>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="departmangconfirmStatus" [(ngModel)]="selectedSubRequest.departmangconfirmStatus" required>
+                </p-selectButton>
+                <div *ngIf="form.submitted && !selectedSubRequest.departmangconfirmStatus" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+                <h2>Enter the cause:</h2>
+                <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
+                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <div *ngIf="mode2 === 'Offer'">
         <form (ngSubmit)="confirmUploadAndITData()" #Offerform="ngForm">
             <p-stepper>
                 <p-stepperPanel header="Supplier Offer">
@@ -561,8 +601,11 @@
                                 <p-button label="Next" icon="pi pi-arrow-right" iconPos="right"
                                     (click)="nextCallback.emit()"></p-button>
                             </div>
+        <p-divider></p-divider>
+
                         </div>
                     </ng-template>
+
                 </p-stepperPanel>
                 <p-stepperPanel header="Price">
                     <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback"
@@ -637,54 +680,14 @@
                                     </ng-template>
                                 </p-button>
                             </div>
+        <p-divider></p-divider>
+
                         </div>
                     </ng-template>
                 </p-stepperPanel>
             </p-stepper>
         </form>
 
-    </div>
-
-</p-dialog>
-<p-dialog
-    header="{{mode2 === 'approve' ? 'Manager Approval' :  mode2 === 'approveContoller' ? 'Finance Approval':  mode2 === 'PO' ? 'PO Approval':mode2 === 'PR&PO' ? 'Pr Approval'  : 'Finance Approval' }}"
-    [modal]="true" [(visible)]="visible2">
-
-    <div *ngIf="mode2 === 'approve'">
-        <div class="w-100">
-            <p-divider type="dashed"></p-divider>
-
-            <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
-                <h2>Select your response:</h2>
-                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
-                    name="departmangconfirmStatus" [(ngModel)]="selectedSubRequest.departmangconfirmStatus" required>
-                </p-selectButton>
-                <div *ngIf="form.submitted && !selectedSubRequest.departmangconfirmStatus" class="error-message">
-                    Response is required.
-                </div>
-                <br>
-                <h2>Enter the cause:</h2>
-                <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
-                    [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause" required #cause="ngModel">
-                </textarea>
-                <div *ngIf="cause.touched && cause.invalid" class="error-message">
-                    Cause is required.
-                </div>
-                <br>
-                <div class="position-relative end-0 bottom-0">
-                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
-                        <ng-container *ngIf="!loading2; else loadingTemplate">
-                            Confirm
-                        </ng-container>
-                        <ng-template #loadingTemplate>
-                            <i class="pi pi-spinner pi-spin"></i> Loading...
-                        </ng-template>
-                    </p-button>
-                </div>
-            </form>
-
-
-        </div>
     </div>
     <div *ngIf="mode2 === 'approveContoller'">
         <div class="w-100">
@@ -722,13 +725,12 @@
                     Response is required.
                 </div>
                 <br>
-                <h2>Enter the cause:</h2>
-                <textarea rows="6" cols="50" pInputTextarea name="finance_Not_confirmCause"
+                <div *ngIf="selectedSubRequest.financeconfirmSatuts==false">
+                <h2  >Enter the cause:</h2>
+                <textarea rows="6" cols="50" pInputTextarea name="finance_Not_confirmCause" 
                     [(ngModel)]="selectedSubRequest.finance_Not_confirmCause" required #cause="ngModel">
                 </textarea>
-                <div *ngIf="cause.touched && cause.invalid" class="error-message">
-                    Cause is required.
-                </div>
+            </div>
                 <br>
                 <div class="position-relative end-2 bottom-2">
                     <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
@@ -772,13 +774,13 @@
                     <p-divider type="dashed" />
                     <br>
                 </div>
+                <div *ngIf="selectedSubRequest.pR_Status===false">
                 <h2>Enter the cause:</h2>
-                <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
+                <textarea rows="10" cols="70" pInputTextarea name="pR_Not_ConfirmCause" 
                     [(ngModel)]="selectedSubRequest.pR_Not_ConfirmCause" required #cause="ngModel">
                 </textarea>
-                <div *ngIf="cause.touched && cause.invalid" class="error-message">
-                    Cause is required.
-                </div>
+               
+            </div>
                 <br>
                 <div class="position-relative end-0 bottom-0">
                     <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
@@ -853,12 +855,27 @@
                             <p-checkbox   inputId="ny" [(ngModel)]="selectedSubRequest.receptionStatus" [binary]="true" name="receptionStatus" />
                             <label for="ny" class="ml-2"> Assign</label>
                         </div>
-                        <div class="form-group mt-3">
-                            <p-calendar [iconDisplay]="'input'" [showIcon]="true"  inputId="calendar-24h" 
-                                [appendTo]="'body'" name="assetReceiveByEMployeAt"
-                                [(ngModel)]="selectedSubRequest.assetReceiveByEMployeAt"  dateFormat="dd-mm-yy"  [showTime]="true"  [showButtonBar]="true"
-                               />
+                        <div class="form-group d-flex align-items-center mt-3">
+                            <div class="flex-grow-1 mr-2">
+                                <label class="mb-3" for="AssetSN">Assignment Date:</label>
+
+                                <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="calendar-24h"
+                                            [appendTo]="'body'" name="assetReceiveByEMployeAt"
+                                            [(ngModel)]="selectedSubRequest.assetReceiveByEMployeAt" dateFormat="dd-mm-yy" [showTime]="true" [showButtonBar]="true"
+                                            class="w-100"/>
+                            </div>
+                            <div class="flex-grow-1 mr-3">
+                                <label class="mb-3" for="AssetSN">Asset SN:</label> 
+                                <input type="text" pInputText [(ngModel)]="selectedSubRequest.assetSN" name="AssetSN"
+                                       placeholder="Asset Serial Number" class="form-control"/>
+                            </div>
+                            <div class="flex-grow-1">
+                                <label class="mb-3" for="AssetSN">Asset Model:</label>
+                                <input type="text" pInputText [(ngModel)]="selectedSubRequest.assetModele" name="AssetModele"
+                                       placeholder="Asset Modele" class="form-control"/>
+                            </div>
                         </div>
+
                     </div>
                     <p-divider type="dashed"></p-divider>
                     <br>
@@ -878,5 +895,245 @@
 
 
         </div>
+    </div>
+
+    <div *ngIf="mode2 === 'AdminApprove'">
+       <form (ngSubmit)="AdminApprove()" class="position-relative" #form="ngForm">
+         <p-tabView>
+            
+            <p-tabPanel header="Manager Approval">
+                <div class="w-100">
+                    <p-divider type="dashed"></p-divider>
+        
+                        <h2>Select your response:</h2>
+                        <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                            name="departmangconfirmStatus" [(ngModel)]="selectedSubRequest.departmangconfirmStatus" required>
+                        </p-selectButton>
+                        <div class="form-group mt-3">
+                            <p-dropdown 
+                            [appendTo]="'body'" 
+                            [options]="ManagerList" 
+                            name="deptManagId"
+                            optionLabel="teNum" 
+                            optionValue="id" 
+                            [showClear]="true" 
+                            [filter]="true" 
+                            filterBy="teNum"
+                            placeholder="Select the Depatment Manager"
+                            [(ngModel)]="selectedSubRequest.deptManagId"
+                   >
+                        </p-dropdown>
+                        </div>
+                        <div *ngIf="form.submitted && !selectedSubRequest.departmangconfirmStatus" class="error-message">
+                            Response is required.
+                        </div>
+                        <br>
+                        <h2>Enter the cause:</h2>
+                        <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
+                            [(ngModel)]="selectedSubRequest.departmang_Not_confirmCause" required >
+                        </textarea>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Controller Approval">
+                <div class="w-100">
+                    <p-divider type="dashed"></p-divider>
+        
+                        <h2>Select your response:</h2>
+                        <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                            name="financeconfirmSatuts" [(ngModel)]="selectedSubRequest.financeconfirmSatuts" required>
+                        </p-selectButton>
+                        <div class="form-group mt-3">
+                            <p-dropdown 
+                            [appendTo]="'body'" 
+                            [options]="ControllerList" 
+                            name="controllerid"
+                            optionLabel="teNum" 
+                            optionValue="id" 
+                            [showClear]="true" 
+                            [filter]="true" 
+                            filterBy="teNum"
+                            placeholder="Select the Controller"
+                            [(ngModel)]="selectedSubRequest.controllerid"
+
+                   >
+                        </p-dropdown>
+                        </div>
+                        <br>
+                        <div class="container" *ngIf="selectedSubRequest.financeconfirmSatuts===true">
+                            <p-divider align="left" type="solid"> <b>GL & CC & Order</b>
+                            </p-divider>
+        
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <input pInputText id="GL" aria-describedby="gl-help" name="gl" placeholder="GL"
+                                        [(ngModel)]="selectedSubRequest.gl" class="form-control" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <input pInputText id="CC" aria-describedby="CC-help" name="cc" placeholder="CC"
+                                        [(ngModel)]="selectedSubRequest.cc" class="form-control" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <input pInputText id="order" aria-describedby="order-help" placeholder="Order" name="order"
+                                        [(ngModel)]="selectedSubRequest.order" class="form-control" />
+        
+                                </div>
+                            </div>
+                        </div>
+                        <p-divider type="solid"> </p-divider>
+        
+                        <div *ngIf="form.submitted && !selectedSubRequest.financeconfirmSatuts" class="error-message">
+                            Response is required.
+                        </div>
+                        <br>
+                        <div *ngIf="selectedSubRequest.financeconfirmSatuts===false" class="col-md-4 mb-3">
+                        <h2>Enter the cause:</h2>
+                        <textarea rows="6" cols="50" pInputTextarea name="finance_Not_confirmCause"
+                            [(ngModel)]="selectedSubRequest.finance_Not_confirmCause" required #cause="ngModel">
+                        </textarea>
+                        </div>
+        
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="PR">
+                <div class="w-100">
+                    <p-divider type="dashed"></p-divider>
+        
+                        <h2>Select your response:</h2>
+                        <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value" name="pR_Status"
+                            [(ngModel)]="selectedSubRequest.pR_Status" required>
+                        </p-selectButton>
+                        <div class="form-group mt-3">
+                            <p-dropdown 
+                            [appendTo]="'body'" 
+                            [options]="ItApproversList" 
+                            name="itId"
+                            optionLabel="teNum" 
+                            optionValue="id" 
+                            [showClear]="true" 
+                            [filter]="true" 
+                            filterBy="teNum"
+                            placeholder="Select the IT Approver"
+                            [(ngModel)]="selectedSubRequest.itId"
+
+                   >
+                        </p-dropdown>
+                        </div>
+                        <div *ngIf="form.submitted && !selectedSubRequest.pR_Status" class="error-message">
+                            Response is required.
+                        </div>
+                        <br>
+        
+                        <div *ngIf="selectedSubRequest.pR_Status===true">
+                            <p-divider align="left" type="solid"> <b> PR</b>
+                            </p-divider>
+                            <div class="row">
+                                <div class="col-4">
+                                    <input type="text" pInputText [(ngModel)]="selectedSubRequest.prNum" name="prNum"
+                                        placeholder="PR number" class="form-control" />
+                                </div>
+        
+                            </div>
+                            <p-divider type="dashed" />
+                            <br>
+                        </div> 
+                        <div *ngIf="selectedSubRequest.pR_Status===false">
+                        <h2>Enter the cause:</h2>
+                        <textarea rows="10" cols="70" pInputTextarea name="pR_Not_ConfirmCause"
+                            [(ngModel)]="selectedSubRequest.pR_Not_ConfirmCause" required #cause="ngModel">
+                        </textarea>
+                      </div>
+        
+        
+                </div>
+              
+            </p-tabPanel>
+            <p-tabPanel header="PO">
+                <div class="w-100">
+
+                    <div>
+                        <p-divider align="left" type="solid"><b>PO</b></p-divider>
+                        <div class="row">
+                            <div class="form-group">
+                                <input type="text" pInputText [(ngModel)]="selectedSubRequest.poNum" name="poNum"
+                                    placeholder="PO number" class="form-control same-size-input" />
+                            </div>
+                            <p-divider align="left" type="solid"><b>Supplier</b></p-divider>
+                            <div class="form-group mt-3">
+                                <p-dropdown [filter]="true" filterBy="supplierName" [showClear]="true"
+                                    [(ngModel)]="selectedSubRequest.supplierrid" [appendTo]="'body'" name="supplierrid"
+                                    [options]="supliersNames" optionValue="supplierId" optionLabel="supplierName"
+                                    aria-describedby="supplierName" placeholder="Select the Supplier Name"
+                                    class="same-size-dropdown">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <p-divider type="dashed"></p-divider>
+                        <br>
+                    </div>
+                  
+            </div>
+            </p-tabPanel>
+            <p-tabPanel header="Assignment">
+                <div class="w-100">
+                    <div *ngIf="selectedSubRequest.pR_Status === true">
+                        <p-divider align="left" type="solid"><b>Employee</b></p-divider>
+                        <div class="row">
+                            <div class="row justify-content-center align-items-center text-center">
+                                <p-avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" />
+                                <h3 class="mt-2">{{Mainrequest.nmaeOfUser}} </h3>
+                            </div>
+                           
+                               
+                            <p-divider type="solid"></p-divider>
+                            <div class="form-group mt-3">
+                                <p-checkbox   inputId="ny" [(ngModel)]="selectedSubRequest.receptionStatus" [binary]="true" name="receptionStatus" />
+                                <label for="ny" class="ml-2"> Assign</label>
+                            </div>
+                            <div class="form-group d-flex align-items-center mt-3">
+                                <div class="flex-grow-1 mr-2">
+                                    <label class="mb-3" for="AssetSN">Assignment Date:</label><br>
+    
+                                    <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="calendar-24h"
+                                                [appendTo]="'body'" name="assetReceiveByEMployeAt"
+                                                [(ngModel)]="selectedSubRequest.assetReceiveByEMployeAt" dateFormat="dd-mm-yy" [showTime]="true" [showButtonBar]="true"
+                                                class="w-100"/>
+                                </div>
+                                <div class="flex-grow-1 mr-3">
+                                    <label class="mb-3" for="AssetSN">Asset SN:</label> 
+                                    <input type="text" pInputText [(ngModel)]="selectedSubRequest.assetSN" name="AssetSN"
+                                           placeholder="Asset Serial Number" class="form-control"/>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <label class="mb-3" for="AssetSN">Asset Model:</label>
+                                    <input type="text" pInputText [(ngModel)]="selectedSubRequest.assetModele" name="AssetModele"
+                                           placeholder="Asset Modele" class="form-control"/>
+                                </div>
+                            </div>
+    
+                        </div>
+                        <p-divider type="dashed"></p-divider>
+                        <br>
+                    </div>
+                    <br>
+                   
+                   
+            </div>
+            </p-tabPanel> 
+        </p-tabView>
+        <div style="text-align: right;">
+            <p-button type="submit" [outlined]="true" [disabled]="loading2 ">
+                <ng-container *ngIf="!loading2; else loadingTemplate">
+                    Confirm
+                </ng-container>
+                <ng-template #loadingTemplate>
+                    <i class="pi pi-spinner pi-spin"></i> Loading...
+                </ng-template>
+            </p-button>
+        </div>
+    </form>
+
+       
+     
+      
     </div>
 </p-dialog>

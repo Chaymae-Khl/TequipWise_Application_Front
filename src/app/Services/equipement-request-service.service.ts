@@ -52,7 +52,10 @@ Aproval(equipmentRequestId:any,subRequestId:any,Response:any){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.put(`${this.apiUrl}/Request/${equipmentRequestId}/subrequests/${subRequestId}`,Response,httpOptions);
 }
-
+AdminAproval(equipmentRequestId:any,subRequestId:any,Response:any){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.put(`${this.apiUrl}/Request/${equipmentRequestId}/Adminsubrequests/${subRequestId}`,Response,httpOptions);
+}
 
 
 

@@ -4,68 +4,45 @@
   <div class="col-12">
     <div class="form-container">
       <div class="align-right">
-        <p-button
-          label="View My Requests"
-          icon="pi pi-list"
-          routerLink="/UserEquipementRequest"
-          [outlined]="true"
-          severity="secondary"
-        ></p-button>
+        <p-button label="View My Requests" icon="pi pi-list" routerLink="/UserEquipementRequest" [outlined]="true"
+          severity="secondary"></p-button>
       </div>
       <form (ngSubmit)="ValidRequest()" #requestForm="ngForm" class="form">
         <p class="title">IT Assets Request</p>
         <p class="message">Enter your request information.</p>
 
         <div class="flex flex-wrap gap-3">
-          <p class="message">If you want to request an asset for another employee, check the box below.</p>
+          <p class="message">Choose for whom you are requesting these assets :</p>
           <div class="d-flex align-items-center">
             <div class="form-check mr-2">
-              <p-checkbox
-                name="forme"
-                [(ngModel)]="request.isNewhire"
-                [binary]="true"
-                inputId="binary"
-                label="For Another Employee"
-              ></p-checkbox>
+              <p-dropdown [options]="choices" [(ngModel)]="request.forWho" optionLabel="name" optionValue="name"
+                name="ForWho" placeholder="For whom" />
             </div>
-            <input type="text" pInputText [(ngModel)]="request.newHireName" name="newHireName" class="form-control ml-2" placeholder="Name of new Employee" />
+            
+            <input type="text" *ngIf="request.forWho=='For Another Employee'" pInputText [(ngModel)]="request.newHireName" name="newHireName" class="form-control ml-2"
+              placeholder="Name of new Employee" />
           </div>
         </div>
         <div *ngFor="let subRequest of request.equipmentSubRequests; let i = index" class="sub-request">
           <p-divider align="left" type="solid">
             <b>
-              <p-button icon="pi pi-times" [rounded]="true" [text]="true" label="Asset {{i+1}}" (click)="removeSubRequest(i)" severity="warning" />
+              <p-button icon="pi pi-times" [rounded]="true" [text]="true" label="Asset {{i+1}}"
+                (click)="removeSubRequest(i)" severity="warning" />
             </b>
           </p-divider>
           <div class="d-flex align-items-center">
             <div class="mr-2">
               <label>
-                <p-dropdown
-                  [options]="equipemnts"
-                  [(ngModel)]="subRequest.equipmentId"
-                  optionLabel="equipName"
-                  optionValue="equipementSN"
-                  [filter]="true"
-                  filterBy="equipName"
-                  [showClear]="true"
-                  placeholder="Select the asset you want"
-                  name="equipmentId{{i}}"
-                  required
-                  [ngClass]="{'ng-invalid': requestForm.submitted && !subRequest.equipmentId}"
-                ></p-dropdown>
+                <p-dropdown [options]="equipemnts" [(ngModel)]="subRequest.equipmentId" optionLabel="equipName"
+                  optionValue="equipementSN" [filter]="true" filterBy="equipName" [showClear]="true"
+                  placeholder="Select the asset you want" name="equipmentId{{i}}" required
+                  [ngClass]="{'ng-invalid': requestForm.submitted && !subRequest.equipmentId}"></p-dropdown>
               </label>
             </div>
             <div class="mr-2">
               <label>
-                <p-inputNumber
-                  mode="decimal"
-                  [(ngModel)]="subRequest.qtEquipment"
-                  name="numberEquipment{{i}}"
-                  placeholder="Quantity"
-                  [min]="1"
-                  [max]="50"
-                  required
-                ></p-inputNumber>
+                <p-inputNumber mode="decimal" [(ngModel)]="subRequest.qtEquipment" name="numberEquipment{{i}}"
+                  placeholder="Quantity" [min]="1" [max]="50" required></p-inputNumber>
               </label>
             </div>
           </div>
@@ -90,7 +67,7 @@
       </form>
     </div>
   </div>
-  <p-toast position="bottom-right" ></p-toast>
+  <p-toast position="bottom-right"></p-toast>
 </div>
 <div *ngFor="let notification of notifications">
   {{ notification }}

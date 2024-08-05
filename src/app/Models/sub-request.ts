@@ -10,6 +10,8 @@ export class SubRequest {
     gl?: string;
     cc?: string;
     order?: string;
+    assetSN ?: string;
+   assetModele?: string;
     subRequestStatus?: boolean;
     qtEquipment?: number;
     departmangconfirmedAt?: Date;

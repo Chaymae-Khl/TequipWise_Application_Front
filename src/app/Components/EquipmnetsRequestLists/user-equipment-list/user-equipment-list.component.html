@@ -145,8 +145,6 @@
                 </td>
             </tr>       
         </ng-template>
-     
-        
     </p-table>
  <div *ngIf="loading" class="text-center">
         <p-progressSpinner 
@@ -167,15 +165,10 @@
                 </div>
                 <div class="form-group">
                     <p> <i class="pi pi-caret-right"style="color: #EA8300"></i><strong>  For:</strong>
-                        <ng-container *ngIf="selectedRequest?.newHireName">
-                            <i>{{ selectedRequest?.newHireName }}</i>
-                        </ng-container>
-                        <ng-container *ngIf="selectedRequest?.isNewhire === true && !selectedRequest?.newHireName">
-                            <i> For New hire</i>
-                        </ng-container>
-                        <ng-container *ngIf="!selectedRequest?.isNewhire">
-                            <i> For me</i>
-                        </ng-container>
+                        ({{selectedRequest?.forWho  }}) 
+                        @if(selectedRequest?.forWho=='For Another Employee'){
+                        {{selectedRequest?.newHireName}}
+                    }
                     </p>
                 </div>
                 <div class="form-group">

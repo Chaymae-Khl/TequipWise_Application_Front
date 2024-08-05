@@ -7,7 +7,7 @@ export class EquipmentRequest {
     comment?: string;
     totalPrice?: number;
     requestStatus?: boolean;
-    isNewhire?: boolean;
+    forWho?: string;
     newHireName?: string;
    
     supplierOffer?: string;

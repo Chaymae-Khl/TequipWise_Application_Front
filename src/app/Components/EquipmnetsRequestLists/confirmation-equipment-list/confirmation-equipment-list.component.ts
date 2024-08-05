@@ -8,6 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SubRequest } from '../../../Models/sub-request';
 import { environment } from '../../../../environments/environment';
 import { EquipementServiceService } from '../../../Services/equipement-service.service';
+import { AuthServiceService } from '../../../Services/auth-service.service';
 class ManagerApproval {
   Status?: boolean
   NotConfirmCause?: string;
@@ -41,17 +42,21 @@ export class ConfirmationEquipmentListComponent {
   pdfVisible: boolean = false;
   filterOptions: SelectItem[] = [
     { label: 'All', value: null },
+    { label: 'Approved', value: 'Approved' },
     { label: 'Open', value: 'Open' },
-    { label: 'You Approved', value: true },
-    { label: 'You Rejected', value: false }
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Partly Approved', value: 'Partly Approved' },
+    { label: 'Rejected', value: 'Rejected' }
   ];
   approvedEquipmentSubRequests: any[] = [];
   visible: boolean = false;
   visible2: boolean = false;
   timelineEvents: any[] = [];
-  mode: 'request' | 'subrequest' | 'Offer' | 'approve' | 'approveContoller' | 'PR&PO' = 'approve';
-  mode2: 'approve' | 'approveContoller' | 'PR&PO' | 'PO' | 'Assign' = 'approve';
-
+  mode: 'request' | 'subrequest' |  'approve' | 'approveContoller' | 'PR&PO' = 'approve';
+  mode2: 'approve' | 'approveContoller' | 'PR&PO' | 'PO' | 'Assign' |'Offer'|'AdminApprove' = 'approve';
+  ManagerList:any;
+  ItApproversList:any;
+  ControllerList:any;
   IsManger!: boolean;
   IsController!: boolean;
   IsItApprover!: boolean;
@@ -63,7 +68,9 @@ export class ConfirmationEquipmentListComponent {
   ];
   constructor(private equipementService: EquipementRequestServiceService, private router: Router, private localStorageService: LocalStorageServiceService,
     private messageService: MessageService,
-    private sanitizer: DomSanitizer, private equipementmanService: EquipementServiceService) {
+    private sanitizer: DomSanitizer, private equipementmanService: EquipementServiceService,
+    private authservice: AuthServiceService
+  ) {
 
   }
   ngOnInit() {
@@ -74,6 +81,9 @@ export class ConfirmationEquipmentListComponent {
     if (this.selectedRequest && this.selectedRequest.supplierOffer) {
       this.pdfSrc = this.loadPdf(this.selectedRequest.supplierOffer);
     }
+    this.getControllers();
+    this.getITApprovers();
+    this.getMangers();
   }
   //helpers method
   //its a helper function  to get the selected request of the subrequest
@@ -159,31 +169,6 @@ export class ConfirmationEquipmentListComponent {
   get approvedSubRequests() {
     return this.selectedRequest.equipmentSubRequests.filter(subRequest => subRequest.departmangconfirmStatus === true);
   }
-  // filterRequests() {
-  //   if (this.selectedFilter === null) {
-  //     this.filteredRequestList = this.equipmentRequests;
-  //   } else if (this.selectedFilter === 'Open') {
-  //     this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-  //       equip.departmangconfirmStatus === null &&
-  //       equip.iTconfirmSatuts === null &&
-  //       equip.financeconfirmSatuts === null &&
-  //       equip.pR_Status === null
-  //     );
-  //   } else if (this.selectedFilter === true) {
-  //     this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-  //       equip.departmangconfirmStatus === true ||
-  //       equip.iTconfirmSatuts === true ||
-  //       equip.financeconfirmSatuts === true ||
-  //       equip.pR_Status === true
-  //     );
-  //   } else if (this.selectedFilter === false) {
-  //     this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-  //       equip.departmangconfirmStatus === false 
-  //     );
-  //   }
-  // }
-
-
 
   //its a hlper function  to get the selected request of the subrequest
   findSelectedRequest = (subEquipmentRequestId: number) => {
@@ -197,7 +182,7 @@ export class ConfirmationEquipmentListComponent {
     }
     return null; // Return null if not found
   };
-  showDialog(mode: 'request' | 'subrequest' | 'Offer', req: any) {
+  showDialog(mode: 'request' | 'subrequest' , req: any) {
     this.mode = mode;
 
     if (mode === 'request') {
@@ -212,23 +197,9 @@ export class ConfirmationEquipmentListComponent {
       console.log(this.selectedSubRequest);
     }
 
-    else if (mode === 'Offer') {
-      this.selectedRequest = req;
-      this.selectedSubRequest = {};
-      if (this.mode === 'Offer' && this.selectedRequest.supplierOffer) {
-        this.uploadedFile = new File([this.selectedRequest.supplierOffer], this.selectedRequest.supplierOffer, {
-          type: 'application/pdf',
-        });
-        this.pdfSrc = this.loadPdf(this.selectedRequest.supplierOffer);
-      }
-    }
-
-
-
-
     this.visible = true;
     this.timelineEvents = [
-      { title: 'Request Created', ForWho: req.isNewhire, Equipment: req.equipementName, Comments: req.comment, Quantity: req.qtEquipment, PU: req.pu },
+      { title: 'Request Created', ForWho: req.forWho, Equipment: req.equipementName, Comments: req.comment, Quantity: req.qtEquipment, PU: req.pu },
       { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: req.departmangconfirmStatus },
       { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.pR_Not_ConfirmCause, statusIT: req.iTconfirmSatuts, supplierOffer: this.Mysubrequest?.supplierOffer, PrStatus: this.getPRStatus(req.pR_Status, req), prnum: req.prNum, ponum: req.poNum },
       { title: 'Finance approval', date: req.financeconfirmedAt, by: req.controllerName, RejectionCause: req.finance_Not_confirmCause, statusFina: req.financeconfirmSatuts, cc: req.cc, gl: req.gl, order: req.order },
@@ -238,22 +209,34 @@ export class ConfirmationEquipmentListComponent {
     ];
   }
 
-  showDialog2(mode2: 'approve' | 'approveContoller' | 'PR&PO' | 'PO' | 'Assign', req: any) {
+  showDialog2(mode2: 'approve' | 'approveContoller' | 'PR&PO' | 'PO' | 'Assign'| 'Offer'|'AdminApprove', req: any) {
     this.mode2 = mode2;
     this.visible2 = true;
     this.selectedSubRequest = req;
     const selectedSubEquipmentRequestId: any = this.selectedSubRequest.subEquipmentRequestId;
     this.Mainrequest = this.findSelectedRequest(selectedSubEquipmentRequestId);
-    if (mode2 === 'Assign') {
+    if (mode2 === 'Assign' ||mode2==='AdminApprove') {
       if (!this.selectedSubRequest.assetReceiveByEMployeAt) {
           // Set to today's date if not set (first time)
-          this.selectedSubRequest.assetReceiveByEMployeAt = new Date();
+          this.selectedSubRequest.assetReceiveByEMployeAt = null;
       } else {
           // Ensure the date is a Date object (for subsequent updates)
           this.selectedSubRequest.assetReceiveByEMployeAt = new Date(this.selectedSubRequest.assetReceiveByEMployeAt);
       }
   }
+  else if (mode2 === 'Offer') {
+    this.selectedRequest = req;
+    this.selectedSubRequest = {};
+    if (this.mode2 === 'Offer' && this.selectedRequest.supplierOffer) {
+      this.uploadedFile = new File([this.selectedRequest.supplierOffer], this.selectedRequest.supplierOffer, {
+        type: 'application/pdf',
+      });
+      this.pdfSrc = this.loadPdf(this.selectedRequest.supplierOffer);
+    }
   }
+ 
+  }
+  
   togglePdfVisibility(): void {
     this.pdfVisible = !this.pdfVisible;
   }
@@ -318,9 +301,6 @@ export class ConfirmationEquipmentListComponent {
     }
   }
 
-
-
-
   getReuestList() {
     this.loading = true; // Set loading to true before fetching data
     this.equipementService.getRequestOfDepartement().subscribe(
@@ -384,23 +364,12 @@ export class ConfirmationEquipmentListComponent {
     return 'Partly Rejected';
   }
   filterRequests() {
-    // Filter the list based on selected filter
     if (this.selectedFilter === null) {
       // Show all requests
       this.filteredRequestList = this.equipmentRequests;
-    }
-    else if (this.selectedFilter === 'Open') {
+    } else {
       this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-        equip.supplierOffer === null &&
-        equip.pR_Status === null &&
-        equip.requestStatus === null
-      );
-    }
-
-    else {
-      // Filter based on selected approval status
-      this.filteredRequestList = this.equipmentRequests.filter((equip: any) =>
-        equip.requestStatus === this.selectedFilter
+        this.getRequestStatus(equip) === this.selectedFilter
       );
     }
   }
@@ -433,9 +402,35 @@ export class ConfirmationEquipmentListComponent {
       }
     );
   }
+  AdminApprove() {
+    console.log(this.selectedSubRequest)
+    this.loading2 = true;
+    this.equipementService.AdminAproval(this.Mainrequest.equipmentRequestId, this.selectedSubRequest.subEquipmentRequestId, this.selectedSubRequest).subscribe(
+      (response) => {
+        this.getReuestList();
+        this.visible2 = false;
+        this.loading2 = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: 'Your response saved successfully',
+          life: 10000
+        });
+      },
+      (error) => {
+        console.log(error);
+        this.loading2 = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'We faced a problem while saving status',
+          life: 10000
+        });
+      }
+    );
+  }
 
   //for the the infos Entred by the finace and the it(CC,Gl,Order)
-
 
   //file upload
   onFileInputChange(event: any): void {
@@ -471,42 +466,42 @@ export class ConfirmationEquipmentListComponent {
   // Method to confirm and upload supplier offer
   confirmUploadAndITData() {
     this.loading3 = true;
-    if (this.uploadedFile) {
-      const requestId = this.selectedRequest.equipmentRequestId; // Replace with actual request ID
-      this.equipementService.uploadSupplierOffer(requestId, this.selectedRequest, this.uploadedFile).subscribe(
-        (response) => {
-          this.uploadedFileName = this.uploadedFile?.name || null;
-          this.loading3 = false;
-          this.getReuestList();
-          this.visible = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'File Uploaded',
-            detail: 'Supplier offer uploaded successfully',
-            life: 3000
-          });
-          // Additional logic after successful upload if needed
-        },
-        (error) => {
-          this.loading3 = false;
-          console.error('Error uploading file', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Upload Error',
-            detail: 'Failed to upload supplier offer',
-            life: 3000
-          });
-        }
-      );
-    } else {
-      this.loading3 = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Upload Error',
-        detail: 'No file selected for upload',
-        life: 3000
-      });
-    }
+  if (this.uploadedFile || this.selectedRequest.supplierOffer) {
+    const requestId = this.selectedRequest.equipmentRequestId; // Replace with actual request ID
+    this.equipementService.uploadSupplierOffer(requestId, this.selectedRequest, this.uploadedFile).subscribe(
+      (response) => {
+        this.uploadedFileName = this.uploadedFile?.name || null;
+        this.loading3 = false;
+        this.getReuestList();
+        this.visible2 = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'File Uploaded',
+          detail: 'Supplier offer uploaded successfully',
+          life: 3000
+        });
+        // Additional logic after successful upload if needed
+      },
+      (error) => {
+        this.loading3 = false;
+        console.error('Error uploading file', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Upload Error',
+          detail: 'Failed to upload supplier offer',
+          life: 3000
+        });
+      }
+    );
+  } else {
+    this.loading3 = false;
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Upload Error',
+      detail: 'No file selected for upload',
+      life: 3000
+    });
+  }
   }
 
   loadPdfContent(file: File): void {
@@ -534,5 +529,50 @@ export class ConfirmationEquipmentListComponent {
         }
 
       );
+  }
+  getControllers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.ControllerList = data
+          .filter((user: any) => user.roles && user.roles.includes('Controller'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        // console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
+  getITApprovers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.ItApproversList = data
+          .filter((user: any) => user.roles && user.roles.includes('It Approver'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        // console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
+  getMangers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.ManagerList = data
+          .filter((user: any) => user.roles && user.roles.includes('Manager'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        // console.error('An error occurred while fetching Users:', error);
+      }
+    );
   }
 }

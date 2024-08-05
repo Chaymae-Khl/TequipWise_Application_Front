@@ -35,7 +35,12 @@
         <i class="pi" [ngClass]="isPasswordVisible ? 'pi-eye-slash' : 'pi-eye'" (click)="togglePasswordVisibility()" style=" cursor: pointer;"></i>
       </div>
       <button id="registerbtn" type="submit" class="submit action-button">
+        <ng-container *ngIf="!loading; else loadingTemplate">
         <span style="color: white;" class="font-weight-bold">Login</span>
+      </ng-container>
+        <ng-template #loadingTemplate>
+          <i class="pi pi-spinner pi-spin"></i>    Loading...
+        </ng-template>
       </button>
        <div class="additional-options">
     <p>Don't have an account? <a  routerLink="/register" >  Register</a> </p><br>

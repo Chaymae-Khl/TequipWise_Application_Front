@@ -56,10 +56,14 @@ export class ConfirmationEquipmentListComponent {
   mode2: 'approve' | 'approveContoller' | 'PR&PO' | 'PO' | 'Assign' |'Offer'|'AdminApprove' = 'approve';
   ManagerList:any;
   ItApproversList:any;
+  ISbackupAprover!:boolean;
   ControllerList:any;
+  IsApprover!: boolean;
   IsManger!: boolean;
   IsController!: boolean;
   IsItApprover!: boolean;
+  ISitbackupAprover!: boolean;
+  IScONTROLLERbackupAprover!: boolean;
   IsAdmin!: boolean;
   Mysubrequest: any;
   stateOptions: any[] = [
@@ -130,7 +134,33 @@ export class ConfirmationEquipmentListComponent {
           console.error('Error fetching manager status:', error);
         }
       );
-
+      this.localStorageService.IsManagerBackupApprover(token).subscribe(
+        (isBackup: boolean) => {
+          this.ISbackupAprover = isBackup;
+          console.log('Manager status:', isBackup);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+      this.localStorageService.IsITBackupApprover(token).subscribe(
+        (isBackup: boolean) => {
+          this.ISitbackupAprover = isBackup;
+          console.log('Manager status:', isBackup);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+      this.localStorageService.IsControllerBackupApprover(token).subscribe(
+        (isBackup: boolean) => {
+          this.IScONTROLLERbackupAprover = isBackup;
+          console.log('Manager status:', isBackup);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
       this.localStorageService.IsItApprover(token).subscribe(
         (isItApprover: boolean) => {
           this.IsItApprover = isItApprover;
@@ -153,6 +183,15 @@ export class ConfirmationEquipmentListComponent {
         (isAdmin: boolean) => {
           this.IsAdmin = isAdmin;
           console.log('Admin status:', isAdmin);
+        },
+        (error: any) => {
+          console.error('Error fetching admin status:', error);
+        }
+      );
+      this.localStorageService.IsApprover(token).subscribe(
+        (isApprover: boolean) => {
+          this.IsApprover = isApprover;
+          console.log('Admin status:', isApprover);
         },
         (error: any) => {
           console.error('Error fetching admin status:', error);

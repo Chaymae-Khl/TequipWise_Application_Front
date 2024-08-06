@@ -271,7 +271,7 @@
                 </div>
                 <p-divider type="dashed"></p-divider>
                 <div style="text-align: right;">
-                    <p-button *ngIf="IsItApprover || IsAdmin" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
+                    <p-button *ngIf="IsItApprover || IsAdmin ||ISitbackupAprover" label="Offer" icon="pi pi-file-pdf" [outlined]="true"
                         (click)="showDialog2('Offer',selectedRequest )" severity="Success"></p-button>
                 </div>
                 <p-table [value]="selectedRequest.equipmentSubRequests" styleClass="p-datatable-gridlines"
@@ -370,25 +370,25 @@
 
                                 <div class="flex-container" *ngIf="subRequest.departmangconfirmStatus !== false && subRequest.iTconfirmSatuts !== false && subRequest.financeconfirmSatuts !== false">
                                     <div >
-                                        <p-button *ngIf="IsManger" icon="pi pi-reply" [outlined]="true" label="Approve"
+                                        <p-button *ngIf="IsManger ||ISbackupAprover||IsApprover" icon="pi pi-reply" [outlined]="true" label="Approve"
                                             (click)="showDialog2('approve', subRequest)" severity="Success"></p-button>
                                     </div>
                                     <div >
-                                        <p-button *ngIf="IsController" icon="pi pi-reply" [outlined]="true"
+                                        <p-button *ngIf="IsController ||IScONTROLLERbackupAprover" icon="pi pi-reply" [outlined]="true"
                                             label="Approve" (click)="showDialog2('approveContoller', subRequest)"
                                             severity="Success"></p-button>
                                     </div>
                                     <div  *ngIf="subRequest.financeconfirmSatuts===true">
-                                        <p-button *ngIf="IsItApprover " label="PR" icon="pi pi-inbox" [outlined]="true"
+                                        <p-button *ngIf="IsItApprover ||ISitbackupAprover " label="PR" icon="pi pi-inbox" [outlined]="true"
                                             (click)="showDialog2('PR&PO', subRequest)" severity="Success"></p-button>
                                     </div>
 
                                     <div  *ngIf="subRequest.pR_Status==true">
-                                        <p-button *ngIf="IsItApprover" label="PO" icon="pi pi-inbox"
+                                        <p-button *ngIf="IsItApprover ||ISitbackupAprover" label="PO" icon="pi pi-inbox"
                                             (click)="showDialog2('PO', subRequest)" severity="warning"></p-button>
                                     </div>
                                     <div *ngIf="subRequest.poNum!=null">
-                                        <p-button *ngIf="IsItApprover" label="Assign" icon="pi pi-user"
+                                        <p-button *ngIf="IsItApprover ||ISitbackupAprover" label="Assign" icon="pi pi-user"
                                             (click)="showDialog2('Assign', subRequest)" severity="Success"></p-button>
                                     </div>
                                     <div >

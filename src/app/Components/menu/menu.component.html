@@ -15,11 +15,11 @@
             <p class="desc">Dashboard</p>
             <span class="backdrop"></span>
           </div>
-          <div *ngIf="IsManger || IsItApprover ||IsController||ISbackupAprover" class="menu-item">
+          <div *ngIf="IsManger || IsItApprover ||IsController || ISManagerbackupAprover || ISitbackupAprover || IScONTROLLERbackupAprover ||IsApprover" class="menu-item">
              <a routerLink="/RequestConfirmation"><button class="button">
              <img width="80px" src="assets/Images/Quene.png" alt="">
             </button></a>
-            <p class="desc">Approval Queue</p>
+            <p class="desc">Approval Queue</p> 
             <span class="backdrop"></span>
           </div>
           <div class="menu-item">

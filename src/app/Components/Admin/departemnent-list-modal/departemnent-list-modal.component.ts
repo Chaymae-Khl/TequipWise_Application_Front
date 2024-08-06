@@ -21,6 +21,7 @@ export class DepartemnentListModalComponent {
   editingRowIndexDept:any;
   originalPlant: Plant | null = null;
   originalDept: Department | null = null;
+  displayDialog: boolean = true;  // Control the dialog visibility
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -49,9 +50,13 @@ export class DepartemnentListModalComponent {
   }
 
   closeModal(): void {
+    this.displayDialog = false;
     this.dialogRef.close();
+    const backdrop = document.querySelector('.p-dialog-mask');
+    if (backdrop) {
+      backdrop.remove();
+    }
   }
-
   getControllers(): void {
     this.authservice.getUsers().subscribe(
       (data: any) => {

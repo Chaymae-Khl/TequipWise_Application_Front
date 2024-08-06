@@ -40,7 +40,7 @@ GetAssetsList(){
 }
 NumberOfRequest(){
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.get(`${this.apiUrl}/Request/GetUserRequestCount`,httpOptions);
+  return this.httpClient.get(`${this.apiUrl}/Request/GetRequestCount`,httpOptions);
 }
 getRequestOfDepartement(){
   const httpOptions = this.getHttpOptions();

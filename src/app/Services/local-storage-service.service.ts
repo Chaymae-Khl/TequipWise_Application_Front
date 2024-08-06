@@ -60,14 +60,22 @@ export class LocalStorageServiceService {
 
 
   IsAdmin(Token: any): Observable<boolean> {
-
     if (!Token) {
-      return of(false); // Return false (not admin)
+      return of(false); // Return false (not authenticated)
     }
+  
     const helper = new JwtHelperService();
     const decodedToken = helper.decodeToken(Token);
-    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-    const isAdmin = role === 'Admin';
+  
+    let roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Convert roles to an array if it's not already one
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+  
+    // Check if 'DeptManager' role exists in the roles array
+    const isAdmin = roles.includes('Admin');    
     return of(isAdmin);
   }
 
@@ -90,7 +98,10 @@ export class LocalStorageServiceService {
     const isDeptManager = roles.includes('Manager');    
     return of(isDeptManager);
   }
-  IsBackupApprover(Token: any): Observable<boolean> {
+
+
+  
+  IsApprover(Token: any): Observable<boolean> {
     if (!Token) {
       return of(false); // Return false (not authenticated)
     }
@@ -106,7 +117,64 @@ export class LocalStorageServiceService {
     }
   
     // Check if 'DeptManager' role exists in the roles array
-    const isBackup = roles.includes('BackupApprover');    
+    const isApprover = roles.includes('Approver');    
+    return of(isApprover);
+  }
+  IsManagerBackupApprover(Token: any): Observable<boolean> {
+    if (!Token) {
+      return of(false); // Return false (not authenticated)
+    }
+  
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(Token);
+  
+    let roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Convert roles to an array if it's not already one
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+  
+    // Check if 'DeptManager' role exists in the roles array
+    const isBackup = roles.includes('ManagerBackupApprover');    
+    return of(isBackup);
+  }
+  IsITBackupApprover(Token: any): Observable<boolean> {
+    if (!Token) {
+      return of(false); // Return false (not authenticated)
+    }
+  
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(Token);
+  
+    let roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Convert roles to an array if it's not already one
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+  
+    // Check if 'DeptManager' role exists in the roles array
+    const isBackup = roles.includes('ItBackupApprover');    
+    return of(isBackup);
+  }
+  IsControllerBackupApprover(Token: any): Observable<boolean> {
+    if (!Token) {
+      return of(false); // Return false (not authenticated)
+    }
+  
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(Token);
+  
+    let roles = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    
+    // Convert roles to an array if it's not already one
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+  
+    // Check if 'DeptManager' role exists in the roles array
+    const isBackup = roles.includes('ControllerBackupApprover');    
     return of(isBackup);
   }
   IsItApprover(Token: any): Observable<boolean> {

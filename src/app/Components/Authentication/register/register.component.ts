@@ -105,7 +105,7 @@ export class RegisterComponent  {
     }
 
     const formValues = this.registerForm.value;
-    const role = 'Admin';
+    const role = 'User';
 
     this.authService.UserRegister(formValues, role).subscribe(
       (res) => {

@@ -12,7 +12,10 @@ export class MenuComponent {
   isAuthenticated: boolean;
   IsAdmin!:boolean;
   IsManger!:boolean;
-  ISbackupAprover!:boolean;
+  ISManagerbackupAprover!:boolean;
+  ISitbackupAprover!:boolean;
+  IScONTROLLERbackupAprover!:boolean;
+  IsApprover!:boolean;
   IsItApprover!:boolean;
   IsController!:boolean;
   visible: boolean = false;
@@ -39,7 +42,17 @@ export class MenuComponent {
           console.error('Error fetching admin status:', error);
         }
       );
-
+      if (token) {
+        this.localStorageService.IsApprover(token).subscribe(
+          (isAdmin: boolean) => {
+            this.IsApprover = isAdmin;
+            console.log('Admin status:', isAdmin);
+          },
+          (error: any) => {
+            console.error('Error fetching admin status:', error);
+          }
+        );}
+  
       this.localStorageService.IsManger(token).subscribe(
         (isManager: boolean) => {
           this.IsManger = isManager;
@@ -59,9 +72,27 @@ export class MenuComponent {
           console.error('Error fetching manager status:', error);
         }
       );
-      this.localStorageService.IsBackupApprover(token).subscribe(
+      this.localStorageService.IsManagerBackupApprover(token).subscribe(
         (isBackup: boolean) => {
-          this.ISbackupAprover = isBackup;
+          this.ISManagerbackupAprover = isBackup;
+          console.log('Manager status:', isBackup);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+      this.localStorageService.IsControllerBackupApprover(token).subscribe(
+        (isBackup: boolean) => {
+          this.IScONTROLLERbackupAprover = isBackup;
+          console.log('Manager status:', isBackup);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+      this.localStorageService.IsITBackupApprover(token).subscribe(
+        (isBackup: boolean) => {
+          this.ISitbackupAprover = isBackup;
           console.log('Manager status:', isBackup);
         },
         (error: any) => {

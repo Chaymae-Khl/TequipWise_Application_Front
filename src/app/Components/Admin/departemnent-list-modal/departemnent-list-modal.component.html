@@ -1,182 +1,187 @@
-<div class="LPD-modal">
-  <div class="container">
-    <button class="close-button" (click)="closeModal()"><i class="pi pi-times-circle" style="color: #708090"></i></button>
-
-    <h1 style="text-align: center; padding: 0.5rem;margin-top: 0.5rem;">{{ isPlant ? 'Plants' : 'Departements' }}</h1>
-    <p-divider></p-divider>
-   
-    <form (ngSubmit)="AddPlantToLocation()" *ngIf="isPlant">
-      <p-accordion [activeIndex]="0">
-      <p-accordionTab header="Add new Plant">
-         <div class="container">
-        <div class="row">
-          <div class="col">
-            <input pInputText [(ngModel)]="plant.plant_name" name="plant_name" placeholder="Plant name" required />
-          </div>
-       
-          <div class="col">
-            <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="ItApprovers"
-              name="itApproverId" [(ngModel)]="plant.itApproverId" [showClear]="true" optionValue="id"
-              optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the It Approver">
-            </p-dropdown>
-          </div>
-          <div class="col">
-            <p-button icon="pi pi-check" label="Confirm" severity="secondary" type="submit"></p-button>
-          </div>
-        </div>
-      </div>
-    </p-accordionTab>
-  </p-accordion>
-    </form>
-    <form (ngSubmit)="AddDepartementToLocation()" *ngIf="isDepartment">
-      <p-accordion [activeIndex]="0">
-          <p-accordionTab header="Add new Department">
-              <div class="container">
-                  <div class="row">
-                      <!-- Left Column -->
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <p-divider align="center" type="dotted">
-                              <b>Departemnet infos</b>
-                              </p-divider>
-                              <input pInputText name="departmentName" [(ngModel)]="department.departmentName"
-                                  placeholder="Department Name" required class="w-100" />
-                          </div>
-                          <div class="form-group mt-2">
-                              <label for="Status">Status</label><br>
-                              <p-inputSwitch id="status" [(ngModel)]="department.status" name="status"></p-inputSwitch>
-                          </div>
-                      </div>
-                      <!-- Right Column -->
-                      <div class="col-md-6">
-                          <div class="form-group">
-                            <p-divider align="center" type="dotted">
-                              <b>Manager of the department</b>
-                              </p-divider>
-                              <input pInputText name="EmailManger" [(ngModel)]="department.EmailManger"
-                                  placeholder="Manager Email" required class="w-100" />
-                          </div>
-                          <p-divider align="left" type="solid">
-                            <b>OR</b>
-                            </p-divider>
-                          <div class="form-group mt-2">
-                              <p-dropdown [filter]="true" [appendTo]="'body'" [(ngModel)]="department.ManagerId"
-                                  filterBy="fullName" [options]="users" [showClear]="true" optionValue="id"
-                                  optionLabel="fullName" aria-describedby="manager-name-help"
-                                  placeholder="Select the manager" name="ManagerId" class="w-100">
-                              </p-dropdown>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- Button Row -->
-                  <div class="row mt-3">
-                      <div class="col d-flex">
-                          <p-button icon="pi pi-check" type="submit" label="Confirm" severity="secondary"></p-button>
-                      </div>
-                  </div>
-              </div>
-          </p-accordionTab>
-      </p-accordion>
-  </form>
-    <p-divider></p-divider>
-
-    <h3 style="color: red;margin-left: 5px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
-      NB: to update double click on the row please !!!
-    </h3>
+<p-dialog header="{{ isPlant ? 'Plants' : 'Departements' }}" [(visible)]="displayDialog" modal="modal"  [responsive]="true" [draggable]="true">
+ 
+  <div *ngIf="isPlant">
     <p-accordion [activeIndex]="0">
-      <p-accordionTab header="{{ isPlant ? 'Plants List' : 'Departements List' }}">
-        <!-- Department Table -->
-        <p-table *ngIf="isDepartment" [value]="getdata" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Departement Name</th>
-              <th>Manager Name</th>
-              <th>Manager Email</th>
-              <th>Status</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-department let-rowIndex2="rowIndex">
-            <tr [class.editable-row]="editingRowIndexDept === rowIndex2" (dblclick)="editRowdept(rowIndex2, $event)">
-              <td>
-                <ng-container *ngIf="editingRowIndexDept === rowIndex2">
-                  <input pInputText [(ngModel)]="department.departmentName" />
-                </ng-container>
-                <ng-container *ngIf="editingRowIndexDept !== rowIndex2">
-                  {{department.departmentName}}
-                </ng-container>
-              </td>
-              <td>
-                <ng-container *ngIf="editingRowIndexDept !== rowIndex2; else editModeDept">
-                  {{department.managerName}}
-                </ng-container>
-                <ng-template #editModeDept>
-                  <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="users"
-                    [(ngModel)]="department.managerId" optionValue="id" optionLabel="fullName"
-                    placeholder="Select the manager">
-                  </p-dropdown>
-                </ng-template>
-              </td>
-              <td>
-                <ng-container *ngIf="editingRowIndexDept === rowIndex2">
-                  <input pInputText [(ngModel)]="department.emailManger" />
-                </ng-container>
-                <ng-container *ngIf="editingRowIndexDept !== rowIndex2">
-                  {{department.emailManger }}
-                </ng-container>
-              </td>
-              <td>
-                <ng-container *ngIf="editingRowIndexDept !== rowIndex2; else editModeStatusDept">
-                  <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}" *ngIf="department.status; else inactiveIconDept"><i class="pi pi-check-circle" style="color: #49b852"></i> </mat-icon>
-                  <ng-template #inactiveIconDept><mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}"><i class="pi pi-times-circle" style="color: #fd2828"></i></mat-icon></ng-template>
-                </ng-container>
-                <ng-template #editModeStatusDept>
-                  <p-inputSwitch id="status" [(ngModel)]="department.status" name="status"></p-inputSwitch>
-                </ng-template>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-
-        <!-- Plant Table -->
-        <p-table *ngIf="isPlant" [value]="getdata" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Plant Name</th>
-              <th>It Approver Name</th>
-              <th>Actions</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-plant let-rowIndex="rowIndex">
-            <tr [class.editable-row]="editingRowIndex === rowIndex" (dblclick)="editRow(rowIndex, $event)">
-              <td>
-                <ng-container *ngIf="editingRowIndex === rowIndex">
-                  <input pInputText [(ngModel)]="plant.plant_name" />
-                </ng-container>
-                <ng-container *ngIf="editingRowIndex !== rowIndex">
-                  {{plant.plant_name}}
-                </ng-container>
-              </td>
-             
-              <td>
-                <ng-container *ngIf="editingRowIndex !== rowIndex; else editModePlant2">
-                  {{plant.itApprover_name}}
-                </ng-container>
-                <ng-template #editModePlant2>
-                  <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="ItApprovers"
-                    [(ngModel)]="plant.itApproverId" optionValue="id" optionLabel="fullName"
-                    placeholder="Select the It Approver">
-                  </p-dropdown>
-                </ng-template>
-              </td>
-              <td>
-                <button (click)="DeletePlantfromLocation(plant.plantNumber)" mat-icon-button color="warn">
-                  <i class="pi pi-trash" style="color: #fd2828"></i>
-                </button>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+      <p-accordionTab header="Add new Plant">
+        <form (ngSubmit)="AddPlantToLocation()">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <input pInputText [(ngModel)]="plant.plant_name" name="plant_name" placeholder="Plant name" required />
+              </div>
+              <div class="col">
+                <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="ItApprovers"
+                  name="itApproverId" [(ngModel)]="plant.itApproverId" [showClear]="true" optionValue="id"
+                  optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the It Approver">
+                </p-dropdown>
+              </div>
+              <div class="col">
+                <p-button icon="pi pi-check" label="Confirm" severity="secondary" type="submit"></p-button>
+              </div>
+            </div>
+          </div>
+        </form>
       </p-accordionTab>
     </p-accordion>
   </div>
-</div>
+
+  <div *ngIf="isDepartment">
+    <p-accordion [activeIndex]="0">
+      <p-accordionTab header="Add new Department">
+        <form (ngSubmit)="AddDepartementToLocation()">
+          <div class="container">
+            <div class="row">
+              <!-- Left Column -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <p-divider align="center" type="dotted">
+                    <b>Department infos</b>
+                  </p-divider>
+                  <input pInputText name="departmentName" [(ngModel)]="department.departmentName"
+                    placeholder="Department Name" required class="w-100" />
+                </div>
+                <div class="form-group mt-2">
+                  <label for="Status">Status</label><br>
+                  <p-inputSwitch id="status" [(ngModel)]="department.status" name="status"></p-inputSwitch>
+                </div>
+              </div>
+              <!-- Right Column -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <p-divider align="center" type="dotted">
+                    <b>Manager of the department</b>
+                  </p-divider>
+                  <input pInputText name="EmailManger" [(ngModel)]="department.EmailManger"
+                    placeholder="Manager Email" required class="w-100" />
+                </div>
+                <p-divider align="left" type="solid">
+                  <b>OR</b>
+                </p-divider>
+                <div class="form-group mt-2">
+                  <p-dropdown [filter]="true" [appendTo]="'body'" [(ngModel)]="department.ManagerId"
+                    filterBy="fullName" [options]="users" [showClear]="true" optionValue="id"
+                    optionLabel="fullName" aria-describedby="manager-name-help"
+                    placeholder="Select the manager" name="ManagerId" class="w-100">
+                  </p-dropdown>
+                </div>
+              </div>
+            </div>
+            <!-- Button Row -->
+            <div class="row mt-3">
+              <div class="col d-flex">
+                <p-button icon="pi pi-check" type="submit" label="Confirm" severity="secondary"></p-button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+
+  <p-divider></p-divider>
+
+  <h3 style="color: red; margin-left: 5px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+    NB: To update, double click on the row please !!!
+  </h3>
+
+  <p-accordion [activeIndex]="0">
+    <p-accordionTab header="{{ isPlant ? 'Plants List' : 'Departments List' }}">
+      <!-- Department Table -->
+      <p-table *ngIf="isDepartment" [value]="getdata" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Department Name</th>
+            <th>Manager Name</th>
+            <th>Manager Email</th>
+            <th>Status</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-department let-rowIndex2="rowIndex">
+          <tr [class.editable-row]="editingRowIndexDept === rowIndex2" (dblclick)="editRowdept(rowIndex2, $event)">
+            <td>
+              <ng-container *ngIf="editingRowIndexDept === rowIndex2">
+                <input pInputText [(ngModel)]="department.departmentName" />
+              </ng-container>
+              <ng-container *ngIf="editingRowIndexDept !== rowIndex2">
+                {{department.departmentName}}
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="editingRowIndexDept !== rowIndex2; else editModeDept">
+                {{department.managerName}}
+              </ng-container>
+              <ng-template #editModeDept>
+                <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="users"
+                  [(ngModel)]="department.managerId" optionValue="id" optionLabel="fullName"
+                  placeholder="Select the manager">
+                </p-dropdown>
+              </ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="editingRowIndexDept === rowIndex2">
+                <input pInputText [(ngModel)]="department.emailManger" />
+              </ng-container>
+              <ng-container *ngIf="editingRowIndexDept !== rowIndex2">
+                {{department.emailManger }}
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="editingRowIndexDept !== rowIndex2; else editModeStatusDept">
+                <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}" *ngIf="department.status; else inactiveIconDept">
+                  <i class="pi pi-check-circle" style="color: #49b852"></i>
+                </mat-icon>
+                <ng-template #inactiveIconDept>
+                  <mat-icon [ngClass]="{'active': department.status, 'inactive': !department.status}">
+                    <i class="pi pi-times-circle" style="color: #fd2828"></i>
+                  </mat-icon>
+                </ng-template>
+              </ng-container>
+              <ng-template #editModeStatusDept>
+                <p-inputSwitch id="status" [(ngModel)]="department.status" name="status"></p-inputSwitch>
+              </ng-template>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Plant Table -->
+      <p-table *ngIf="isPlant" [value]="getdata" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Plant Name</th>
+            <th>It Approver Name</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-plant let-rowIndex="rowIndex">
+          <tr [class.editable-row]="editingRowIndex === rowIndex" (dblclick)="editRow(rowIndex, $event)">
+            <td>
+              <ng-container *ngIf="editingRowIndex === rowIndex">
+                <input pInputText [(ngModel)]="plant.plant_name" />
+              </ng-container>
+              <ng-container *ngIf="editingRowIndex !== rowIndex">
+                {{plant.plant_name}}
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="editingRowIndex !== rowIndex; else editModePlant2">
+                {{plant.itApprover_name}}
+              </ng-container>
+              <ng-template #editModePlant2>
+                <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="ItApprovers"
+                  [(ngModel)]="plant.itApproverId" optionValue="id" optionLabel="fullName"
+                  placeholder="Select the It Approver">
+                </p-dropdown>
+              </ng-template>
+            </td>
+            <td>
+              <button (click)="DeletePlantfromLocation(plant.plantNumber)" mat-icon-button color="warn">
+                <i class="pi pi-trash" style="color: #fd2828"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-accordionTab>
+  </p-accordion>
+</p-dialog>

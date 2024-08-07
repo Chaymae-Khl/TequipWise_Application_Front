@@ -658,8 +658,8 @@
                                             <td>{{ asset.equipementName }}</td>
                                             <td>{{ asset.qtEquipment }}</td>
                                             <td>
-                                                <input type="text" pInputText name="pu"
-                                                    [(ngModel)]="selectedRequest.equipmentSubRequests[i].pu"
+                                                <input type="text" pInputText name="pu{{i}}"
+                                                    [(ngModel)]="asset.pu"
                                                     #pu="ngModel" required />
                                                 <div *ngIf="pu.touched && pu.invalid" class="error-message">
                                                     Unit Price is required.
@@ -783,8 +783,8 @@
             </div>
                 <br>
                 <div class="position-relative end-0 bottom-0">
-                    <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
-                        <ng-container *ngIf="!loading4; else loadingTemplate">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
                             Confirm
                         </ng-container>
                         <ng-template #loadingTemplate>
@@ -823,8 +823,8 @@
                 </div>
                 <br>
                 <div>
-                    <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
-                        <ng-container *ngIf="!loading4; else loadingTemplate">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
                             Confirm
                         </ng-container>
                         <ng-template #loadingTemplate>
@@ -882,8 +882,8 @@
                 </div>
                 <br>
                 <div>
-                    <p-button type="submit" [outlined]="true" [disabled]="loading4 || form.invalid">
-                        <ng-container *ngIf="!loading4; else loadingTemplate">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
                             Confirm
                         </ng-container>
                         <ng-template #loadingTemplate>

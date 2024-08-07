@@ -1,176 +1,309 @@
 import { Component, OnInit } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexTitleSubtitle, ApexXAxis } from 'ngx-apexcharts';
 import { AuthServiceService } from '../../../Services/auth-service.service';
 import { EquipementRequestServiceService } from '../../../Services/equipement-request-service.service';
+
+interface MonthlyExpenditureDto {
+  year: number;
+  month: number;
+  total: number;
+}
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css'] // Corrected styleUrls
 })
-export class DashboardComponent implements OnInit{
-
-  numberofusers: number = 0; 
-  numberofReq: number = 0; 
+export class DashboardComponent implements OnInit {
+  numberofusers: number = 0;
+  numberofReq: number = 0;
   data: any;
   options: any;
   data2: any;
   options2: any;
-  basicData: any;
-
-  basicOptions: any;
   
-constructor(  private Authservice:AuthServiceService,private equipementReqService: EquipementRequestServiceService){}
+  date?: Date;
+
+  constructor(private authService: AuthServiceService, private equipementReqService: EquipementRequestServiceService) {}
+
   ngOnInit(): void {
     this.getNumofUsers();
     this.getNumOfRequest();
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    
-   
-    this.data = {
-      labels: ['Open', 'In Progress', 'Waiting For finance', 'Waiting for PR', 'Waiting for PO', 'Approved', 'Rejected'],
+    this.initializeChartData();
+
+    this.date = new Date();
+    const currentYear = this.date.getFullYear();
+    this.fetchFilteredSubEquipmentRequests(currentYear);
+
+    this.setupChartOptions();
+  }
+
+  value = [
+    { label: 'Users', color1: '#34d399', color2: '#fbbf24', value: 50, data: this.numberofusers, icon: 'pi pi-users' },
+    { label: 'IT Asset Requests', color1: '#fbbf24', color2: '#60a5fa', value: 25, data: this.numberofReq, icon: 'pi pi-inbox' },
+    { label: 'Phone Requests', color1: '#60a5fa', color2: '#c084fc', value: 25, data: 0, icon: 'pi pi-inbox' }
+  ];
+
+  getNumofUsers() {
+    this.authService.getNumUsers().subscribe(
+      (data: any) => {
+        console.log('Number of users:', data); // Debugging line
+        this.numberofusers = data;
+        this.updateValueArray();
+      },
+      (error) => {
+        console.error('An error occurred while fetching number of users:', error);
+      }
+    );
+  }
+
+  getNumOfRequest() {
+    this.equipementReqService.NumberOfRequest().subscribe(
+      (data: any) => {
+        console.log('Number of requests:', data); // Debugging line
+        this.numberofReq = data;
+        this.updateValueArray();
+      },
+      (error) => {
+        console.error('An error occurred while fetching number of requests:', error);
+      }
+    );
+  }
+
+  updateValueArray() {
+    this.value[0].data = this.numberofusers;
+    this.value[1].data = this.numberofReq;
+  }
+
+  onDateChange(event: any) {
+    if (event) {
+      const year = event.getFullYear();
+      this.fetchFilteredSubEquipmentRequests(year);
+    }
+  }
+
+  fetchFilteredSubEquipmentRequests(year: number) {
+    this.equipementReqService.MonthlyExpenditure(year).subscribe((data: any) => {
+      console.log('Monthly expenditure data:', data); // Debugging line
+      this.updateChart(data);
+    });
+  }
+
+  updateChart(data: MonthlyExpenditureDto[]) {
+    const monthlyData = this.aggregateMonthlyData(data);
+    const labels = Object.keys(monthlyData);
+    const values = Object.values(monthlyData);
+
+    this.data2 = {
+      labels: labels,
       datasets: [
-          {
-              label:'It Assets Request',
-              backgroundColor: [
-                  documentStyle.getPropertyValue('--blue-500'),
-                  documentStyle.getPropertyValue('--cyan-500'),
-                  documentStyle.getPropertyValue('--yellow-500'),
-                  documentStyle.getPropertyValue('--orange-500'),
-                  documentStyle.getPropertyValue('--gray-500'),
-                  documentStyle.getPropertyValue('--green-500'),
-                  documentStyle.getPropertyValue('--red-500')
-              ],
-              borderColor: [
-                documentStyle.getPropertyValue('--blue-500'),
-                documentStyle.getPropertyValue('--cyan-500'),
-                documentStyle.getPropertyValue('--yellow-500'),
-                documentStyle.getPropertyValue('--orange-500'),
-                documentStyle.getPropertyValue('--gray-500'),
-                documentStyle.getPropertyValue('--green-500'),
-                documentStyle.getPropertyValue('--red-500')
-              ],
-              data: [65, 59, 80, 81, 56, 55, 40]
-          }
+        {
+          label: 'Monthly Expenditure',
+          backgroundColor: '#2E4957',
+          data: values
+        }
       ]
-  };
- 
-    this.options = {
+    };
+  }
+
+  aggregateMonthlyData(data: MonthlyExpenditureDto[]) {
+    const monthlyData: { [key: string]: number } = {};
+
+    data.forEach(item => {
+      const month = `${item.month}/${item.year}`;
+      if (!monthlyData[month]) {
+        monthlyData[month] = 0;
+      }
+      monthlyData[month] += item.total;
+    });
+
+    return monthlyData;
+  }
+
+  initializeChartData() {
+    this.equipementReqService.getRequestCounts().subscribe(counts => {
+      console.log('Request counts:', counts); // Debugging line
+      this.data = {
+        labels: ['Open', 'In Progress', 'Waiting For Finance', 'Waiting for PR', 'Waiting for PO', 'Approved', 'Rejected'],
+        datasets: [
+          {
+            label: 'IT Assets Request',
+            backgroundColor: [
+            
+            '#e9844070', // Blue
+            '#E98300', // Orange
+            '#A4D4E6', // Red
+            '#167A87', // Teal
+            '#2E4957', // Pink
+            '#8FB838', // Purple
+            'red'  // Yellow
+            ],
+            borderColor: [
+             '#e9844070', // Blue
+            '#E98300', // Orange
+            '#A4D4E6', // Red
+            '#167A87', // Teal
+            '#2E4957', // red
+            '#8FB838', // Purple
+            'red'  // Yellow
+            ],
+            data: [
+              counts.open,
+              counts.inProgress,
+              counts.waitingForFinanceApproval,
+              counts.waitingForPR,
+              counts.waitingForPO,
+              counts.approved,
+              counts.rejected
+            ]
+          }
+        ]
+      };
+
+      this.options = {
         maintainAspectRatio: false,
         aspectRatio: 0.8,
         plugins: {
-            legend: {
-               
-            }
+          legend: {}
         },
         scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary,
-                    font: {
-                        weight: 500
-                    }
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder,
-                    drawBorder: false
-                }
-            }
-
-        }
-    };
-
-    this.basicData = {
-      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-      datasets: [
-          {
-              label: 'Sales',
-              data: [540, 325, 702, 620],
-              backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-              borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
-              borderWidth: 1
-          }
-      ]
-  };
-
-  this.basicOptions = {
-      plugins: {
-          legend: {
-              labels: {
-                  color: textColor
-              }
-          }
-      },
-      scales: {
-          y: {
-              beginAtZero: true,
-              ticks: {
-                  color: textColorSecondary
-              },
-              grid: {
-                  color: surfaceBorder,
-                  drawBorder: false
-              }
-          },
           x: {
-              ticks: {
-                  color: textColorSecondary
-              },
-              grid: {
-                  color: surfaceBorder,
-                  drawBorder: false
+            ticks: {
+              color: '#495057',
+              font: {
+                weight: 500
               }
+            },
+            grid: {
+              color: '#ebedef',
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef',
+              drawBorder: false
+            }
           }
-      }
-  };
+        }
+      };
+      this.data = {
+        labels: ['Open', 'In Progress', 'Waiting For Finance', 'Waiting for PR', 'Waiting for PO', 'Approved', 'Rejected'],
+        datasets: [
+          {
+            label: 'IT Assets Request',
+            backgroundColor: [
+            
+            '#e9844070', // Blue
+            '#E98300', // Orange
+            '#A4D4E6', // Red
+            '#167A87', // Teal
+            '#2E4957', // Pink
+            '#8FB838', // Purple
+            'red'  // Yellow
+            ],
+            borderColor: [
+             '#e9844070', // Blue
+            '#E98300', // Orange
+            '#A4D4E6', // Red
+            '#167A87', // Teal
+            '#2E4957', // red
+            '#8FB838', // Purple
+            'red'  // Yellow
+            ],
+            data: [
+              counts.open,
+              counts.inProgress,
+              counts.waitingForFinanceApproval,
+              counts.waitingForPR,
+              counts.waitingForPO,
+              counts.approved,
+              counts.rejected
+            ]
+          }
+        ]
+      };
 
-
-
-
+      this.options = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+          legend: {}
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#495057',
+              font: {
+                weight: 500
+              }
+            },
+            grid: {
+              color: '#ebedef',
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef',
+              drawBorder: false
+            }
+          }
+        }
+      };
+    });
     
   }
-  value = [
-    { label: 'Users', color1: '#34d399', color2: '#fbbf24', value: 50,data: this.numberofusers, icon: 'pi pi-users' },
-    { label: 'IT Asset Requests', color1: '#fbbf24', color2: '#60a5fa', value: 25,data:this.numberofReq, icon: 'pi pi-inbox' },
-    { label: 'Phone Requests', color1: '#60a5fa', color2: '#c084fc', value: 25,data:0, icon: 'pi pi-inbox' }
-];
-getNumofUsers(){
-  this.Authservice.getNumUsers().subscribe(
-    (data:any)=>{
-      this.numberofusers=data;
-      this.updateValueArray();
-    },
-    (error)=>{
-      console.error('An error occurred while fetching nuber of Users:', error);
-    }
-  )
-}
 
-getNumOfRequest(){
-  this.equipementReqService.NumberOfRequest().subscribe(
-    (data:any)=>{
-      this.numberofReq=data;
-      this.updateValueArray();
-    },
-    (error)=>{
-      console.error('An error occurred while fetching nuber of Users:', error);
-    }
-  )
-}
-updateValueArray() {
-  this.value[0].data = this.numberofusers; // Mettez à jour les données pour le nombre d'utilisateurs
-  this.value[1].data = this.numberofReq; // Mettez à jour les données pour le nombre d'utilisateurs
-}
+  setupChartOptions() {
+    this.options2 = {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#333',
+          },
+        },
+        tooltip: {
+          backgroundColor: '#333',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+        },
+      },
+      scales: {
+        x: {
+          type: 'category',
+          title: {
+            display: true,
+            text: 'Month',
+            color: '#555'
+          },
+          ticks: {
+            color: '#666'
+          },
+          grid: {
+            color: '#ddd',
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Total Expenditure',
+            color: '#EA8300'
+          },
+          ticks: {
+            color: '#EA8300'
+          },
+          grid: {
+            color: '#EA8300',
+          },
+        },
+      }
+    };
+  }
 }

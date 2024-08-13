@@ -1,0 +1,101 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6">
+        <div class="form-container card p-4 shadow-sm">
+
+            <form #requestForm="ngForm" (ngSubmit)="PassPhoneRequest()" class="form">
+                <p class="title h4 text-center mb-4">Phone / Modem Request</p>
+                <p class="message text-center text-muted mb-4">Enter your request information.</p>
+
+                <!-- Request For Whom Section -->
+                <div class="mb-3">
+                    <p class="message font-weight-bold">Requesting for:</p>
+                    <div class="d-flex align-items-center">
+                        <p-dropdown 
+                            [options]="choices" 
+                            optionLabel="name" 
+                            [(ngModel)]="phoneRequest.forWho"
+                            optionValue="name" 
+                            name="ForWho" 
+                            placeholder="Select person" 
+                            class="flex-grow-1"/>
+                        <input 
+                            *ngIf="phoneRequest.forWho=='For Another Employee'" 
+                            type="text" 
+                            pInputText 
+                            name="newHireName" 
+                            [(ngModel)]="phoneRequest.newHireName"
+                            class="form-control ml-2" 
+                            placeholder="New Employee Name" />
+                    </div>
+                </div>
+
+                <!-- Asset Type Section -->
+                <div class="mb-3">
+                    <p class="message font-weight-bold">Asset Type:</p>
+                    <p-dropdown 
+                        [options]="Assettype" 
+                        optionLabel="name" 
+                        optionValue="name"
+                        name="assetType" 
+                        placeholder="Select asset type"
+                        [(ngModel)]="phoneRequest.assetType" 
+                        class="w-100"/>
+                </div>
+
+                <!-- Phone Request Type and Replacement Type Section -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <div class="flex-grow-1">
+                            <p class="message font-weight-bold">Phone Request Type:</p>
+                            <p-dropdown 
+                                [options]="requesttype" 
+                                optionLabel="name" 
+                                optionValue="name"
+                                name="phoneRequestType" 
+                                placeholder="Select request type"
+                                [(ngModel)]="phoneRequest.phoneRequestType" 
+                                class="w-100"/>
+                        </div>
+                        
+                        <div class="flex-grow-1 ml-2" *ngIf="phoneRequest.phoneRequestType=='Replacement'">
+                            <p class="message font-weight-bold">Replacement Type:</p>
+                            <p-dropdown 
+                                [options]="replacementtype" 
+                                optionLabel="name" 
+                                optionValue="name"
+                                name="replacementType" 
+                                placeholder="Select replacement type"
+                                [(ngModel)]="phoneRequest.replacemnetType" 
+                                class="w-100"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Area Section -->
+                <div class="mb-4">
+                    <mat-form-field class="w-100">
+                        <mat-label>Why do you want this phone?</mat-label>
+                        <textarea matInput required name="comment" [(ngModel)]="phoneRequest.comment" rows="3"></textarea>
+                    </mat-form-field>
+                </div>
+
+                <!-- Divider -->
+                <p-divider></p-divider>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button class="submit btn btn-primary" [disabled]="loading || requestForm.invalid">
+                        <span *ngIf="loading">
+                            <i class="pi pi-spin pi-spinner"></i> Sending...
+                        </span>
+                        <span *ngIf="!loading">Submit</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p-toast position="bottom-right"></p-toast>

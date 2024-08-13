@@ -19,6 +19,8 @@ export class MenuComponent {
   IsItApprover!:boolean;
   IsController!:boolean;
   visible: boolean = false;
+  visible2: boolean = false;
+
   constructor(private route: ActivatedRoute,private localStorageService:LocalStorageServiceService) {
     // Access the resolved data
     this.isAuthenticated = this.route.snapshot.data['isAuthenticated'];
@@ -117,5 +119,8 @@ export class MenuComponent {
 
   showDialog(): void {
     this.visible = true;
+  }
+  showDialog2(): void {
+    this.visible2 = true;
   }
 }

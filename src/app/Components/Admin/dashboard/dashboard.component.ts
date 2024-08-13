@@ -3,6 +3,7 @@ import { AuthServiceService } from '../../../Services/auth-service.service';
 import { EquipementRequestServiceService } from '../../../Services/equipement-request-service.service';
 
 interface MonthlyExpenditureDto {
+  day:any;
   year: number;
   month: number;
   total: number;
@@ -20,7 +21,8 @@ export class DashboardComponent implements OnInit {
   options: any;
   data2: any;
   options2: any;
-  
+  showChart: boolean = true;
+
   date?: Date;
 
   constructor(private authService: AuthServiceService, private equipementReqService: EquipementRequestServiceService) {}
@@ -31,8 +33,12 @@ export class DashboardComponent implements OnInit {
     this.initializeChartData();
 
     this.date = new Date();
+    this.date = new Date();
     const currentYear = this.date.getFullYear();
-    this.fetchFilteredSubEquipmentRequests(currentYear);
+    const currentMonth = this.date.getMonth() + 1; // Months are 0-indexed in JavaScript
+    const currentDay = this.date.getDate();
+
+    this.fetchFilteredSubEquipmentRequests(currentYear, currentMonth, currentDay);
 
     this.setupChartOptions();
   }
@@ -76,35 +82,38 @@ export class DashboardComponent implements OnInit {
 
   onDateChange(event: any) {
     if (event) {
-      const year = event.getFullYear();
-      this.fetchFilteredSubEquipmentRequests(year);
+        const year = event.getFullYear();
+        const month = event.getMonth() + 1; // JavaScript months are 0-indexed
+        const day = event.getDate();
+        this.fetchFilteredSubEquipmentRequests(year, month, day);  // Pass year, month, and day
     }
   }
 
-  fetchFilteredSubEquipmentRequests(year: number) {
-    this.equipementReqService.MonthlyExpenditure(year).subscribe((data: any) => {
-      console.log('Monthly expenditure data:', data); // Debugging line
-      this.updateChart(data);
+  fetchFilteredSubEquipmentRequests(year: number, month?: number, day?: number) {
+    this.equipementReqService.MonthlyExpenditure(year, month, day).subscribe((data: any) => {
+      console.log('Filtered daily expenditure data:', data);
+      if (data.length === 0) {
+        this.data2 = null; // Clear the chart data if no data is returned
+      } else {
+        this.updateChart(data); // Update the chart with new data
+      }
     });
   }
-
   updateChart(data: MonthlyExpenditureDto[]) {
-    const monthlyData = this.aggregateMonthlyData(data);
-    const labels = Object.keys(monthlyData);
-    const values = Object.values(monthlyData);
+    const dailyData = data.map(d => `${d.day}/${d.month}/${d.year}`);
+    const values = data.map(d => d.total);
 
     this.data2 = {
-      labels: labels,
+      labels: dailyData,
       datasets: [
         {
-          label: 'Monthly Expenditure',
+          label: 'Daily Expenditure',
           backgroundColor: '#2E4957',
           data: values
         }
       ]
     };
   }
-
   aggregateMonthlyData(data: MonthlyExpenditureDto[]) {
     const monthlyData: { [key: string]: number } = {};
 
@@ -280,7 +289,7 @@ export class DashboardComponent implements OnInit {
           type: 'category',
           title: {
             display: true,
-            text: 'Month',
+            text: 'Day',
             color: '#555'
           },
           ticks: {

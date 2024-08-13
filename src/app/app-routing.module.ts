@@ -20,6 +20,8 @@ import { MyProfileComponent } from './Components/Authentication/my-profile/my-pr
 import { UserEquipmentListComponent } from './Components/EquipmnetsRequestLists/user-equipment-list/user-equipment-list.component';
 import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsRequestLists/confirmation-equipment-list/confirmation-equipment-list.component';
 import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equipment-list/my-equipment-list.component';
+import { PhoneRequestComponent } from './Components/phone-request/phone-request.component';
+import { UserPhoneListComponent } from './Components/PhonesRequestLists/user-phone-list/user-phone-list.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -61,7 +63,9 @@ const routes: Routes = [
   { path: 'tokenExpired', component: TokenExpiredComponent },
   { path: 'Menu', component: MenuComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'EquipementRequest', component: EquipmentRequestComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'phoneRequest', component: PhoneRequestComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'UserEquipementRequest', component: UserEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'UserPhoneRequest', component: UserPhoneListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'RequestConfirmation', component: ConfirmationEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'MyProfile', component: MyProfileComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'EquipmentLists', component: MyEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } }

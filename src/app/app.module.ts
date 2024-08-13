@@ -92,6 +92,9 @@ import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equipment-list/my-equipment-list.component';
+import { PhoneRequestComponent } from './Components/phone-request/phone-request.component';
+import { UserPhoneListComponent } from './Components/PhonesRequestLists/user-phone-list/user-phone-list.component';
+import { ConfirmationPhoneListComponent } from './Components/PhonesRequestLists/confirmation-phone-list/confirmation-phone-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,6 +128,9 @@ import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equi
     UserEquipmentListComponent,
     ConfirmationEquipmentListComponent,
     MyEquipmentListComponent,
+    PhoneRequestComponent,
+    UserPhoneListComponent,
+    ConfirmationPhoneListComponent,
   
    
   

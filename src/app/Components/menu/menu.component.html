@@ -23,7 +23,7 @@
             <span class="backdrop"></span>
           </div>
           <div class="menu-item">
-            <a routerLink="/UserEquipementRequest"><button class="button">
+            <a (click)="showDialog2()"><button class="button">
               <img class="dashicon" src="assets/Images/AllRequests.png" alt="">
             </button></a>
             <p class="desc">My Requests</p>
@@ -60,7 +60,21 @@
           <button routerLink="/EquipementRequest" class="btn"><i class="pi pi-desktop" style="font-size: 2rem;"></i><br>IT assets</button>
         </div>
         <div class="col">
-          <button routerLink="/EquipementRequest" class="btn"><i class="pi pi-mobile" style="font-size: 2rem;"></i> <br><br> Phones</button>
+          <button routerLink="/phoneRequest" class="btn"><i class="pi pi-mobile" style="font-size: 2rem;"></i> Phones/Modems</button>
+        </div>
+      </div>
+    </div>
+    <p-divider></p-divider>
+  </p-dialog>
+  <p-dialog header="Request Type" [modal]="true" [(visible)]="visible2">
+    <p-divider></p-divider>
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col">
+          <button routerLink="/UserEquipementRequest" class="btn2"><i class="pi pi-desktop" style="font-size: 2rem;"></i><br>IT assets Requests</button>
+        </div>
+        <div class="col">
+          <button routerLink="/UserPhoneRequest" class="btn2"><i class="pi pi-mobile" style="font-size: 2rem;"></i> Phones/Modems Requests</button>
         </div>
       </div>
     </div>

@@ -72,9 +72,21 @@ uploadSupplierOffer(requestId: any, updatedRequest: any, file: File): Observable
   return this.httpClient.put(`${this.apiUrl}/Request/ItOfferAndPrice/${requestId}`, formData, httpOptions);
 }
 //for the KPIs
-MonthlyExpenditure(year:any){
+MonthlyExpenditure(year: number, month?: number, day?: number) {
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.get(`${this.apiUrl}/Request/monthly-expenditure?year=${year}`,httpOptions);
+  let params: any = { year };
+
+  if (month !== undefined) {
+      params.month = month;
+  }
+  if (day !== undefined) {
+      params.day = day;
+  }
+
+  // Include params in the options object
+  const options = { ...httpOptions, params };
+
+  return this.httpClient.get(`${this.apiUrl}/Request/monthly-expenditure`, options);
 }
 getRequestCounts(): Observable<any> {
   const httpOptions = this.getHttpOptions();

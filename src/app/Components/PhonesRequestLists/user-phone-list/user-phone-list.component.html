@@ -1,1 +1,83 @@
 <app-nav-bar></app-nav-bar>
+<div class="col text-center">
+    <h1 class="mt-5"><i class="pi pi-bars" style="font-size: 1rem"></i> Your Phones/Modems Requests List</h1>
+</div>
+<p-divider></p-divider>
+<div class="container-fluid">
+    <p-table [value]="userPhoneList" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '60rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="background-color: #769ef55f; "># Request Number</th>
+                <th style="background-color: #769ef55f; ">By</th>
+                <th style="background-color: #769ef55f; ">Asset</th>
+                <th style="background-color: #769ef55f;">Request Date </th>
+                <th style="background-color: #769ef55f; ">Status</th>
+                <th style="background-color: #769ef55f; ">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-request>
+            <tr [ngClass]="{'recent-request': isRecentRequest(request.requestDate)}">
+                <td>{{ request. phoneRequestId }}</td>
+                <td>{{ request.nmaeOfUser }}</td>
+                <td>{{ request.assetType}}</td>
+                <td>{{ request.requestDate | date:'dd/MM/yyyy hh:mm'}}</td>
+                <td><p-tag [rounded]="true" [value]="getRequestStatusGeneral(request)" [severity]="getRequestStatusGeneral(request) === 'Approved' ? 'success' :
+                getRequestStatusGeneral(request) === 'Open' ? 'info' :
+                getRequestStatusGeneral(request) === 'In Progress' ? 'secondary' :
+                getRequestStatusGeneral(request) === 'Waiting for HR' ? 'warning' :
+                getRequestStatusGeneral(request) === 'Rejected' ? 'danger' : 'info'" /></td>
+                <td><p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary" (onClick)="showDialog(request)"
+                    [outlined]="true"></p-button></td>
+
+            </tr>
+        </ng-template>
+
+    </p-table>
+    <div *ngIf="loading" class="text-center">
+        <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
+            animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
+    </div>
+</div>
+
+
+
+<p-dialog header="Request Details" [modal]="true" [(visible)]="visible" [style]="{width: '70vw'}">
+    <div class="position-relative" *ngIf="selectedRequest">
+        <img *ngIf="selectedRequest?.requestStatus === true" src="/assets/Images/approved.png" width="222rem"
+            alt="Approved" style="position: absolute; left: 11px;">
+        <img *ngIf="selectedRequest?.requestStatus === false" src="/assets/Images/rejected.png" width="222rem"
+            alt="Rejected" style="position: absolute; left: 11px;">
+    </div>
+
+    <p-timeline [value]="timelineEvents" align="alternate">
+        <ng-template pTemplate="marker" let-event>
+            <ng-container *ngIf="event.title">
+                <span *ngIf="getIconForEvent(event)" [ngClass]="getIconForEvent(event)" [style.color]="getColorForEvent(event)"></span>
+            </ng-container>
+        </ng-template>
+
+        <ng-template pTemplate="content" let-event>
+            <div class="p-timeline-event-content">
+                <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
+                <p-divider type="dashed"></p-divider>
+                <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
+                <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
+                <p *ngIf="event.ForWho"><b>For whom:</b> ({{ event.ForWho }}) {{ event.NameofNewEmpl }} </p>
+                <p *ngIf="event.PhonerequestType"><b>Request Type:</b> {{ event.PhonerequestType }} </p>
+                <p *ngIf="event.replacementType"><b>replacement Type:</b> {{ event.replacementType }} </p>
+                <p *ngIf="event.statusManag"><b>Status:</b> {{ event.statusManag }} </p>
+                <p *ngIf="event.statusHr || event.statusHr !=null"><b>Status:</b> {{ event.statusHr }} </p>
+                <p *ngIf="event.statusIT  || event.statusIT !=null"><b>Status:</b> {{ event.statusIT }} </p>
+                <p *ngIf="event.statusreq"><b>Status:</b> {{ event.statusreq }} </p>
+                <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+                <p *ngIf="event.RejectionCause"><b>Cause:</b> {{ event.RejectionCause }}</p>
+                <p *ngIf="event.AssignementStatus != null"><b>Assigned:</b> {{ event.AssignementStatus === true ? 'Yes' : 'No' }}</p>
+                <p *ngIf="event.AssignedAt"><b>Assigned At:</b> {{ event.AssignedAt | date:'dd/MM/yyyy hh:mm' }}</p>
+            </div>
+        </ng-template>
+    </p-timeline>
+</p-dialog>

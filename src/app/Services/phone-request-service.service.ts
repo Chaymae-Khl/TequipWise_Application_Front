@@ -28,6 +28,10 @@ PassRequest(newRequest:PhoneRequest){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.post(`${this.apiUrl}/PhoneRequest/PassPhoneRequest`,newRequest,httpOptions);
 }
+GetPhoneRequestForAuthUser(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/PhoneRequest/GetUserPhoneRequests`,httpOptions);
 
+}
 
 }

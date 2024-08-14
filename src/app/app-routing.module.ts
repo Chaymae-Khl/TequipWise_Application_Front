@@ -22,6 +22,7 @@ import { ConfirmationEquipmentListComponent } from './Components/EquipmnetsReque
 import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equipment-list/my-equipment-list.component';
 import { PhoneRequestComponent } from './Components/phone-request/phone-request.component';
 import { UserPhoneListComponent } from './Components/PhonesRequestLists/user-phone-list/user-phone-list.component';
+import { ConfirmationPhoneListComponent } from './Components/PhonesRequestLists/confirmation-phone-list/confirmation-phone-list.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -66,6 +67,7 @@ const routes: Routes = [
   { path: 'phoneRequest', component: PhoneRequestComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'UserEquipementRequest', component: UserEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'UserPhoneRequest', component: UserPhoneListComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'PhoneRequestConfirmation', component: ConfirmationPhoneListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'RequestConfirmation', component: ConfirmationEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'MyProfile', component: MyProfileComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'EquipmentLists', component: MyEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } }

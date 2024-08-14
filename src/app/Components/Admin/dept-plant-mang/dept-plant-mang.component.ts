@@ -31,6 +31,7 @@ export class DeptPlantMangComponent implements OnInit {
   users: any;
   controllers:any;
   ItApprovers:any;
+  HrApprovers:any;
   selectedExistingPlantIds:any;
   searchTerm: string = '';
   loading2: boolean = true; // Initialize as true to show loading initially
@@ -40,7 +41,7 @@ export class DeptPlantMangComponent implements OnInit {
   //for the form repititions
   public locations: any[] = [{ name: '', buildingNumber: '' }];
   public departments: any[] = [{ departmentName: '', managerName: '', status: false }];
-  public plantes: any[] = [{ plantName: '',sapNumber:'', approverName: '' }];
+  public plantes: any[] = [{ plantName: '',sapNumber:'', approverName: '',hrApproverName:'' }];
 
   constructor(private openDataServiceService: OpenDataServiceService,
     public dialog: MatDialog,
@@ -60,6 +61,8 @@ export class DeptPlantMangComponent implements OnInit {
     this.getControllers();
     this.getITApprovers();
     this.getSapNum();
+    this.geHRApprovers();
+
   }
 
   // Get plants method
@@ -116,6 +119,21 @@ export class DeptPlantMangComponent implements OnInit {
       (data: any) => {
         this.ItApprovers = data
           .filter((user: any) => user.roles && user.roles.includes('It Approver'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
+  geHRApprovers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.HrApprovers = data
+          .filter((user: any) => user.roles && user.roles.includes('HR Approver'))
           .map((user: any) => ({
             ...user,
             fullName: `${user.teNum} (${user.userName})`
@@ -189,7 +207,7 @@ export class DeptPlantMangComponent implements OnInit {
   
   addPlant(event: Event): void {
     event.preventDefault(); // Prevent form submission
-    this.plantes.push({ plantName: '', approverName: '',ApproverId:0 });
+    this.plantes.push({ plantName: '', approverName: '',ApproverId:0, hrApproverName: '',HrApproverId:0 });
   }
 
 

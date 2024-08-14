@@ -16,6 +16,12 @@
                 </p-dropdown>
               </div>
               <div class="col">
+                <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="HrApprovers"
+                  name="hrApproverId" [(ngModel)]="plant.hrApproverId" [showClear]="true" optionValue="id"
+                  optionLabel="fullName" aria-describedby="approver-name-help" placeholder="Select the Hr Approver">
+                </p-dropdown>
+              </div>
+              <div class="col">
                 <p-button icon="pi pi-check" label="Confirm" severity="secondary" type="submit"></p-button>
               </div>
             </div>
@@ -150,6 +156,7 @@
           <tr>
             <th>Plant Name</th>
             <th>It Approver Name</th>
+            <th>HR Approver Name</th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -171,6 +178,17 @@
                 <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="ItApprovers"
                   [(ngModel)]="plant.itApproverId" optionValue="id" optionLabel="fullName"
                   placeholder="Select the It Approver">
+                </p-dropdown>
+              </ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="editingRowIndex !== rowIndex; else editModePlant3">
+                {{plant.hrApprover_name}}
+              </ng-container>
+              <ng-template #editModePlant3>
+                <p-dropdown [appendTo]="'body'" [filter]="true" filterBy="fullName" [options]="HrApprovers"
+                  [(ngModel)]="plant.hrApproverId" optionValue="id" optionLabel="fullName"
+                  placeholder="Select the Hr Approver">
                 </p-dropdown>
               </ng-template>
             </td>

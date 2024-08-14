@@ -20,6 +20,7 @@ export class MenuComponent {
   IsController!:boolean;
   visible: boolean = false;
   visible2: boolean = false;
+  visible3: boolean = false;
 
   constructor(private route: ActivatedRoute,private localStorageService:LocalStorageServiceService) {
     // Access the resolved data
@@ -122,5 +123,8 @@ export class MenuComponent {
   }
   showDialog2(): void {
     this.visible2 = true;
+  }
+  showDialog3(): void {
+    this.visible3 = true;
   }
 }

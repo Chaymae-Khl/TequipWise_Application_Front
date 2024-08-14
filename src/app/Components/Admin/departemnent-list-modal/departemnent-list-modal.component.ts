@@ -17,6 +17,7 @@ export class DepartemnentListModalComponent {
   users: any;
   controllers: any;
   ItApprovers:any;
+  HrApprovers:any;
   editingRowIndex:any;
   editingRowIndexDept:any;
   originalPlant: Plant | null = null;
@@ -34,6 +35,7 @@ export class DepartemnentListModalComponent {
   ngOnInit() {
     this.getControllers();
     this.getItApprovers();
+    this.geHRApprovers();
     this.getUsernames();
   }
 
@@ -78,6 +80,21 @@ export class DepartemnentListModalComponent {
       (data: any) => {
         this.ItApprovers = data
           .filter((user: any) => user.roles && user.roles.includes('It Approver'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
+  geHRApprovers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.HrApprovers = data
+          .filter((user: any) => user.roles && user.roles.includes('HR Approver'))
           .map((user: any) => ({
             ...user,
             fullName: `${user.teNum} (${user.userName})`

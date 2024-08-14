@@ -8,4 +8,6 @@ export class Plant {
   ApproverId?: any;
   itApprover_name:any;
   itApproverId:any;
+  hrApproverId:any;
+  hrApprover_name :any;
 }

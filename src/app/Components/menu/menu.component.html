@@ -15,7 +15,7 @@
             <p class="desc">Dashboard</p>
             <span class="backdrop"></span>
           </div>
-          <div *ngIf="IsManger || IsItApprover ||IsController || ISManagerbackupAprover || ISitbackupAprover || IScONTROLLERbackupAprover ||IsApprover" class="menu-item">
+          <div *ngIf="IsManger || IsItApprover ||IsController || ISManagerbackupAprover || ISitbackupAprover || IScONTROLLERbackupAprover ||IsApprover || IsHr" class="menu-item">
              <a (click)="showDialog3()"><button  class="button">
              <img width="80px" src="assets/Images/Quene.png" alt="">
             </button></a>
@@ -84,7 +84,7 @@
     <p-divider></p-divider>
     <div class="container">
       <div class="row align-items-start">
-        <div class="col">
+        <div *ngIf="!IsHr" class="col">
           <button routerLink="/RequestConfirmation" class="btn3"><i class="pi pi-desktop" style="font-size: 2rem;"></i><br>IT assets Requests</button>
         </div>
         <div class="col">

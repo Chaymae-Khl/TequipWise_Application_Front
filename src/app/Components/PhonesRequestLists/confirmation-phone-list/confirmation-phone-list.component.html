@@ -1,1 +1,300 @@
 <app-nav-bar></app-nav-bar>
+
+<div class="col text-center">
+    <h1 class="mt-5"><i class="pi pi-bars" style="font-size: 1rem"></i> Phones/Modems Approval Queue List</h1>
+</div>
+<p-divider></p-divider>
+<div class="container-fluid">
+    <p-table [value]="userPhoneList" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '80rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="background-color: #769ef55f; "># Request Number</th>
+                <th style="background-color: #769ef55f; ">By</th>
+                <th style="background-color: #769ef55f; ">Asset</th>
+                <th style="background-color: #769ef55f;">Request Date </th>
+                <th style="background-color: #769ef55f; ">Status</th>
+                <th style="background-color: #769ef55f; ">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-request>
+            <tr [ngClass]="{'recent-request': isRecentRequest(request.requestDate)}">
+                <td>{{ request. phoneRequestId }}</td>
+                <td>{{ request.nmaeOfUser }}</td>
+                <td>{{ request.assetType}}</td>
+                <td>{{ request.requestDate | date:'dd/MM/yyyy hh:mm'}}</td>
+                <td><p-tag [rounded]="true" [value]="getRequestStatusGeneral(request)" [severity]="getRequestStatusGeneral(request) === 'Approved' ? 'success' :
+                getRequestStatusGeneral(request) === 'Open' ? 'info' :
+                getRequestStatusGeneral(request) === 'In Progress' ? 'secondary' :
+                getRequestStatusGeneral(request) === 'Waiting for HR' ? 'warning' :
+                getRequestStatusGeneral(request) === 'Rejected' ? 'danger' : 'info'" /></td>
+                <td>
+                    <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
+                        (onClick)="showDialog(request)" [outlined]="true"></p-button>
+
+                    <p-button class="ml-2" icon="pi pi-reply" [outlined]="true" (onClick)="showDialog2(request)"
+                        label="Approve" severity="Success"></p-button>
+                    <p-button *ngIf="(IsItApprover===true ||ISitbackupAprover===true) && request.iTconfirmSatuts===true"class="ml-2" icon="pi pi-reply" [outlined]="true" (onClick)="showDialog3(request)"
+                        label="Assign" severity="warning"></p-button>
+                </td>
+
+            </tr>
+        </ng-template>
+
+    </p-table>
+    <div *ngIf="loading" class="text-center">
+        <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
+            animationDuration=".5s" />
+        <!-- or any loading indicator/message you prefer -->
+        <p>Fetching data...</p>
+    </div>
+</div>
+
+
+
+<p-dialog header="Request Details" [modal]="true" [(visible)]="visible" [style]="{width: '70vw'}">
+    <div class="position-relative" *ngIf="selectedRequest">
+        <img *ngIf="selectedRequest?.requestStatus === true" src="/assets/Images/approved.png" width="222rem"
+            alt="Approved" style="position: absolute; left: 11px;">
+        <img *ngIf="selectedRequest?.requestStatus === false" src="/assets/Images/rejected.png" width="222rem"
+            alt="Rejected" style="position: absolute; left: 11px;">
+    </div>
+
+    <p-timeline [value]="timelineEvents" align="alternate">
+        <ng-template pTemplate="marker" let-event>
+            <ng-container *ngIf="event.title">
+                <span *ngIf="getIconForEvent(event)" [ngClass]="getIconForEvent(event)"
+                    [style.color]="getColorForEvent(event)"></span>
+            </ng-container>
+        </ng-template>
+
+        <ng-template pTemplate="content" let-event>
+            <div class="p-timeline-event-content">
+                <h4 style="color: #104a7c; font-size: 1.2rem;">{{ event.title }}</h4>
+                <p-divider type="dashed"></p-divider>
+                <p *ngIf="event.date"><b>Date:</b> {{ event.date | date:'dd/MM/yyyy hh:mm' }}</p>
+                <p *ngIf="event.by"><b>By:</b> {{ event.by }}</p>
+                <p *ngIf="event.Equipment"><b>Asset:</b> {{ event.Equipment }}</p>
+                <p *ngIf="event.ForWho"><b>For whom:</b> ({{ event.ForWho }}) {{ event.NameofNewEmpl }} </p>
+                <p *ngIf="event.PhonerequestType"><b>Request Type:</b> {{ event.PhonerequestType }} </p>
+                <p *ngIf="event.replacementType"><b>replacement Type:</b> {{ event.replacementType }} </p>
+                <p *ngIf="event.statusManag"><b>Status:</b> {{ event.statusManag }} </p>
+                <p *ngIf="event.statusHr || event.statusHr !=null"><b>Status:</b> {{ event.statusHr }} </p>
+                <p *ngIf="event.emplCatego || event.emplCatego !=null"><b>Employee category:</b> {{ event.emplCatego }}
+                </p>
+                <p *ngIf="event.statusIT  || event.statusIT !=null"><b>Status:</b> {{ event.statusIT }} </p>
+                <p *ngIf="event.statusreq"><b>Status:</b> {{ event.statusreq }} </p>
+                <p *ngIf="event.Comments"><b>Comment:</b> {{ event.Comments }}</p>
+                <p *ngIf="event.RejectionCause"><b>Cause:</b> {{ event.RejectionCause }}</p>
+                <p *ngIf="event.AssignementStatus != null"><b>Assigned:</b> {{ event.AssignementStatus === true ? 'Yes'
+                    : 'No' }}</p>
+                <p *ngIf="event.AssignedAt"><b>Assigned At:</b> {{ event.AssignedAt | date:'dd/MM/yyyy hh:mm' }}</p>
+            </div>
+        </ng-template>
+    </p-timeline>
+</p-dialog>
+
+
+
+<p-dialog header="Request Approval" [modal]="true" [(visible)]="visible2" [style]="{width: '70vw'}">
+
+    <div *ngIf="IsManger || ISbackupAprover">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="Approve()" class="position-relative" #form="ngForm">
+                <h3>Select your response:</h3>
+                <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                    name="departmangconfirmStatus" [(ngModel)]="selectedRequest.departmangconfirmStatus" required>
+                </p-selectButton>
+                <div *ngIf="form.submitted && !selectedRequest.departmangconfirmStatus" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+                <h3>Enter the cause:</h3>
+                <textarea rows="10" cols="70" pInputTextarea name="departmang_Not_confirmCause"
+                    [(ngModel)]="selectedRequest.departmang_Not_confirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+    <div *ngIf="IsHr">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="Approve()" class="position-relative" #form="ngForm">
+                <div class="d-flex justify-content-start align-items-center">
+                    <div class="me-3">
+                        <h3>Select your response:</h3>
+                        <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                            name="hRconfirmSatuts" [(ngModel)]="selectedRequest.hRconfirmSatuts" required>
+                        </p-selectButton>
+                    </div>
+
+                    <div *ngIf="selectedRequest.hRconfirmSatuts!==false">
+                        <h3>Employee Category:</h3>
+                        <p-dropdown [options]="categories" [(ngModel)]="selectedRequest.employeeCategorie"
+                            optionLabel="name" optionValue="name" name="employeeCategorie"
+                            placeholder="Select the employee Category">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div *ngIf="form.submitted && !selectedRequest.hRconfirmSatuts" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+
+                <h3>Enter the cause:</h3>
+                <textarea rows="10" cols="70" pInputTextarea name="hR_Not_confirmCause"
+                    [(ngModel)]="selectedRequest.hR_Not_confirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div *ngIf="IsItApprover || ISitbackupAprover">
+        <div class="w-100">
+            <p-divider type="dashed"></p-divider>
+
+            <form (ngSubmit)="Approve()" class="position-relative" #form="ngForm">
+                <div class="d-flex justify-content-start align-items-center">
+                    <div class="me-3">
+                        <h3>Select your response:</h3>
+                        <p-selectButton [options]="stateOptions" optionLabel="label" optionValue="value"
+                            name="hRconfirmSatuts" [(ngModel)]="selectedRequest.iTconfirmSatuts" required>
+                        </p-selectButton>
+                    </div>
+
+                    <div *ngIf="selectedRequest.iTconfirmSatuts!==false">
+                        <p-divider align="left" type="solid"> <b>Modele & IMI & Number</b>
+                        </p-divider>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <input pInputText id="modele" aria-describedby="gl-help" name="modele"
+                                    placeholder="Modele" [(ngModel)]="selectedRequest.modele" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input pInputText id="imi" aria-describedby="CC-help" name="imi" placeholder="IMI"
+                                    [(ngModel)]="selectedRequest.imi" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input pInputText id="telNumber" aria-describedby="order-help" placeholder="Number"
+                                    name="telNumber" [(ngModel)]="selectedRequest.telNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="form.submitted && !selectedRequest.iTconfirmSatuts" class="error-message">
+                    Response is required.
+                </div>
+                <br>
+
+                <h3>Enter the cause:</h3>
+                <textarea rows="10" cols="70" pInputTextarea name="hR_Not_confirmCause"
+                    [(ngModel)]="selectedRequest.iT_Not_confirmCause" required #cause="ngModel">
+                </textarea>
+                <div *ngIf="cause.touched && cause.invalid" class="error-message">
+                    Cause is required.
+                </div>
+                <br>
+
+                <div class="position-relative end-0 bottom-0">
+                    <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                        <ng-container *ngIf="!loading2; else loadingTemplate">
+                            Confirm
+                        </ng-container>
+                        <ng-template #loadingTemplate>
+                            <i class="pi pi-spinner pi-spin"></i> Loading...
+                        </ng-template>
+                    </p-button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog header="Request Details" [modal]="true" [(visible)]="visible3" [style]="{width: '70vw'}">
+    <div class="w-100">
+        <form (ngSubmit)="Approve()" class="position-relative" #form="ngForm">
+            <p-divider align="left" type="solid"><b>Employee</b></p-divider>
+            <div class="row">
+                <div class="row justify-content-center align-items-center text-center">
+                    <p-avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" />
+                    <h3 class="mt-2">{{selectedRequest.nmaeOfUser}} </h3>
+                </div>
+               
+                   
+                <p-divider type="solid"></p-divider>
+                <div class="form-group mt-3">
+                    <p-checkbox   inputId="ny" [(ngModel)]="selectedRequest.receptionStatus" [binary]="true" name="receptionStatus" />
+                    <label for="ny" class="ml-2"> Assign</label>
+                </div>
+                <div class="form-group d-flex align-items-center mt-3">
+                    <div class="flex-grow-1 mr-2">
+                        <label class="mb-3" for="AssetSN">Assignment Date:</label><br>
+
+                        <p-calendar [iconDisplay]="'input'" [showIcon]="true" inputId="calendar-24h"
+                                    [appendTo]="'body'" name="assetReceiveByEMployeAt"
+                                    [(ngModel)]="selectedRequest.assetReceiveByEMployeAt" dateFormat="dd-mm-yy" [showTime]="true" [showButtonBar]="true"
+                                    class="w-100"/>
+                    </div>
+                   
+             
+
+            </div>
+            <p-divider type="dashed"></p-divider>
+            <br>
+        </div>
+        <br>
+        <div class="position-relative end-0 bottom-0">
+            <p-button type="submit" [outlined]="true" [disabled]="loading2 || form.invalid">
+                <ng-container *ngIf="!loading2; else loadingTemplate">
+                    Confirm
+                </ng-container>
+                <ng-template #loadingTemplate>
+                    <i class="pi pi-spinner pi-spin"></i> Loading...
+                </ng-template>
+            </p-button>
+        </div>
+    </form>
+       
+</div>
+</p-dialog>
+<p-toast />

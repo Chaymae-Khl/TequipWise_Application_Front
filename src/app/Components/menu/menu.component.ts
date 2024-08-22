@@ -18,6 +18,7 @@ export class MenuComponent {
   IsApprover!:boolean;
   IsItApprover!:boolean;
   IsController!:boolean;
+  IsHr!:boolean;
   visible: boolean = false;
   visible2: boolean = false;
   visible3: boolean = false;
@@ -70,6 +71,15 @@ export class MenuComponent {
         (isItApprover: boolean) => {
           this.IsItApprover = isItApprover;
           console.log('Manager status:', isItApprover);
+        },
+        (error: any) => {
+          console.error('Error fetching manager status:', error);
+        }
+      );
+      this.localStorageService.IsHR(token).subscribe(
+        (ishr: boolean) => {
+          this.IsHr = ishr;
+          console.log('Manager status:', ishr);
         },
         (error: any) => {
           console.error('Error fetching manager status:', error);

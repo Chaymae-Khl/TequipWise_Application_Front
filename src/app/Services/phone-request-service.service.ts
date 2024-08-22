@@ -33,5 +33,12 @@ GetPhoneRequestForAuthUser(){
   return this.httpClient.get(`${this.apiUrl}/PhoneRequest/GetUserPhoneRequests`,httpOptions);
 
 }
-
+getRequestOfApprovers(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/PhoneRequest/ApproversRequests`,httpOptions);
+}
+Aproval(phoneRequestId:any,Response:any){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.patch(`${this.apiUrl}/PhoneRequest/UpdatePhoneRequest/${phoneRequestId}`,Response,httpOptions);
+}
 }

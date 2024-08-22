@@ -15,8 +15,8 @@ export class UserFilterPipe implements PipeTransform {
     const term = searchTerm.toLowerCase().trim();
 
     return users.filter(user =>
-      user.userName.toLowerCase().includes(term) ||
-      user.teNum.toLowerCase().includes(term)
+      user.userName.toLowerCase().includes(term) 
+      // user.teNum.toLowerCase().includes(term)
     );
   }
 

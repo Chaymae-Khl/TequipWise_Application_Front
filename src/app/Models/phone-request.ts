@@ -21,12 +21,12 @@ export class PhoneRequest {
     imi?:                         string;
     modele?:                      string;
     telNumber?:                   string;
-    assetReceiveByEMployeAt?:     Date;
+    assetReceiveByEMployeAt?:     any;
     receptionStatus?:             boolean;
     hRconfirmedAt?:               Date;
     hRconfirmSatuts?:             boolean;
     hR_Not_confirmCause?:         string;
     employeeCategorie?:           string;
-   
+    nmaeOfUser:any;
 }
 

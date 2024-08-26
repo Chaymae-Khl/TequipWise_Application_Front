@@ -699,7 +699,7 @@
                     name="financeconfirmSatuts" [(ngModel)]="selectedSubRequest.financeconfirmSatuts" required>
                 </p-selectButton>
                 <br>
-                <div class="container" *ngIf="selectedSubRequest.financeconfirmSatuts===true">
+                <div class="container" *ngIf="selectedSubRequest.financeconfirmSatuts!==false">
                     <p-divider align="left" type="solid"> <b>GL & CC & Order</b>
                     </p-divider>
 
@@ -761,7 +761,7 @@
                 </div>
                 <br>
 
-                <div *ngIf="selectedSubRequest.pR_Status===true">
+                <div *ngIf="selectedSubRequest.pR_Status!==false">
                     <p-divider align="left" type="solid"> <b> PR</b>
                     </p-divider>
                     <div class="row">
@@ -842,13 +842,29 @@
 
             <form (ngSubmit)="ManagerApprve()" class="position-relative" #form="ngForm">
                 <div *ngIf="selectedSubRequest.pR_Status === true">
-                    <p-divider align="left" type="solid"><b>Employee</b></p-divider>
+                    <p-divider align="left" type="solid">
+                       @if(Mainrequest.forWho==='For Another Employee'){
+                        <b> 
+                        Request passed by
+                    </b>}
+                    @else if(Mainrequest.forWho==='For me'){
+                    <b> 
+                        Employee
+                    </b>}
+                </p-divider>
                     <div class="row">
                         <div class="row justify-content-center align-items-center text-center">
-                            <p-avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" />
+                            <p-avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" label=""/>
                             <h3 class="mt-2">{{Mainrequest.nmaeOfUser}} </h3>
                         </div>
-                       
+                        <div *ngIf="Mainrequest.forWho==='For Another Employee'" class="flex flex-column gap-2">
+                            <label >New hire Email</label>
+                            <input 
+                            [(ngModel)]="Mainrequest.newHireEmail"
+                                pInputText
+                                name="newHireEmail"
+                               />
+                        </div>
                            
                         <p-divider type="solid"></p-divider>
                         <div class="form-group mt-3">
@@ -954,7 +970,6 @@
                             filterBy="teNum"
                             placeholder="Select the Controller"
                             [(ngModel)]="selectedSubRequest.controllerid"
-
                    >
                         </p-dropdown>
                         </div>

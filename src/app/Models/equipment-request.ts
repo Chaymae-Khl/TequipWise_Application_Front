@@ -9,9 +9,8 @@ export class EquipmentRequest {
     requestStatus?: boolean;
     forWho?: string;
     newHireName?: string;
-   
+    newHireEmail?:string;
     supplierOffer?: string;
-   
     userId?: string;
     nmaeOfUser?: string;
     equipmentSubRequests: SubRequest[] = [];

@@ -37,22 +37,27 @@
                 <p-table
                     [paginator]="true"
                     [rows]="5"
+                    [value]="phonesList"
                     [rowsPerPageOptions]="[5, 10, 20]"
                 >
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Name</th>
-                            <th>Country</th>
-                            <th>Company</th>
-                            <th>Representative</th>
+                            <th style="background-color: #448b5e6d; color: white;">Asset type</th>
+                            <th style="background-color: #448b5e6d; color: white;">Assignment Date</th>
+                            <th style="background-color: #448b5e6d; color: white;">Model</th>
+                            <th style="background-color: #448b5e6d; color: white;">Number</th>
+                            <th style="background-color: #448b5e6d; color: white;">IMI</th>
+
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-customer>
+                    <ng-template pTemplate="body" let-phone>
                         <tr>
-                            <td>{{ customer.name }}</td>
-                            <td>{{ customer.country.name }}</td>
-                            <td>{{ customer.company }}</td>
-                            <td>{{ customer.representative.name }}</td>
+                            <td>{{ phone.assetType }}</td>
+                            <td>{{ phone.assetReceiveByEMployeAt}}</td>
+                            <td>{{ phone.modele }}</td>
+                            <td>{{ phone.telNumber }}</td>
+                            <td>{{ phone.imi }}</td>
+
                         </tr>
                     </ng-template>
                 </p-table>

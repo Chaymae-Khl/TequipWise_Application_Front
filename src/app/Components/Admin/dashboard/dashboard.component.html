@@ -1,42 +1,57 @@
 <h1 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 30px;">
-  <i class="pi pi-clipboard" style="font-size: 2rem; color: orange;"></i> TequipWise Dashboard
+    <i class="pi pi-clipboard" style="font-size: 2rem; color: orange;"></i> TequipWise Dashboard
 </h1>
 
 <p-meterGroup [value]="value">
-  <ng-template pTemplate="label">
-      <div class="flex flex-wrap gap-3">
-          <ng-container *ngFor="let meterItem of value; let index = index">
-              <p-card class="flex-1">
-                  <div class="flex justify-content-between gap-5">
-                      <div class="flex flex-column gap-1">
-                          <span class="text-secondary text-sm">{{ meterItem.label }}</span>
-                          <span class="font-bold text-lg">{{ meterItem.data }}</span>
-                      </div>
-                      <span class="w-2rem h-2rem border-circle inline-flex justify-content-center align-items-center text-center" [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
-                          <i [class]="meterItem.icon"></i>
-                      </span>
-                  </div>
-              </p-card>
-          </ng-container>
-      </div>
-  </ng-template>
+    <ng-template pTemplate="label">
+        <div class="flex flex-wrap gap-3">
+            <ng-container *ngFor="let meterItem of value; let index = index">
+                <p-card class="flex-1">
+                    <div class="flex justify-content-between gap-5">
+                        <div class="flex flex-column gap-1">
+                            <span class="text-secondary text-sm">{{ meterItem.label }}</span>
+                            <span class="font-bold text-lg">{{ meterItem.data }}</span>
+                        </div>
+                        <span
+                            class="w-2rem h-2rem border-circle inline-flex justify-content-center align-items-center text-center"
+                            [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
+                            <i [class]="meterItem.icon"></i>
+                        </span>
+                    </div>
+                </p-card>
+            </ng-container>
+        </div>
+    </ng-template>
 </p-meterGroup>
 
 <p-divider></p-divider>
 
-<div class="flex flex-wrap gap-3" style="background-color: #fde6c975;">
-  <div class="card p-4 flex-1">
-      <h2 class="p-4"><i class="pi pi-inbox" style="font-size: 1rem"></i> IT Assets Request Status</h2>
-      <p-chart type="bar" [data]="data" [options]="options"></p-chart>
-  </div>
+<div class="flex flex-wrap gap-3">
+    <div class="card p-4 flex-1">
+        <h2 class="p-4"><i class="pi pi-inbox" style="font-size: 1rem"></i> IT Assets Request Status</h2>
+        <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+    </div>
 
-  <div class="card p-4 flex-1">
-      <div class="d-flex justify-content-between align-items-center p-4">
-          <h2 class="mb-0"><i class="pi pi-chart-line" style="font-size: 1rem"></i> Expenditure Overview of IT Assets</h2>
-          <p-calendar [(ngModel)]="date" (onSelect)="onDateChange($event)" dateFormat="yy-mm-dd"></p-calendar>
-      </div>
-      <p-chart type="bar" [data]="data2" [options]="options2"></p-chart>
-  </div>
+    <div class="card p-4 flex-1">
+        <div class="d-flex justify-content-between align-items-center p-4">
+            <h2 class="mb-0"><i class="pi pi-chart-line" style="font-size: 1rem"></i> Expenditure Overview of IT Assets
+            </h2>
+
+        </div>
+        <p-chart type="bar" [data]="data2" [options]="options2"></p-chart>
+        <p-divider align="left" type="solid"> <b>Filter by date range</b> </p-divider>
+        <div style="display: flex; align-items: center;">
+            <p-calendar [(ngModel)]="startDate" dateFormat="yy-mm-dd" placeholder="Start Date"></p-calendar>
+            <p-calendar [(ngModel)]="endDate" dateFormat="yy-mm-dd" placeholder="End Date" class="ml-3"></p-calendar>
+            <p-button (click)="onDateRangeChange()" icon="pi pi-filter" [outlined]="true" class="ml-3"></p-button>
+        </div>
+    </div>
+
 </div>
-
 <p-divider></p-divider>
+<div class="flex flex-wrap gap-3">
+    <div class="card p-4 flex-1">
+        <h2 class="p-4"><i class="pi pi-inbox" style="font-size: 1rem"></i> Phones/Modems Request Status</h2>
+        <p-chart type="bar" [data]="phonedata" [options]="options"></p-chart>
+    </div>
+</div>

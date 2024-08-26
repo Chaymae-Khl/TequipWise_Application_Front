@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../../Services/auth-service.service';
 import { EquipementRequestServiceService } from '../../../Services/equipement-request-service.service';
+import { PhoneRequestServiceService } from '../../../Services/phone-request-service.service';
 
 interface MonthlyExpenditureDto {
   day:any;
@@ -17,36 +18,41 @@ interface MonthlyExpenditureDto {
 export class DashboardComponent implements OnInit {
   numberofusers: number = 0;
   numberofReq: number = 0;
+  numberofPhoneReq: number = 0;
   data: any;
+  phonedata:any;
   options: any;
   data2: any;
   options2: any;
   showChart: boolean = true;
-
+  startDate?: Date;
+  endDate?: Date;
   date?: Date;
 
-  constructor(private authService: AuthServiceService, private equipementReqService: EquipementRequestServiceService) {}
+  constructor(private authService: AuthServiceService, private equipementReqService: EquipementRequestServiceService, private phoneReqService: PhoneRequestServiceService) {}
 
   ngOnInit(): void {
     this.getNumofUsers();
     this.getNumOfRequest();
     this.initializeChartData();
-
+    this.initializeChartData2();
+    this.getNumOfPhoneRequest();
     this.date = new Date();
     this.date = new Date();
-    const currentYear = this.date.getFullYear();
-    const currentMonth = this.date.getMonth() + 1; // Months are 0-indexed in JavaScript
-    const currentDay = this.date.getDate();
-
-    this.fetchFilteredSubEquipmentRequests(currentYear, currentMonth, currentDay);
+    this.startDate = new Date();
+    this.endDate = new Date();
+    this.fetchFilteredSubEquipmentRequests(this.startDate, this.endDate);
+    // this.fetchFilteredSubEquipmentRequests(currentYear, currentMonth, currentDay);
 
     this.setupChartOptions();
   }
 
   value = [
     { label: 'Users', color1: '#34d399', color2: '#fbbf24', value: 50, data: this.numberofusers, icon: 'pi pi-users' },
-    { label: 'IT Asset Requests', color1: '#fbbf24', color2: '#60a5fa', value: 25, data: this.numberofReq, icon: 'pi pi-inbox' },
-    { label: 'Phone Requests', color1: '#60a5fa', color2: '#c084fc', value: 25, data: 0, icon: 'pi pi-inbox' }
+    { label: 'IT Asset requests', color1: '#fbbf24', color2: '#60a5fa', value: 25, data: this.numberofReq, icon: 'pi pi-inbox' },
+    { label: 'Phone requests', color1: '#60a5fa', color2: '#c084fc', value: 25, data: this.numberofPhoneReq, icon: 'pi pi-inbox' },
+    { label: 'Maintenance requests', color1: '#EA8300', color2: '#EA8300', value: 25, data: 0, icon: 'pi pi-inbox' }
+  
   ];
 
   getNumofUsers() {
@@ -74,35 +80,48 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-
+  getNumOfPhoneRequest() {
+    this.phoneReqService.getRequestCounts().subscribe(
+      (data: any) => {
+        console.log('Number of phone requests:', data); // Debugging line
+        this.numberofPhoneReq = data;
+        this.updateValueArray();
+      },
+      (error) => {
+        console.error('An error occurred while fetching number of requests:', error);
+      }
+    );
+  }
   updateValueArray() {
     this.value[0].data = this.numberofusers;
     this.value[1].data = this.numberofReq;
+    this.value[2].data = this.numberofPhoneReq;
+
   }
 
-  onDateChange(event: any) {
-    if (event) {
-        const year = event.getFullYear();
-        const month = event.getMonth() + 1; // JavaScript months are 0-indexed
-        const day = event.getDate();
-        this.fetchFilteredSubEquipmentRequests(year, month, day);  // Pass year, month, and day
+  onDateRangeChange() {
+    if (this.startDate && this.endDate) {
+      this.fetchFilteredSubEquipmentRequests(this.startDate, this.endDate);
     }
   }
 
-  fetchFilteredSubEquipmentRequests(year: number, month?: number, day?: number) {
-    this.equipementReqService.MonthlyExpenditure(year, month, day).subscribe((data: any) => {
-      console.log('Filtered daily expenditure data:', data);
+  fetchFilteredSubEquipmentRequests(startDate: Date, endDate?: Date) {
+    const start = this.formatDate(startDate);
+    const end = endDate ? this.formatDate(endDate) : null;
+
+    this.equipementReqService.MonthlyExpenditure(start, end).subscribe((data: any) => {
+      console.log('Filtered expenditure data:', data);
       if (data.length === 0) {
-        this.data2 = null; // Clear the chart data if no data is returned
+        this.data2 = null;
       } else {
-        this.updateChart(data); // Update the chart with new data
+        this.updateChart(data);
       }
     });
   }
   updateChart(data: MonthlyExpenditureDto[]) {
     const dailyData = data.map(d => `${d.day}/${d.month}/${d.year}`);
     const values = data.map(d => d.total);
-
+  
     this.data2 = {
       labels: dailyData,
       datasets: [
@@ -113,6 +132,12 @@ export class DashboardComponent implements OnInit {
         }
       ]
     };
+  }
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // JavaScript months are 0-indexed
+    const day = date.getDate();
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
   }
   aggregateMonthlyData(data: MonthlyExpenditureDto[]) {
     const monthlyData: { [key: string]: number } = {};
@@ -198,36 +223,41 @@ export class DashboardComponent implements OnInit {
           }
         }
       };
-      this.data = {
-        labels: ['Open', 'In Progress', 'Waiting For Finance', 'Waiting for PR', 'Waiting for PO', 'Approved', 'Rejected'],
+  
+    });
+    
+  }
+  initializeChartData2() {
+    this.phoneReqService.getPhoneRequestCounts().subscribe(counts => {
+      console.log('Request counts:', counts); // Debugging line
+      this.phonedata = {
+        labels: ['Open', 'In Progress', 'Waiting For HR', 'Waiting for IT','Approved', 'Rejected'],
         datasets: [
           {
-            label: 'IT Assets Request',
+            label: 'Phone/Modem Request',
             backgroundColor: [
             
             '#e9844070', // Blue
             '#E98300', // Orange
-            '#A4D4E6', // Red
             '#167A87', // Teal
             '#2E4957', // Pink
-            '#8FB838', // Purple
+            '#8FB838', 
             'red'  // Yellow
             ],
             borderColor: [
              '#e9844070', // Blue
             '#E98300', // Orange
-            '#A4D4E6', // Red
+         
             '#167A87', // Teal
             '#2E4957', // red
             '#8FB838', // Purple
-            'red'  // Yellow
+            'red'  
             ],
             data: [
               counts.open,
               counts.inProgress,
-              counts.waitingForFinanceApproval,
-              counts.waitingForPR,
-              counts.waitingForPO,
+              counts.waitingForHR,
+              counts.waitingForIT,
               counts.approved,
               counts.rejected
             ]
@@ -265,10 +295,10 @@ export class DashboardComponent implements OnInit {
           }
         }
       };
+  
     });
     
   }
-
   setupChartOptions() {
     this.options2 = {
       responsive: true,

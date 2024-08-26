@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LocalStorageServiceService } from './local-storage-service.service';
 import { PhoneRequest } from '../Models/phone-request';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,21 @@ getRequestOfApprovers(){
 Aproval(phoneRequestId:any,Response:any){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.patch(`${this.apiUrl}/PhoneRequest/UpdatePhoneRequest/${phoneRequestId}`,Response,httpOptions);
+}
+AprovalAdmin(phoneRequestId:any,Response:any){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.patch(`${this.apiUrl}/PhoneRequest/UpdatePhoneRequestAdmin/${phoneRequestId}`,Response,httpOptions);
+}
+GetPhonesList(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/PhoneRequest/user-phones`,httpOptions);
+}
+getRequestCounts(): Observable<any> {
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/PhoneRequest/GetPhoneRequestCount`,httpOptions);
+}
+getPhoneRequestCounts(): Observable<any> {
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/PhoneRequest/counts`,httpOptions);
 }
 }

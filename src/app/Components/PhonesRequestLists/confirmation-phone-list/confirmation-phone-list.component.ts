@@ -3,6 +3,7 @@ import { PhoneRequestServiceService } from '../../../Services/phone-request-serv
 import { LocalStorageServiceService } from '../../../Services/local-storage-service.service';
 import { PhoneRequest } from '../../../Models/phone-request';
 import { MessageService } from 'primeng/api';
+import { AuthServiceService } from '../../../Services/auth-service.service';
 
 @Component({
   selector: 'app-confirmation-phone-list',
@@ -23,12 +24,16 @@ export class ConfirmationPhoneListComponent {
   IsItApprover!: boolean;
   ISitbackupAprover!: boolean;
   ISbackupAprover!: boolean;
+  IsAdmin!: boolean;
   loading2: boolean = false;
   stateOptions: any[] = [
     { label: 'Approve', value: true },
     { label: 'Reject', value: false }
   ];
-  constructor(private phonerequestservice:PhoneRequestServiceService, private localStorageService: LocalStorageServiceService, private messageService: MessageService){}
+  ItApproversList:any;
+  ManagerList:any;
+  HRList:any;
+  constructor(private phonerequestservice:PhoneRequestServiceService, private localStorageService: LocalStorageServiceService, private messageService: MessageService, private authservice: AuthServiceService){}
   ngOnInit() {
   this.GetPhoneRequestForApprovers();
   this.checkRoles();
@@ -38,6 +43,9 @@ export class ConfirmationPhoneListComponent {
     { name: 'C' },
     { name: 'D' }
 ];
+this.getITApprovers();
+this.getMangers();
+this.getHRs();
   }
   
   GetPhoneRequestForApprovers(){
@@ -64,8 +72,6 @@ export class ConfirmationPhoneListComponent {
     }
   
     getRequestStatusGeneral(status: any): string {
-    
-    
       if (status.requestStatus === false) {
         return 'Rejected';
       } else if (status.departmangconfirmStatus === true && status.hRconfirmSatuts === null && status.iTconfirmSatuts === null) {
@@ -89,14 +95,21 @@ export class ConfirmationPhoneListComponent {
         { title: 'Request Created',ForWho: req.forWho,by:req.nmaeOfUser,NameofNewEmpl:req.newHireName, Equipment: req.assetType,Comments:req.comment,PhonerequestType:req.phoneRequestType,replacementType:req.replacemnetType},
         { title: 'Manager approval', date: req.departmangconfirmedAt, by: req.departementManagerName, RejectionCause: req.departmang_Not_confirmCause, statusManag: this.getmanagerStatus(),statusManag2:req.departmangconfirmStatus },
         { title: 'HR approval', date: req.hRconfirmedAt, by: req.hrApproverName, RejectionCause: req.hR_Not_confirmCause, statusHr: this.getHRrStatus(),statusHr2:req.hRconfirmSatuts,emplCatego:req.employeeCategorie },
-        { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.pR_Not_ConfirmCause, statusIT: this.getITrStatus(),statusIT2:req.iTconfirmSatuts },
-        { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: this.getRequestStatusGeneral(req),statusreq2:req.requestStatus }
+        { title: 'IT approval', date: req.iTconfirmedAt, by: req.itApproverName, RejectionCause: req.pR_Not_ConfirmCause, statusIT: this.getITrStatus(),statusIT2:req.iTconfirmSatuts,imi:req.imi,modele:req.modele,telnum:req.telNumber },
+        { title: 'Asset approval', date: req.iTconfirmedAt, statusreq: this.getRequestStatusGeneral(req),statusreq2:req.requestStatus,AssignementStatus:req.receptionStatus,AssignedAt:req.assetReceiveByEMployeAt }
       ];
     
     }
     showDialog2(req:any) {
       this.visible2 = true;
       this.selectedRequest=req;
+      if (!this.selectedRequest.assetReceiveByEMployeAt) {
+        // Set to today's date if not set (first time)
+        this.selectedRequest.assetReceiveByEMployeAt = null;
+    } else {
+        // Ensure the date is a Date object (for subsequent updates)
+        this.selectedRequest.assetReceiveByEMployeAt = new Date(this.selectedRequest.assetReceiveByEMployeAt);
+    }
      
     }
     showDialog3(req:any) {
@@ -240,15 +253,15 @@ export class ConfirmationPhoneListComponent {
         }
       );
      
-      // this.localStorageService.IsAdmin(token).subscribe(
-      //   (isAdmin: boolean) => {
-      //     this.IsAdmin = isAdmin;
-      //     console.log('Admin status:', isAdmin);
-      //   },
-      //   (error: any) => {
-      //     console.error('Error fetching admin status:', error);
-      //   }
-      // );
+      this.localStorageService.IsAdmin(token).subscribe(
+        (isAdmin: boolean) => {
+          this.IsAdmin = isAdmin;
+          console.log('Admin status:', isAdmin);
+        },
+        (error: any) => {
+          console.error('Error fetching admin status:', error);
+        }
+      );
       // this.localStorageService.IsApprover(token).subscribe(
       //   (isApprover: boolean) => {
       //     this.IsApprover = isApprover;
@@ -283,6 +296,77 @@ export class ConfirmationPhoneListComponent {
           detail: 'We faced a problem while saving status',
           life: 10000
         });
+      }
+    );
+  }
+  ApproveAdmin(){
+    this.loading2 = true;
+    this.phonerequestservice.Aproval(this.selectedRequest.phoneRequestId,this.selectedRequest).subscribe(
+      (response) => {
+        this.GetPhoneRequestForApprovers();
+        this.visible2 = false;
+        this.loading2 = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success Message',
+          detail: 'Your response saved succeffuly',
+          life: 10000
+        });
+      },
+      (error) => {
+        console.log(error);
+        this.loading2 = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error Message',
+          detail: 'We faced a problem while saving status',
+          life: 10000
+        });
+      }
+    );
+  }
+  getITApprovers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.ItApproversList = data
+          .filter((user: any) => user.roles && user.roles.includes('It Approver'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        // console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
+  getMangers(): void {
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.ManagerList = data
+          .filter((user: any) => user.roles && user.roles.includes('Manager'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        // console.error('An error occurred while fetching Users:', error);
+      }
+    );
+  }
+  getHRs(){
+    this.authservice.getUsers().subscribe(
+      (data: any) => {
+        this.HRList = data
+          .filter((user: any) => user.roles && user.roles.includes('HR Approver'))
+          .map((user: any) => ({
+            ...user,
+            fullName: `${user.teNum} (${user.userName})`
+          }));
+      },
+      (error) => {
+        // console.error('An error occurred while fetching Users:', error);
       }
     );
   }

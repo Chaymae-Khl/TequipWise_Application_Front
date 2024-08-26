@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LocalStorageServiceService } from './local-storage-service.service';
 import { EquipmentRequest } from '../Models/equipment-request';
 import { Observable } from 'rxjs';
@@ -72,21 +72,13 @@ uploadSupplierOffer(requestId: any, updatedRequest: any, file: File): Observable
   return this.httpClient.put(`${this.apiUrl}/Request/ItOfferAndPrice/${requestId}`, formData, httpOptions);
 }
 //for the KPIs
-MonthlyExpenditure(year: number, month?: number, day?: number) {
-  const httpOptions = this.getHttpOptions();
-  let params: any = { year };
-
-  if (month !== undefined) {
-      params.month = month;
-  }
-  if (day !== undefined) {
-      params.day = day;
+MonthlyExpenditure(startDate: string, endDate?: any): Observable<any> {
+  let params = new HttpParams().set('startDate', startDate);
+  if (endDate) {
+    params = params.set('endDate', endDate);
   }
 
-  // Include params in the options object
-  const options = { ...httpOptions, params };
-
-  return this.httpClient.get(`${this.apiUrl}/Request/monthly-expenditure`, options);
+  return this.httpClient.get(`${this.apiUrl}/Request/monthly-expenditure`, {params});
 }
 getRequestCounts(): Observable<any> {
   const httpOptions = this.getHttpOptions();

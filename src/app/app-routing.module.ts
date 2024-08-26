@@ -55,6 +55,10 @@ const routes: Routes = [
           
       },
       {
+        path: 'PhoneRequests', component:  ConfirmationPhoneListComponent, 
+          
+      },
+      {
         path: 'dashboard', component: DashboardComponent,
       }
     ], resolve: { isAuthenticated: AuthGuard }

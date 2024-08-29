@@ -1,0 +1,32 @@
+export class MaintenanceRequest {
+    maintenanceId?:               number;
+    requestDate?:                 Date;
+    description?:                 string;
+    requestStatus?:               boolean;
+    equipmentType?:               string;
+    sn?:                          string;
+    damageTYpe?:                  string;
+    offer?:                       string;
+    supplierId?:                  string;
+    UserId?:                      string;
+    deptManagId?:                 string;
+    itId?:                        string;
+    controllerId?:                string;
+    departmangconfirmedAt?:       Date;
+    departmangconfirmStatus?:     boolean;
+    departmang_Not_confirmCause?: string;
+    iTconfirmedAt?:               Date;
+    iTconfirmSatuts?:             boolean;
+    iT_Not_confirmCause?:         string;
+    pu?:                          number;
+    gl?:                          string;
+    cc?:                          string;
+    order?:                       string;
+    poNum?:                       string;
+    prNum?:                       string;
+    pR_Status?:                   boolean;
+    pR_Not_ConfirmCause?:         string;
+    controllerconfirmedAt?:       Date;
+    controllerconfirmSatuts?:     boolean;
+    controller_Not_confirmCause?: string;
+}

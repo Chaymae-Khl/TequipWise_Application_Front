@@ -95,6 +95,8 @@ import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equi
 import { PhoneRequestComponent } from './Components/phone-request/phone-request.component';
 import { UserPhoneListComponent } from './Components/PhonesRequestLists/user-phone-list/user-phone-list.component';
 import { ConfirmationPhoneListComponent } from './Components/PhonesRequestLists/confirmation-phone-list/confirmation-phone-list.component';
+import { MaintenanceRequestComponent } from './Components/maintenance-request/maintenance-request.component';
+import { UserMaintenanceListComponent } from './Components/MaintenanceRequestLists/user-maintenance-list/user-maintenance-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -131,6 +133,9 @@ import { ConfirmationPhoneListComponent } from './Components/PhonesRequestLists/
     PhoneRequestComponent,
     UserPhoneListComponent,
     ConfirmationPhoneListComponent,
+    MaintenanceRequestComponent,
+    UserMaintenanceListComponent,
+    
   
    
   

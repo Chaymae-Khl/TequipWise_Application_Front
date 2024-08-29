@@ -1,0 +1,90 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="row justify-content-center">
+    <div class="col-10 col-md-8 col-lg-6">
+        <div class="form-container card p-4 shadow-sm">
+
+            <form #requestForm="ngForm" class="form" (ngSubmit)="AddNewRequest()">
+                <p class="title h4 text-center mb-4">Maintenance Request</p>
+                <p class="message  text-muted ">Enter your request information:</p>
+                <p-divider></p-divider>
+                <div class="row mt-2 ">
+                    <div class="col-md-6">
+                        <div class="flex flex-column gap-2">
+                            <label for="type">Equipment Type:</label>
+                            <input pInputText id="type" aria-describedby="type-help" name="equipmentType" [(ngModel)]="newMaintenance.equipmentType" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="flex flex-column gap-2">
+                            <label for="sn">Serial Number:</label>
+                            <input pInputText id="sn" aria-describedby="sn-help" name="sn" [(ngModel)]="newMaintenance.sn"/>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row mt-2 ">
+                   
+                    <div class="col-md-6">
+                        <div class="flex flex-column gap-2">
+                            <label for="supplier">Supplier:</label>
+                            <p-dropdown optionLabel="suuplier_name" optionValue="suplierId" name="supplierId" [filter]="true"
+                            [options]="suppliers" filterBy="suuplier_name"  placeholder="Select the supplier" class="flex-grow-1" [(ngModel)]="newMaintenance.supplierId" />
+                             
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="flex flex-column gap-2">
+                            <label for="sn">Damage Type:</label>
+                            <p-dropdown [options]="choices" optionLabel="name" optionValue="name" name="damageTYpe"
+                                placeholder="Select the Damage" class="flex-grow-1" [(ngModel)]="newMaintenance.damageTYpe"/>
+
+                        </div>
+                    </div>
+
+                </div>
+                    <div class="row mt-2">
+                        <p-divider align="left" type="solid">
+                            <b>User</b>
+                            </p-divider>
+                            <p-dropdown optionLabel="teNum" optionValue="id" name="UserId"
+                            [options]="users"    placeholder="Select the user" class="flex-grow-1"  [filter]="true"
+                                filterBy="teNum" [(ngModel)]="newMaintenance.UserId" />
+
+                  </div>
+                
+                <div class="row mt-2" *ngIf="newMaintenance.damageTYpe==='User damage'" >
+                    <p-divider align="left" type="solid">
+                        <b>Offer</b>
+                        </p-divider>
+                    <p-fileUpload  [multiple]="false" accept="application/pdf" maxFileSize="1000000" name="offer"  (onSelect)="onFileUpload($event)">
+                    </p-fileUpload>
+
+                </div>
+                <div class="row mt-2">
+                    <p-divider align="left" type="solid">
+                        <b>Description</b>
+                        </p-divider>
+                    <mat-form-field class="w-100">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput [(ngModel)]="newMaintenance.description" required name="description"></textarea>
+                      </mat-form-field>
+                </div>
+                <p-divider></p-divider>
+                <button class="submit btn btn-primary" [disabled]="loading || requestForm.invalid">
+                    <span *ngIf="loading">
+                      <i class="pi pi-spin pi-spinner"></i>
+                      Sending...
+                    </span>
+                    <span *ngIf="!loading">
+                      Submit
+                    </span>
+                  </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<p-toast position="bottom-right"></p-toast>

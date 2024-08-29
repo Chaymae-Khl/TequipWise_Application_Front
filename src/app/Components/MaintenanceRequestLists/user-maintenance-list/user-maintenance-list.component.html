@@ -1,41 +1,41 @@
-<app-nav-bar *ngIf="!IsAdmin"></app-nav-bar>
+<app-nav-bar></app-nav-bar>
 
 <div class="col text-center">
-    <h1 class="mt-5"><i class="pi pi-bars" style="font-size: 1rem"></i> Phones/Modems Approval Queue List</h1>
+    <h1 class="mt-5"><i class="pi pi-bars" style="font-size: 1rem"></i> Maintenance Approval Queue List</h1>
 </div>
 <p-divider></p-divider>
 <div class="container-fluid">
-    <p-table [value]="userPhoneList" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '80rem' }"
+    <p-table [value]="maintenanceList" [paginator]="true" [rows]="5" [tableStyle]="{ 'min-width': '80rem' }"
         [rowsPerPageOptions]="[5, 10, 20]">
         <ng-template pTemplate="header">
             <tr>
                 <th style="background-color: #769ef55f; "># Request Number</th>
+                <th style="background-color: #769ef55f; ">Request Date</th>
                 <th style="background-color: #769ef55f; ">By</th>
-                <th style="background-color: #769ef55f; ">Asset</th>
-                <th style="background-color: #769ef55f;">Request Date </th>
+                <th style="background-color: #769ef55f; ">Equipment Type</th>
+                <th style="background-color: #769ef55f;">Damage Type </th>
                 <th style="background-color: #769ef55f; ">Status</th>
+
                 <th style="background-color: #769ef55f; ">Actions</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-request>
             <tr [ngClass]="{'recent-request': isRecentRequest(request.requestDate)}">
-                <td>{{ request. phoneRequestId }}</td>
-                <td>{{ request.nmaeOfUser }}</td>
-                <td>{{ request.assetType}}</td>
+                <td>{{ request.maintenanceId }}</td>
                 <td>{{ request.requestDate | date:'dd/MM/yyyy hh:mm'}}</td>
-                <td><p-tag [rounded]="true" [value]="getRequestStatusGeneral(request)" [severity]="getRequestStatusGeneral(request) === 'Approved' ? 'success' :
-                getRequestStatusGeneral(request) === 'Open' ? 'info' :
-                getRequestStatusGeneral(request) === 'In Progress' ? 'secondary' :
-                getRequestStatusGeneral(request) === 'Waiting for HR' ? 'warning' :
-                getRequestStatusGeneral(request) === 'Rejected' ? 'danger' : 'info'" /></td>
-                <td>
-                    <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
-                        (onClick)="showDialog(request)" [outlined]="true"></p-button>
+                <td>{{ request.itApproverName}}</td>
+                <td>{{ request.equipmentType}}</td>
+                <td>{{ request.damageTYpe}}</td>
+                <td>{{getRequestStatusGeneral(request)}}</td>
 
+                <td>
+                     <p-button icon="pi pi-arrow-up-right" label="Details" severity="secondary"
+                        (onClick)="showDialog(request)" [outlined]="true"></p-button>
+<!--
                     <p-button class="ml-2" icon="pi pi-reply" [outlined]="true" (onClick)="showDialog2(request)"
                         label="Approve" severity="Success"></p-button>
                     <p-button *ngIf="(IsItApprover===true ||ISitbackupAprover===true) && request.iTconfirmSatuts===true"class="ml-2" icon="pi pi-reply" [outlined]="true" (onClick)="showDialog3(request)"
-                        label="Assign" severity="warning"></p-button>
+                        label="Assign" severity="warning"></p-button> -->
                 </td>
 
             </tr>
@@ -52,7 +52,7 @@
 
 
 
-<p-dialog header="Request Details" [modal]="true" [(visible)]="visible" [style]="{width: '70vw'}">
+<!-- <p-dialog header="Request Details" [modal]="true" [(visible)]="visible" [style]="{width: '70vw'}">
     <div class="position-relative" *ngIf="selectedRequest">
         <img *ngIf="selectedRequest?.requestStatus === true" src="/assets/Images/approved.png" width="222rem"
             alt="Approved" style="position: absolute; left: 11px;">
@@ -517,4 +517,4 @@
        
 </div>
 </p-dialog>
-<p-toast />
+<p-toast /> -->

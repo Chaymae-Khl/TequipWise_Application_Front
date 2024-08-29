@@ -5,6 +5,7 @@ export class PhoneRequest {
     requestStatus?:               boolean;
     forWho?:                      string;
     newHireName?:                 string;
+    newHireEmail?:                 string;
     assetType?:                   string;
     phoneRequestType?:            string;
     replacemnetType?:             string;

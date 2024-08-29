@@ -53,7 +53,7 @@
                     <ng-template pTemplate="body" let-phone>
                         <tr>
                             <td>{{ phone.assetType }}</td>
-                            <td>{{ phone.assetReceiveByEMployeAt}}</td>
+                            <td>{{ phone.assetReceiveByEMployeAt | date:'dd/MM/yyyy hh:mm'}}</td>
                             <td>{{ phone.modele }}</td>
                             <td>{{ phone.telNumber }}</td>
                             <td>{{ phone.imi }}</td>

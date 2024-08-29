@@ -12,6 +12,7 @@ export class SubRequest {
     order?: string;
     assetSN ?: string;
    assetModele?: string;
+   newHireEmail?:string;
     subRequestStatus?: boolean;
     qtEquipment?: number;
     departmangconfirmedAt?: Date;

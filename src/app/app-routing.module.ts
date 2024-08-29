@@ -23,6 +23,8 @@ import { MyEquipmentListComponent } from './Components/UserEquipmentList/my-equi
 import { PhoneRequestComponent } from './Components/phone-request/phone-request.component';
 import { UserPhoneListComponent } from './Components/PhonesRequestLists/user-phone-list/user-phone-list.component';
 import { ConfirmationPhoneListComponent } from './Components/PhonesRequestLists/confirmation-phone-list/confirmation-phone-list.component';
+import { MaintenanceRequestComponent } from './Components/maintenance-request/maintenance-request.component';
+import { UserMaintenanceListComponent } from './Components/MaintenanceRequestLists/user-maintenance-list/user-maintenance-list.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -74,7 +76,9 @@ const routes: Routes = [
   { path: 'PhoneRequestConfirmation', component: ConfirmationPhoneListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'RequestConfirmation', component: ConfirmationEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
   { path: 'MyProfile', component: MyProfileComponent, resolve: { isAuthenticated: AuthGuard } },
-  { path: 'EquipmentLists', component: MyEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } }
+  { path: 'EquipmentLists', component: MyEquipmentListComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'maintenanceRequest', component: MaintenanceRequestComponent, resolve: { isAuthenticated: AuthGuard } },
+  { path: 'maintenanceRequestlist', component: UserMaintenanceListComponent, resolve: { isAuthenticated: AuthGuard } }
 
 ];
 

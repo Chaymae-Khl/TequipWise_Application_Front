@@ -860,7 +860,7 @@
                         <div *ngIf="Mainrequest.forWho==='For Another Employee'" class="flex flex-column gap-2">
                             <label >New hire Email</label>
                             <input 
-                            [(ngModel)]="Mainrequest.newHireEmail"
+                            [(ngModel)]="selectedSubRequest.newHireEmail"
                                 pInputText
                                 name="newHireEmail"
                                />
@@ -1090,14 +1090,30 @@
             </p-tabPanel>
             <p-tabPanel header="Assignment">
                 <div class="w-100">
-                    <div *ngIf="selectedSubRequest.pR_Status === true">
-                        <p-divider align="left" type="solid"><b>Employee</b></p-divider>
+                    <div >
+                        <p-divider align="left" type="solid">
+                            @if(Mainrequest.forWho==='For Another Employee'){
+                             <b> 
+                             Request passed by
+                         </b>}
+                         @else if(Mainrequest.forWho==='For me'){
+                         <b> 
+                             Employee
+                         </b>}
+                     </p-divider>
                         <div class="row">
                             <div class="row justify-content-center align-items-center text-center">
                                 <p-avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" />
                                 <h3 class="mt-2">{{Mainrequest.nmaeOfUser}} </h3>
                             </div>
-                           
+                            <div *ngIf="Mainrequest.forWho==='For Another Employee'" class="flex flex-column gap-2">
+                                <label >New hire Email</label>
+                                <input 
+                                [(ngModel)]="selectedSubRequest.newHireEmail"
+                                    pInputText
+                                    name="newHireEmail"
+                                   />
+                            </div>
                                
                             <p-divider type="solid"></p-divider>
                             <div class="form-group mt-3">

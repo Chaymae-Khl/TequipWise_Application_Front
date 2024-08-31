@@ -101,7 +101,7 @@
 
 <p-dialog header="Request Approval" [modal]="true" [(visible)]="visible2" [style]="{width: '70vw'}">
 
-    <div *ngIf="IsManger || ISbackupAprover">
+    <div *ngIf="IsManger || ISbackupAprover || IsApprover">
         <div class="w-100">
             <p-divider type="dashed"></p-divider>
 

@@ -59,4 +59,8 @@ getRequests(){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.get(`${this.apiUrl}/Maintenance/DepartmentRequests`,httpOptions);
 }
+Aproval(RequestId:any,Response:any){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.put(`${this.apiUrl}/Maintenance/UpdateRequest/${RequestId}`,Response,httpOptions);
+}
 }

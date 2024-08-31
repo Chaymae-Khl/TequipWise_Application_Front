@@ -17,7 +17,9 @@
 }
 
 
-
+.menu-title-img {
+  width: 100%;
+}
 
 body {
   margin: 0;
@@ -694,7 +696,7 @@ body {
 
 @media (min-width: 1200px) {
   .sidenav:hover {
-    max-width: 15.625rem;
+    max-width: 25.625rem;
   }
 
   .sidenav .sidenav-toggler {

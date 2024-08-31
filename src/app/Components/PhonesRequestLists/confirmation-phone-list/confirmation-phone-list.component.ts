@@ -24,6 +24,7 @@ export class ConfirmationPhoneListComponent {
   IsItApprover!: boolean;
   ISitbackupAprover!: boolean;
   ISbackupAprover!: boolean;
+  IsApprover!: boolean;
   IsAdmin!: boolean;
   loading2: boolean = false;
   stateOptions: any[] = [
@@ -262,15 +263,15 @@ this.getHRs();
           console.error('Error fetching admin status:', error);
         }
       );
-      // this.localStorageService.IsApprover(token).subscribe(
-      //   (isApprover: boolean) => {
-      //     this.IsApprover = isApprover;
-      //     console.log('Admin status:', isApprover);
-      //   },
-      //   (error: any) => {
-      //     console.error('Error fetching admin status:', error);
-      //   }
-      // );
+      this.localStorageService.IsApprover(token).subscribe(
+        (isApprover: boolean) => {
+          this.IsApprover = isApprover;
+          console.log('Admin status:', isApprover);
+        },
+        (error: any) => {
+          console.error('Error fetching admin status:', error);
+        }
+      );
     }
   }
   Approve(){

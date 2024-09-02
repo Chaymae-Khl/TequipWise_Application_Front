@@ -8,7 +8,7 @@ export class MaintenanceRequest {
     damageTYpe?:                  string;
     offer?:                       string;
     supplierId?:                  string;
-    UserId?:                      string;
+    userId?:                      string;
     deptManagId?:                 string;
     itId?:                        string;
     controllerId?:                string;

@@ -61,6 +61,10 @@ const routes: Routes = [
           
       },
       {
+        path: 'maintenanceRequestlist', component:  UserMaintenanceListComponent, 
+          
+      },
+      {
         path: 'dashboard', component: DashboardComponent,
       }
     ], resolve: { isAuthenticated: AuthGuard }

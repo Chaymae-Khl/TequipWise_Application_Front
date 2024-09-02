@@ -90,7 +90,7 @@
         <div *ngIf="!IsHr" class="col">
           <button routerLink="/RequestConfirmation" class="btn3"><i class="pi pi-desktop" style="font-size: 2rem;"></i><br>IT assets Requests</button>
         </div>
-        <div class="col">
+        <div class="col" *ngIf="!IsController">
           <button routerLink="/PhoneRequestConfirmation" class="btn3"><i class="pi pi-mobile" style="font-size: 2rem;"></i> Phones/Modems Requests</button>
         </div>
         <div *ngIf="!IsHr" class="col" >

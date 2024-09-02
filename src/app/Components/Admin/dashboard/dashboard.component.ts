@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../../Services/auth-service.service';
 import { EquipementRequestServiceService } from '../../../Services/equipement-request-service.service';
 import { PhoneRequestServiceService } from '../../../Services/phone-request-service.service';
+import { MaintenanceServiceService } from '../../../Services/maintenance-service.service';
 
 interface MonthlyExpenditureDto {
   day:any;
@@ -19,8 +20,10 @@ export class DashboardComponent implements OnInit {
   numberofusers: number = 0;
   numberofReq: number = 0;
   numberofPhoneReq: number = 0;
+  numberofMainReq: number = 0;
   data: any;
   phonedata:any;
+  Maintedata:any;
   options: any;
   data2: any;
   options2: any;
@@ -29,14 +32,20 @@ export class DashboardComponent implements OnInit {
   endDate?: Date;
   date?: Date;
 
-  constructor(private authService: AuthServiceService, private equipementReqService: EquipementRequestServiceService, private phoneReqService: PhoneRequestServiceService) {}
+  constructor(private authService: AuthServiceService, 
+    private equipementReqService: EquipementRequestServiceService, 
+    private phoneReqService: PhoneRequestServiceService,
+    private maintenanceServiceService :MaintenanceServiceService
+  ) {}
 
   ngOnInit(): void {
     this.getNumofUsers();
     this.getNumOfRequest();
     this.initializeChartData();
     this.initializeChartData2();
+    this.initializeChartData3();
     this.getNumOfPhoneRequest();
+    this.getNumOfMaintenaceRequest();
     this.date = new Date();
     this.date = new Date();
     this.startDate = new Date();
@@ -51,7 +60,7 @@ export class DashboardComponent implements OnInit {
     { label: 'Users', color1: '#34d399', color2: '#fbbf24', value: 50, data: this.numberofusers, icon: 'pi pi-users' },
     { label: 'IT Asset requests', color1: '#fbbf24', color2: '#60a5fa', value: 25, data: this.numberofReq, icon: 'pi pi-inbox' },
     { label: 'Phone requests', color1: '#60a5fa', color2: '#c084fc', value: 25, data: this.numberofPhoneReq, icon: 'pi pi-inbox' },
-    { label: 'Maintenance requests', color1: '#EA8300', color2: '#EA8300', value: 25, data: 0, icon: 'pi pi-inbox' }
+    { label: 'Maintenance requests', color1: '#EA8300', color2: '#EA8300', value: 25, data: this.numberofMainReq, icon: 'pi pi-inbox' }
   
   ];
 
@@ -80,6 +89,18 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+  getNumOfMaintenaceRequest() {
+    this.maintenanceServiceService.getNumberOfRequests().subscribe(
+      (data: any) => {
+        console.log('Number of requests:', data); // Debugging line
+        this.numberofMainReq = data;
+        this.updateValueArray();
+      },
+      (error) => {
+        console.error('An error occurred while fetching number of requests:', error);
+      }
+    );
+  }
   getNumOfPhoneRequest() {
     this.phoneReqService.getRequestCounts().subscribe(
       (data: any) => {
@@ -96,7 +117,7 @@ export class DashboardComponent implements OnInit {
     this.value[0].data = this.numberofusers;
     this.value[1].data = this.numberofReq;
     this.value[2].data = this.numberofPhoneReq;
-
+    this.value[3].data = this.numberofMainReq;
   }
 
   onDateRangeChange() {
@@ -258,6 +279,78 @@ export class DashboardComponent implements OnInit {
               counts.inProgress,
               counts.waitingForHR,
               counts.waitingForIT,
+              counts.approved,
+              counts.rejected
+            ]
+          }
+        ]
+      };
+
+      this.options = {
+        maintainAspectRatio: false,
+        aspectRatio: 0.8,
+        plugins: {
+          legend: {}
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#495057',
+              font: {
+                weight: 500
+              }
+            },
+            grid: {
+              color: '#ebedef',
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: '#495057'
+            },
+            grid: {
+              color: '#ebedef',
+              drawBorder: false
+            }
+          }
+        }
+      };
+  
+    });
+    
+  }
+
+  initializeChartData3() {
+    this.maintenanceServiceService.getRequestCounts().subscribe(counts => {
+      console.log('Maintenance Request counts:', counts); // Debugging line
+      this.Maintedata = {
+        labels: ['Open', 'Waiting For Finance', 'Waiting for PR', 'Waiting for PO', 'Approved', 'Rejected'],
+        datasets: [
+          {
+            label: 'Maintenance Request',
+            backgroundColor: [
+            
+            '#e9844070', // Blue
+            '#A4D4E6', // Red
+            '#167A87', // Teal
+            '#2E4957', // Pink
+            '#8FB838', // Purple
+            'red'  // Yellow
+            ],
+            borderColor: [
+             '#e9844070', // Blue
+            '#A4D4E6', // Red
+            '#167A87', // Teal
+            '#2E4957', // red
+            '#8FB838', // Purple
+            'red'  // Yellow
+            ],
+            data: [
+              counts.open,
+              counts.waitingForFinanceApproval,
+              counts.waitingForPR,
+              counts.waitingForPO,
               counts.approved,
               counts.rejected
             ]

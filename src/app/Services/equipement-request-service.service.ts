@@ -60,13 +60,18 @@ AdminAproval(equipmentRequestId:any,subRequestId:any,Response:any){
 
 
 
-uploadSupplierOffer(requestId: any, updatedRequest: any, file: File): Observable<any> {
+uploadSupplierOffer(requestId: any, updatedRequest: any, file?: File): Observable<any> {
   console.log(file)
-
   const formData = new FormData();
-  formData.append('equipmentRequestId', requestId.toString());
-  formData.append('file', file);
-  formData.append('updatedRequestJson', JSON.stringify(updatedRequest));  // Convert the updatedRequest to a JSON string
+
+  // Convert updatedRequest to JSON string and append it to FormData with the correct key
+  formData.append('updatedRequestJson', JSON.stringify(updatedRequest));
+
+  // Append the file
+  if (file) {
+    formData.append('file', file);
+  }
+
 
   const httpOptions = this.getHttpOptions();
   return this.httpClient.put(`${this.apiUrl}/Request/ItOfferAndPrice/${requestId}`, formData, httpOptions);

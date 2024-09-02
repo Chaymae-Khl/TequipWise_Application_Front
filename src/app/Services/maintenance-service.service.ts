@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { LocalStorageServiceService } from './local-storage-service.service';
 import { MaintenanceRequest } from '../Models/maintenance-request';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -59,8 +60,34 @@ getRequests(){
   const httpOptions = this.getHttpOptions();
   return this.httpClient.get(`${this.apiUrl}/Maintenance/DepartmentRequests`,httpOptions);
 }
-Aproval(RequestId:any,Response:any){
+Aproval(RequestId:any,Response:any,file?:File){
+  const formData = new FormData();
+
+  // Append individual properties of newRequest to FormData
+  Object.keys(Response).forEach(key => {
+    const value = (Response as any)[key];
+    if (value !== undefined && value !== null) {
+      formData.append(key, value.toString());
+    }
+  });
+
+  // Append the file
+  if (file) {
+    formData.append('file', file);
+  }
   const httpOptions = this.getHttpOptions();
-  return this.httpClient.put(`${this.apiUrl}/Maintenance/UpdateRequest/${RequestId}`,Response,httpOptions);
+  return this.httpClient.put(`${this.apiUrl}/Maintenance/UpdateRequest/${RequestId}`,formData,httpOptions);
+}
+AprovalAdmin(RequestId:any,Response:any){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.patch(`${this.apiUrl}/Maintenance/UpdateMaintenaceRequestAdmin/${RequestId}`,Response,httpOptions);
+}
+getNumberOfRequests(){
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Maintenance/GetRequestCount`,httpOptions);
+}
+getRequestCounts(): Observable<any> {
+  const httpOptions = this.getHttpOptions();
+  return this.httpClient.get(`${this.apiUrl}/Maintenance/counts`,httpOptions);
 }
 }

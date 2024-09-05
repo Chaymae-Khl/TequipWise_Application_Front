@@ -207,7 +207,7 @@ export class DeptPlantMangComponent implements OnInit {
   
   addPlant(event: Event): void {
     event.preventDefault(); // Prevent form submission
-    this.plantes.push({ plantName: '', approverName: '',ApproverId:0, hrApproverName: '',HrApproverId:0 });
+    this.plantes.push({ plantName: '', approverName: '',ApproverId:0, hrApproverName: '',HrApproverId:'' });
   }
 
 

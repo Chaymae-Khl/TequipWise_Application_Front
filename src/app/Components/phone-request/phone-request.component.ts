@@ -44,28 +44,52 @@ this.Assettype = [
   { name: 'Modem'}
 ];
   }
-PassPhoneRequest(){
-  this.loading = true;
-this.phoneService.PassRequest(this.phoneRequest).subscribe(
-  (response: any) => {
-    this.router.navigate(['/UserPhoneRequest']);
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success Message',
-      detail: response.message,
-      life: 10000
-    });
-    this.loading = false;
-  },
-  (error) => {
-    console.log("Error submitting request:", error);
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: error.message
-    });
-    this.loading = false;
+  PassPhoneRequest() {
+    this.loading = true;
+    this.phoneService.PassRequest(this.phoneRequest).subscribe(
+      (response: any) => {
+        console.log('response:',response)
+        // Handle based on response status
+        if (response.status === 'Success') {
+          // Success: Proceed with redirection
+          this.router.navigate(['/UserPhoneRequest']);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success Message',
+            detail: response.message,
+            life: 10000
+          });
+        } else if (response.status === 'Denied') {
+          // Denied: Show a warning, no redirection
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Request Denied',
+            detail: response.message,
+            life: 10000
+          });
+        } else if (response.status === 'Error') {
+          // Error: Show an error message, no redirection
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: response.message,
+            life: 10000
+          });
+        }
+  
+        this.loading = false; // Ensure loading spinner is removed after response
+      },
+      (error) => {
+        console.log("Error submitting request:", error);
+        // Handle generic errors
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Submission Error',
+          detail: 'An error occurred while submitting the request. Please try again later.',
+          life: 10000
+        });
+        this.loading = false;
+      }
+    );
   }
-);}
-
 }
